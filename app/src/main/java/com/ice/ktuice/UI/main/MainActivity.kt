@@ -13,11 +13,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val requestedStudentId = intent.getStringExtra("vidko")
+        if(requestedStudentId == null){
+            println("StudentCode not found, quitting!")
+            return@onCreate
+        }
+
         val realm = Realm.getDefaultInstance()
         println("Reading realm objects")
-
         val rlu = realm
                 .where(RlUserModel::class.java)
+                .equalTo("studId", requestedStudentId)
                 .findFirst()
         println("RLU read:"+(rlu != null))
         val loginModel = RlUserModel.toLoginModel(rlu!!)!! // if something is null here, just quit now

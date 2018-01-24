@@ -34,6 +34,7 @@ open class RlUserModel : RealmObject() {
                     println("Creating default ret values")
                     returnValue = RlUserModel()
                     println("default value created!")
+                    returnValue.cookies.clear()
                     returnValue.cookies.addAll(createRlCookieList(model.authCookies))
                     println("stud cookies assigned")
                     returnValue.studId = model.studentId
@@ -41,6 +42,7 @@ open class RlUserModel : RealmObject() {
                     returnValue.studName = model.studentName
                     println("stud name assigned")
                     //currentWeek = model.currentWeek
+                    returnValue.yearList.clear()
                     returnValue.yearList.addAll(RlYearModel.from(model.studentSemesters))
                     println("default value created!")
                 }
@@ -111,10 +113,13 @@ open class RlUserModel : RealmObject() {
         get() = RlSemesterInfoModel.fromString(defaultSemesterDataString!!)*/
 
     fun set(rlu: RlUserModel){
+        this.cookies.clear()
         this.cookies.addAll(rlu.cookies)
+
         this.studId = rlu.studId
         this.studName = rlu.studName
+
+        this.yearList.clear()
         this.yearList.addAll(rlu.yearList)
-        println("Cookie count set:"+this.cookies.size)
     }
 }
