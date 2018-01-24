@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">KTUice</string>
+
+    <string name="login_login_btn">Log In</string>
+    <string name="login_username_hint">Username</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_error_title">Error</string>
+
+    <string name="info_student_code">Student code</string>
+    <string name="info_student_name">Name</string>
+    <string name="info_semesters_found">Semester count</string>
+</resources>
