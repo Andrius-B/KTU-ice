@@ -8,4 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="gradeTableCell">
+        <item name="android:background">@drawable/grade_cell_background</item>
+        <item name="android:padding">4dp</item>
+    </style>
 </resources>
