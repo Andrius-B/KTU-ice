@@ -29,6 +29,19 @@ class ModuleModel(
             p2 = element.getP2()
     )
 
+    //since the model information is embedded into the mark model, this constructor makes sense.
+    constructor(markModel: MarkModel): this(
+            semester = markModel.semester,
+            semester_number = markModel.semester_number,
+            module_code = markModel.module_code,
+            module_name = markModel.module_name,
+            credits = markModel.credits,
+            language = markModel.language,
+            misc = "",
+            p1 = null,
+            p2 = null
+    )
+
 }
 
 private fun Element.getSemester()

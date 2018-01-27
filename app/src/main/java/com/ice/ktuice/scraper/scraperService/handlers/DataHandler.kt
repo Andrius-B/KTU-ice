@@ -1,6 +1,7 @@
 package com.ice.ktuice.scraper.scraperService.handlers
 
 import com.ice.ktuice.scraper.models.*
+import org.jetbrains.anko.getStackTraceString
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -32,6 +33,8 @@ class DataHandler {
                 .execute()
 
         request.charset("windows-1257")
+        //request.bufferUp()
+        //println("Module response:"+request.body())
         val parse = request.parse()
 
         val moduleList = ModuleResponse(request.statusCode())
@@ -50,7 +53,7 @@ class DataHandler {
     private fun getModuleMarkList(loginModel: LoginModel, moduleModel: ModuleModel): List<MarkModel> {
         val markList = mutableListOf<MarkModel>()
         val url = "https://uais.cr.ktu.lt/ktuis/STUD_SS2.infivert"
-
+        println("Getting grades for:"+moduleModel.module_name + "("+moduleModel.module_code+")")
         val request = Jsoup.connect(url)
                 .cookies(loginModel.authCookies)
                 .method(Connection.Method.POST)
@@ -76,6 +79,7 @@ class DataHandler {
 
             (0 until markWeekList.size-1).forEach { index ->
                 if (markTypeIdList[index] != " ") {
+
                     val markModel = MarkModel(
                             name = moduleModel.module_name,
                             id = moduleModel.module_code,

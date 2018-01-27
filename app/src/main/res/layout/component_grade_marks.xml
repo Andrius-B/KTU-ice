@@ -9,10 +9,54 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#ffeeee">
-        <TextView
-            android:layout_width="wrap_content"
+        <TableLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TestModuleDesc"/>
+            android:stretchColumns="*">
+            <TableRow>
+                <TextView android:text="Week"/>
+                <TextView android:text="4"/>
+                <TextView android:text="8"/>
+                <TextView android:text="10"/>
+                <TextView android:text="12"/>
+                <TextView android:text="16"/>
+                <TextView android:text="17-20"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:text="Komiuterinė grafika"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:text="Matematika 1"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:text="Asmens sveikatos ugdymas"/>
+                <View android:layout_width="0dp" android:layout_height="0dp"/>
+                <TextView android:text="10"/>
+                <View android:layout_width="0dp" android:layout_height="0dp"/>
+                <TextView android:text="10"/>
+                <TextView android:text="09"/>
+                <TextView android:text="09"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:text="Informacinės technologijos"/>
+                <TextView android:text="10"/>
+                <TextView android:text="10"/>
+                <TextView android:text="09"/>
+                <TextView android:text="09"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:text="Objektinis programavimas 1"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:text="Taikomoji psichologija"/>
+            </TableRow>
+        </TableLayout>
     </LinearLayout>
     <TableLayout
         android:background="#ffeeff"

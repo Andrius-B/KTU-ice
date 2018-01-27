@@ -2,11 +2,15 @@ package com.ice.ktuice.UI.main
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.google.gson.Gson
+import com.ice.ktuice.AL.GradeTableRowModel.GradeTableFactory
 import com.ice.ktuice.DB.entities.RlUserModel
 import com.ice.ktuice.R
 import com.ice.ktuice.scraper.models.LoginModel
+import com.ice.ktuice.scraper.scraperService.handlers.DataHandler
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.doAsync
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,6 +35,15 @@ class MainActivity : AppCompatActivity() {
         info_semesters_found.text = loginModel.studentSemesters.size.toString()
         info_student_code.text = loginModel.studentId
         info_student_name.text = loginModel.studentName
+
+        doAsync {
+            println("Getting grades!")
+            val api = DataHandler()
+            val gson = Gson()
+            val marks = api.getGrades(loginModel, loginModel.studentSemesters[0])
+            val table = GradeTableFactory.buildGradeTableFromMarkResponse(marks)
+            println(table.toString())
+        }
     }
 
 }
