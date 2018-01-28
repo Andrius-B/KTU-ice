@@ -44,13 +44,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="1"
-            android:imeOptions="actionNext"
+            android:singleLine="true"
+            android:imeOptions="actionDone"
             android:hint="@string/login_username_hint"/>
         <EditText
             android:id="@+id/login_password_field"
             android:inputType="textPassword"
             android:maxLines="1"
-            android:imeOptions="actionDone"
+            android:singleLine="true"
+            android:imeOptions="actionSend"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/login_password_hint"/>

@@ -94,19 +94,19 @@ class LoginActivity: AppCompatActivity() {
 
         if (rlUser != null) {
             //println("RlUserCreated!")
-            realm.use { realm ->
-                realm.beginTransaction()
+            realm.use { rl ->
+                rl.beginTransaction()
                 val rlu: RlUserModel?
-                val dbUser = realm.where(RlUserModel::class.java).equalTo("studId", rlUser.studId).findFirst()
+                val dbUser = rl.where(RlUserModel::class.java).equalTo("studId", rlUser.studId).findFirst()
                 if(dbUser == null){
-                    val newUser = realm.createObject(RlUserModel::class.java, UUID.randomUUID().toString())
+                    val newUser = rl.createObject(RlUserModel::class.java, UUID.randomUUID().toString())
                     rlu = newUser // if no user with the same vidko, create a new one
                 }else rlu = dbUser // if there already is an existing user - update that
 
                 println("Realm object created!")
                 rlu?.set(rlUser)
                 println("Realm object set!")
-                realm.commitTransaction()
+                rl.commitTransaction()
                 println("Realm transaction finished")
             }
         } else {

@@ -9,4 +9,5 @@ import com.ice.ktuice.scraper.models.MarkModel
  */
 class GradeTableCellModel(val markModel:MarkModel?, val weekModel:WeekModel) {
     val isCellEmpty: Boolean = markModel == null
+    var displayMarkString: String = ""
 }

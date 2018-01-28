@@ -9,9 +9,18 @@ class MarkModel(
         val semester_number: String,
         val credits: String,
         val language: String,
-        val profestor: String,
+        val professor: String,
         val typeId: String,
         val type: String?,
         val week: String,
-        val mark: List<String>
-)
+        val marks: MutableList<String>
+){
+    fun getMarkDisplayString():String{
+        var text = ""
+        marks.forEachIndexed{index, mark ->
+            text += mark
+            if(index != marks.size) text += " "
+        }
+        return text
+    }
+}

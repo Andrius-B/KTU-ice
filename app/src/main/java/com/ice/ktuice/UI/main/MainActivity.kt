@@ -11,6 +11,8 @@ import com.ice.ktuice.scraper.scraperService.handlers.DataHandler
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.getStackTraceString
+import org.jetbrains.anko.uiThread
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,14 +38,25 @@ class MainActivity : AppCompatActivity() {
         info_student_code.text = loginModel.studentId
         info_student_name.text = loginModel.studentName
 
-        doAsync {
+        doAsync(
+        {
+            println(it.getStackTraceString())
+        },
+        {
             println("Getting grades!")
             val api = DataHandler()
             val gson = Gson()
             val marks = api.getGrades(loginModel, loginModel.studentSemesters[0])
             val table = GradeTableFactory.buildGradeTableFromMarkResponse(marks)
-            println(table.toString())
-        }
+            table.removeEmptyCells()
+            println("Printing the grade table!")
+            println("Table:" + table.toString())
+            println("Seen weeks:" + table.getWeekListString())
+            table.printRowCounts()
+            uiThread {
+                grade_table_main.createViewForModel(table)
+            }
+        })
     }
 
 }

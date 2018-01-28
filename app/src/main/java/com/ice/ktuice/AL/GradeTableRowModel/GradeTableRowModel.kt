@@ -12,4 +12,10 @@ class GradeTableRowModel(val moduleModel: ModuleModel): ArrayList<GradeTableCell
     fun sortByWeek(){
         this.sortBy { it.weekModel.weekValue }
     }
+
+    fun getStringByWeekModel(weekModel:WeekModel): String {
+        var text = ""
+        val markForDate = filter { it.weekModel == weekModel }.forEach{text += it.markModel?.getMarkDisplayString()}
+        return text
+    }
 }

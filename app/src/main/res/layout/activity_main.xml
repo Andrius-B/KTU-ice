@@ -10,10 +10,8 @@
         android:id="@+id/card_view"
         android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_margin="8dp"
-        android:padding="16dp"
-        card_view:cardCornerRadius="6dp">
+        android:layout_height="85dp"
+        style="@style/mainActivityCardStyle">
         <TableLayout
             android:padding="16dp"
             android:layout_width="match_parent"
@@ -33,5 +31,16 @@
             </TableRow>
         </TableLayout>
     </android.support.v7.widget.CardView>
+    <android.support.v7.widget.CardView
+        style="@style/mainActivityCardStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.ice.ktuice.UI.main.components.GradeTable
+            android:id="@+id/grade_table_main"
+            android:layout_margin="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.v7.widget.CardView>
+
 </LinearLayout>
 

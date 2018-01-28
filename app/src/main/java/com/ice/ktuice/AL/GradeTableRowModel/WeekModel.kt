@@ -35,7 +35,7 @@ class WeekModel(val week:String){
         fun parseWeekToValue(week: String):Float{
             var retVal: Float = 0f
             var partCounter = 0
-            val numbers = week.split("-./:,;", ignoreCase = true)
+            val numbers = week.split("-", ignoreCase = true)
             for(elem in numbers){
                 try{
                     retVal += elem.toFloat()

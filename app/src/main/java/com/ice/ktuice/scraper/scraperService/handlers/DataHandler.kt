@@ -75,7 +75,7 @@ class DataHandler {
             val infoTypeRowList: Map<String, String> = getMarkTypeMap(markInfoTable)
             val markWeekList: List<String> = getMarkWeekList(markTable)
             val markDataList: Map<Int, List<String>> = getMarkDataMap(markTable)
-            val profestorText = headerInfo[2].text()
+            val professorText = headerInfo[2].text()
 
             (0 until markWeekList.size-1).forEach { index ->
                 if (markTypeIdList[index] != " ") {
@@ -89,11 +89,11 @@ class DataHandler {
                             semester_number = moduleModel.semester_number,
                             credits = moduleModel.credits,
                             language = moduleModel.language,
-                            profestor = profestorText,
+                            professor = professorText,
                             typeId = markTypeIdList[index],
                             type = infoTypeRowList[markTypeIdList[index]],
                             week = markWeekList[index],
-                            mark = markDataList[index] ?: listOf()
+                            marks = markDataList[index]?.toMutableList() ?: mutableListOf()
                     )
 
                     markList.add(markModel)
@@ -117,7 +117,14 @@ class DataHandler {
         val rowList = element.select("tr")
         return mutableListOf<String>().apply {
             val headerWeekRow = rowList[0].children()
-                    .subList(4, rowList[0].children().size - 2)
+                    /*
+                    Ignore the first 4 values, because in this row they are:
+                    Number, Group, Name and "Week" respectively
+
+                    Also ignore the last two children, because they are Suggested and final
+                    marks, which are not needed in this table.
+                     */
+                    .subList(4, rowList[0].children().size - 1)
             headerWeekRow.forEach { cell ->
                 add(cell.text())
             }
@@ -128,7 +135,11 @@ class DataHandler {
         val rowList = element.select("tr")
         return mutableListOf<String>().apply {
             val headerTypeRow = rowList[1].children()
-                    .subList(1, rowList[1].children().size - 3)
+                    /*
+                    Ignore the first child, because its "Task"
+                    and the last three, because they are not needed ("Įsk", "Paž." and "Data")
+                     */
+                    .subList(1, rowList[1].children().size - 2)
             headerTypeRow.forEach { cell ->
                 add(cell.text())
             }
@@ -141,13 +152,22 @@ class DataHandler {
             (2 until rowList.size).forEach { rowIndex ->
                 var headerDataRow = rowList[rowIndex].children().toList()
                 if (rowIndex == 2) {
-                    headerDataRow = headerDataRow.subList(4, rowList[rowIndex].children().size - 4)
+                    /*
+                     The first row of marks (row #2) also contains the suggested totals for the
+                     semester, which are not relevant for this particular request, these are ignored by the -4 in size
+                     Also the first data row contains student data, such as name and the academic group id, which are discarded.
+                     */
+                    headerDataRow = headerDataRow.subList(4, rowList[rowIndex].children().size - 3)
                 } else {
-                    headerDataRow = headerDataRow.subList(1, rowList[rowIndex].children().size - 1)
+                    /*
+                     Other rows have a single element with colspan of 4, so only the first child must be discarded,
+                     and only the last column spans the suggestions group above.
+                     */
+                    headerDataRow = headerDataRow.subList(1, rowList[rowIndex].children().size)
                 }
                 headerDataRow.forEachIndexed { index, cell ->
                     val text = cell.text()
-                    if (text != " ") {
+                    if (text.isNotBlank()) {
                         if (containsKey(index)) {
                             put(index, get(index)!!.apply { add(text) })
                         } else {
