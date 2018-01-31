@@ -10,20 +10,12 @@ import com.ice.ktuice.scraper.models.MarkResponse
 class GradeTableFactory {
     companion object {
         fun buildGradeTableFromMarkResponse(markResponse: MarkResponse): GradeTableModel{
-
-            //removing spacer cells
-            markResponse.filter { it.marks.isEmpty() }
-                        .forEach { markResponse.remove(it) }
-
-            markResponse.forEach {
-                val markList = it.marks
-                it.marks.filter { it.isEmpty() }
-                        .forEach { markList.remove(it)}
-
-            }
-
             val table = GradeTableModel()
-            markResponse.forEach { table.addCell(it) }
+            markResponse.forEach {
+                if(!it.isEmpty()) {
+                    table.addMark(it)
+                }
+            }
             return table
         }
     }

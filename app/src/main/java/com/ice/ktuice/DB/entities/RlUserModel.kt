@@ -18,6 +18,26 @@ import java.util.*
 @RealmClass
 open class RlUserModel : RealmObject() {
 
+    @PrimaryKey // rl
+    var id = "one_id_to_rule_them_all"
+    var cookies: RealmList<RlCookie> = RealmList()
+    var studId: String? = null
+    var studName: String? = null
+    var yearList: RealmList<RlYearModel> = RealmList()
+    var username: String? = null
+    var password: String? = null
+
+    fun set(rlu: RlUserModel){
+        this.cookies.clear()
+        this.cookies.addAll(rlu.cookies)
+        this.studId = rlu.studId
+        this.studName = rlu.studName
+        this.yearList.clear()
+        this.yearList.addAll(rlu.yearList)
+        this.password = rlu.password
+        this.username = rlu.username
+    }
+
     companion object {
 
         /**
@@ -25,28 +45,23 @@ open class RlUserModel : RealmObject() {
          * @param model LoginModel? to RlUserModel
          */
         fun from(model: LoginModel?): RlUserModel? {
-                val returnValue: RlUserModel?
-                if (model == null) {
-                    println("model is null!")
-                    returnValue = null
-                }
-                else {
-                    println("Creating default ret values")
-                    returnValue = RlUserModel()
-                    println("default value created!")
-                    returnValue.cookies.clear()
-                    returnValue.cookies.addAll(createRlCookieList(model.authCookies))
-                    println("stud cookies assigned")
-                    returnValue.studId = model.studentId
-                    println("stud id assigned")
-                    returnValue.studName = model.studentName
-                    println("stud name assigned")
-                    //currentWeek = model.currentWeek
-                    returnValue.yearList.clear()
-                    returnValue.yearList.addAll(RlYearModel.from(model.studentSemesters))
-                    println("default value created!")
-                }
-                return returnValue
+            val returnValue: RlUserModel?
+            if (model == null) {
+                println("model is null!")
+                returnValue = null
+            }
+            else {
+                returnValue = RlUserModel()
+                returnValue.cookies.clear()
+                returnValue.cookies.addAll(createRlCookieList(model.authCookies))
+                returnValue.studId = model.studentId
+                returnValue.studName = model.studentName
+                returnValue.yearList.clear()
+                returnValue.yearList.addAll(RlYearModel.from(model.studentSemesters))
+                returnValue.username = model.username
+                returnValue.password = model.password
+            }
+            return returnValue
         }
 
         /**
@@ -65,7 +80,7 @@ open class RlUserModel : RealmObject() {
             if(rlu.studId == null) println("studId is null!")
             if(yearList.isEmpty()) println("yearlist is of size 0!")
 
-            return LoginModel(remapCookies(rlu.cookies), rlu.studName!!, rlu.studId!!, yearList)
+            return LoginModel(remapCookies(rlu.cookies), rlu.studName!!, rlu.studId!!, yearList, rlu.username!!, rlu.password!!)
         }
 
         /**
@@ -90,36 +105,5 @@ open class RlUserModel : RealmObject() {
             }
         }
 
-    }
-
-    @PrimaryKey // rl
-    var id = "one_id_to_rule_them_all"
-    //open var currentWeek: String? = null
-    var cookies: RealmList<RlCookie> = RealmList()
-    var studId: String? = null
-    var studName: String? = null
-    var yearList: RealmList<RlYearModel> = RealmList()
-    //open var weekList: RealmList<RlWeekModel> = RealmList()
-    //open var gradeList: RealmList<RlGradesResponse> = RealmList()
-    //var username: String? = null
-    //var password: String? = null
-    //open var timestamp: Long = 0L
-    //open var defaultSemesterDataString: String? = null
-
-    /*var defaultSemester: RlSemesterInfoModel
-        set(value) {
-            defaultSemesterDataString = value.toDataString()
-        }
-        get() = RlSemesterInfoModel.fromString(defaultSemesterDataString!!)*/
-
-    fun set(rlu: RlUserModel){
-        this.cookies.clear()
-        this.cookies.addAll(rlu.cookies)
-
-        this.studId = rlu.studId
-        this.studName = rlu.studName
-
-        this.yearList.clear()
-        this.yearList.addAll(rlu.yearList)
     }
 }

@@ -5,5 +5,7 @@ data class LoginModel(
         val authCookies: Map<String, String>,
         val studentName: String = "",
         val studentId: String = "",
-        val studentSemesters: List<YearModel>
+        val studentSemesters: List<YearModel>,
+        val username: String = "",
+        val password: String = ""
 )

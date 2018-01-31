@@ -4,19 +4,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import com.ice.ktuice.DB.RealmConfig
-import com.ice.ktuice.DB.entities.RlUserModel
+import com.ice.ktuice.DAL.repositories.loginRepository.LoginRepository
+import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
 import com.ice.ktuice.UI.main.MainActivity
 import com.ice.ktuice.scraper.handlers.LoginHandler
 import com.ice.ktuice.scraper.models.LoginModel
+import com.ice.ktuice.scraper.scraperService.ScraperService
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.activityUiThreadWithContext
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.doAsyncResult
 import org.jetbrains.anko.getStackTraceString
-import java.util.*
+import org.koin.android.ext.android.inject
 import java.util.concurrent.Future
 
 /**
@@ -25,12 +26,15 @@ import java.util.concurrent.Future
  */
 class LoginActivity: AppCompatActivity() {
 
+    private val loginRepository: LoginRepository by inject()
+    private val preferenceRepository: PreferenceRepository by inject()
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
+        if(preferenceRepository.getValue(R.string.logged_in_user_code).isNotBlank()){
+            launchMainActivity()
+        }
         setContentView(R.layout.activity_login)
-
-        RealmConfig.init(this) // init the db
 
         login_submit_button.setOnClickListener{
             val username = login_username_field.text.toString()
@@ -43,14 +47,20 @@ class LoginActivity: AppCompatActivity() {
                     setErrorDisplay("login is null!", true)
                     setLoadingVisible(false)
                 } else {
-                    saveLoginToRealm(loginModel)
                     activityUiThreadWithContext {
-                        val intent = Intent(this, MainActivity::class.java)
-                        intent.putExtra("vidko", loginModel.studentId)
-                        startActivity(intent)
+                        saveLoginToRealm(loginModel)
+                        preferenceRepository.setValue(R.string.logged_in_user_code, loginModel.studentId)
+                        launchMainActivity()
                     }
                 }
             }
+        }
+    }
+
+    private fun launchMainActivity(){
+        runOnUiThread{
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -71,7 +81,7 @@ class LoginActivity: AppCompatActivity() {
                     var loginModel: LoginModel? = null
                     try {
                         setLoadingVisible(true)
-                        val loginResponse = LoginHandler().getAuthCookies(username, password)
+                        val loginResponse = ScraperService.login(username, password)
                         if(loginResponse.loginModel != null) {
                             setLoadingVisible(false)
                             loginModel = loginResponse.loginModel
@@ -90,28 +100,7 @@ class LoginActivity: AppCompatActivity() {
 
     private fun saveLoginToRealm(loginModel: LoginModel){
         val realm = Realm.getDefaultInstance()
-        val rlUser = RlUserModel.from(loginModel)
-
-        if (rlUser != null) {
-            //println("RlUserCreated!")
-            realm.use { rl ->
-                rl.beginTransaction()
-                val rlu: RlUserModel?
-                val dbUser = rl.where(RlUserModel::class.java).equalTo("studId", rlUser.studId).findFirst()
-                if(dbUser == null){
-                    val newUser = rl.createObject(RlUserModel::class.java, UUID.randomUUID().toString())
-                    rlu = newUser // if no user with the same vidko, create a new one
-                }else rlu = dbUser // if there already is an existing user - update that
-
-                println("Realm object created!")
-                rlu?.set(rlUser)
-                println("Realm object set!")
-                rl.commitTransaction()
-                println("Realm transaction finished")
-            }
-        } else {
-            println("rlUser is null!")
-        }
+        loginRepository.createOrUpdate(loginModel, Realm.getDefaultInstance())
     }
 
     private fun setLoadingVisible(visible:Boolean){

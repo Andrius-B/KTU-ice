@@ -22,22 +22,30 @@ class GradeTableModel() {
     }
 
     /**
-     * Appends a mark to the correct table row
+     * Appends a mark to the correct table row and cell
      */
-    fun addCell(mark: MarkModel){
-        val cellModel = GradeTableCellModel(mark, WeekModel(mark.week))
-        println(String.format("Adding mark %s at %s", mark.marks.last(), mark.week))
-        if(!weekList.contains(cellModel.weekModel)){
-            weekList.add(cellModel.weekModel)
-        }
+    fun addMark(mark: MarkModel){
         val markIdentifier = mark.module_code
+        val row: GradeTableRowModel
         if(rowMap.containsKey(markIdentifier)){
-            rowMap[markIdentifier]?.add(cellModel)
+            row = rowMap[markIdentifier]!!
         }else{
-            val newRow = GradeTableRowModel(ModuleModel(mark)) // extracting the module information from the mark
-            newRow.add(cellModel)
-            rowMap[markIdentifier] = newRow
+            row = GradeTableRowModel(ModuleModel(mark)) // extracting the module information from the mark
+            rowMap[markIdentifier] = row
         }
+
+        val markWeekModel = WeekModel(mark.week)
+
+        val currentCell = row.getByWeekModel(markWeekModel) // get a cell at the particular column
+        if(currentCell?.markModels == null){
+            val newCell = GradeTableCellModel(mutableListOf(mark), markWeekModel)
+            row.add(newCell)
+        }else{
+            currentCell.markModels.add(mark)
+        }
+
+        if(!weekList.contains(markWeekModel))
+            weekList.add(markWeekModel)
     }
 
     /**
@@ -60,13 +68,15 @@ class GradeTableModel() {
             val row = it.value
             row.forEach {
                 var cellEmpty = true
-                if(it.markModel?.marks != null && // if the cell contains marks
-                        it.markModel.marks.size > 0){
-                    val marks = it.markModel.marks
+                if(it.markModels != null && // if the cell contains marks
+                        it.markModels.size > 0){
+                    val marks = it.markModels
                     marks.forEach {
-                        if(!it.isBlank()) cellEmpty = false // and if atleast one mark is not blank
-                        // the mark is not empty!
+                        if(!it.isEmpty()) cellEmpty = false
                     }
+                }
+                if(cellEmpty){
+                    row.remove(it)
                 }
             }
         }
@@ -92,16 +102,11 @@ class GradeTableModel() {
         rowMap.forEach {
             var line = it.value.moduleModel.module_name + columnMarker
             it.value.forEach {
-                if(it.markModel != null) {
-                    var markIndex = 0
-                    for(markString in it.markModel.marks) {
-                        markIndex++
-                        line += markString
-                        if (markIndex < it.markModel.marks.size) line += markSeparator
-                    }
-                }else{
-                    line += emptyMarkMarker
-                }
+                line += if(it.markModels != null) {
+                            it.getDisplayString()
+                        }else{
+                            emptyMarkMarker
+                        }
                 line += columnMarker
             }
             text += line
@@ -116,12 +121,10 @@ class GradeTableModel() {
      */
     fun getWeekListString(): String{
         weekList.sortBy { it.weekValue }
-        var index = 0
         var text = ""
-        for (weekModel in weekList){
+        for ((index, weekModel) in weekList.withIndex()){
             text += weekModel.weekValue.toString() + " => " + weekModel.week
             if(index < weekList.size) text += " | "
-            index ++
         }
         return text
     }

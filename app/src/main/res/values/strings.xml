@@ -9,4 +9,6 @@
     <string name="info_student_code">Student code</string>
     <string name="info_student_name">Name</string>
     <string name="info_semesters_found">Semester count</string>
+
+    <string name="grade_table_week_header">Week</string>
 </resources>

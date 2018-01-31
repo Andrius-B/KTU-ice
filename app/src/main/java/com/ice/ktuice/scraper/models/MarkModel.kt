@@ -13,14 +13,17 @@ class MarkModel(
         val typeId: String,
         val type: String?,
         val week: String,
+        /**
+         * A list of marks: higher index strings are newer overridden marks.
+         */
         val marks: MutableList<String>
 ){
-    fun getMarkDisplayString():String{
-        var text = ""
-        marks.forEachIndexed{index, mark ->
-            text += mark
-            if(index != marks.size) text += " "
+        fun isEmpty():Boolean{
+                var empty = true
+                marks.forEach {
+                        if(!it.isBlank()) empty = false // and if atleast one mark is not blank
+                        // the mark is not empty!
+                }
+                return empty
         }
-        return text
-    }
 }

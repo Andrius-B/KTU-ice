@@ -14,7 +14,7 @@ class LoginHandler: BaseHandler() {
         if (postLogin.cookies != null) {
             val agreeLogin = getAgree(postLogin)
             val postContinue = postContinue(agreeLogin)
-            val loginResponse = getInfo(postContinue)
+            val loginResponse = getInfo(postContinue, username, password)
             return loginResponse
         }
         // if there are no cookies returned from postLogin,
@@ -116,7 +116,7 @@ class LoginHandler: BaseHandler() {
         return AuthResponse(request.cookies(), request.statusCode())
     }
 
-    private fun getInfo(authResponse: AuthResponse): LoginResponse {
+    private fun getInfo(authResponse: AuthResponse, username: String, password: String): LoginResponse {
         val url = "https://uais.cr.ktu.lt/ktuis/vs.ind_planas"
         val request = Jsoup.connect(url)
                 .cookies(authResponse.authCookies)
@@ -143,7 +143,9 @@ class LoginHandler: BaseHandler() {
                 authCookies = authResponse.authCookies,
                 studentName = studentName,
                 studentId = studentId,
-                studentSemesters = studyList
+                studentSemesters = studyList,
+                username = username,
+                password = password
         )
         return LoginResponse(loginModel, request.statusCode())
     }

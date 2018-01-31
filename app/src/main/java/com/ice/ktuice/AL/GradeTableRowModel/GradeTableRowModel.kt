@@ -1,6 +1,5 @@
 package com.ice.ktuice.AL.GradeTableRowModel
 
-import com.ice.ktuice.scraper.models.MarkModel
 import com.ice.ktuice.scraper.models.ModuleModel
 
 /**
@@ -13,9 +12,24 @@ class GradeTableRowModel(val moduleModel: ModuleModel): ArrayList<GradeTableCell
         this.sortBy { it.weekModel.weekValue }
     }
 
-    fun getStringByWeekModel(weekModel:WeekModel): String {
-        var text = ""
-        val markForDate = filter { it.weekModel == weekModel }.forEach{text += it.markModel?.getMarkDisplayString()}
-        return text
+    /**
+     * Gets a single cell by week model.
+     * Only a single cell should exist in one row for a weekModel.
+     */
+    fun getByWeekModel(weekModel: WeekModel): GradeTableCellModel?{
+        return singleOrNull { it.weekModel.equals(weekModel) }
+    }
+
+    /**
+     * Checks if this list of gradeTableCells does not contain more than one
+     * cell for a single weekModel
+     */
+    fun isRowCellListValid(): Boolean{
+        var valid = true
+        forEach {
+            val iter = it
+            if(filter { it.weekModel.equals(iter.weekModel) }.size > 1) valid = false
+        }
+        return valid
     }
 }

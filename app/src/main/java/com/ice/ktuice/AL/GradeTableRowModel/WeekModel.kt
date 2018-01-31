@@ -4,7 +4,8 @@ import org.jetbrains.anko.getStackTraceString
 
 /**
  * Created by Andrius on 1/27/2018.
- * These variables are the same as in the MarkModel class
+ * This is a date container class, containing the week string and a numerical
+ * estimation, for sorting and comparison
  */
 class WeekModel(val week:String){
     val weekValue: Float
