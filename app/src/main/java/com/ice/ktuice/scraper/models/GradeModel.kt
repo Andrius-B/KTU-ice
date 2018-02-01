@@ -1,6 +1,6 @@
 package com.ice.ktuice.scraper.models
 
-class MarkModel(
+class GradeModel(
         val name: String,
         val id: String,
         val semester: String,

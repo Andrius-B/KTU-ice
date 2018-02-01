@@ -1,6 +1,6 @@
 package com.ice.ktuice.AL.GradeTableRowModel
 
-import com.ice.ktuice.scraper.models.MarkModel
+import com.ice.ktuice.scraper.models.GradeModel
 import com.ice.ktuice.scraper.models.ModuleModel
 
 /**
@@ -22,26 +22,26 @@ class GradeTableModel() {
     }
 
     /**
-     * Appends a mark to the correct table row and cell
+     * Appends a grade to the correct table row and cell
      */
-    fun addMark(mark: MarkModel){
-        val markIdentifier = mark.module_code
+    fun addMark(grade: GradeModel){
+        val markIdentifier = grade.module_code
         val row: GradeTableRowModel
         if(rowMap.containsKey(markIdentifier)){
             row = rowMap[markIdentifier]!!
         }else{
-            row = GradeTableRowModel(ModuleModel(mark)) // extracting the module information from the mark
+            row = GradeTableRowModel(ModuleModel(grade)) // extracting the module information from the grade
             rowMap[markIdentifier] = row
         }
 
-        val markWeekModel = WeekModel(mark.week)
+        val markWeekModel = WeekModel(grade.week)
 
         val currentCell = row.getByWeekModel(markWeekModel) // get a cell at the particular column
-        if(currentCell?.markModels == null){
-            val newCell = GradeTableCellModel(mutableListOf(mark), markWeekModel)
+        if(currentCell?.gradeModels == null){
+            val newCell = GradeTableCellModel(mutableListOf(grade), markWeekModel)
             row.add(newCell)
         }else{
-            currentCell.markModels.add(mark)
+            currentCell.gradeModels.add(grade)
         }
 
         if(!weekList.contains(markWeekModel))
@@ -68,9 +68,9 @@ class GradeTableModel() {
             val row = it.value
             row.forEach {
                 var cellEmpty = true
-                if(it.markModels != null && // if the cell contains marks
-                        it.markModels.size > 0){
-                    val marks = it.markModels
+                if(it.gradeModels != null && // if the cell contains marks
+                        it.gradeModels.size > 0){
+                    val marks = it.gradeModels
                     marks.forEach {
                         if(!it.isEmpty()) cellEmpty = false
                     }
@@ -102,7 +102,7 @@ class GradeTableModel() {
         rowMap.forEach {
             var line = it.value.moduleModel.module_name + columnMarker
             it.value.forEach {
-                line += if(it.markModels != null) {
+                line += if(it.gradeModels != null) {
                             it.getDisplayString()
                         }else{
                             emptyMarkMarker

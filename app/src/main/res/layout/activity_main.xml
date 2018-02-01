@@ -32,6 +32,10 @@
                     <TextView android:text="@string/info_semesters_found"/>
                     <TextView android:id="@+id/info_semesters_found"/>
                 </TableRow>
+                <TableRow>
+                    <Button android:text="@string/logout_text"
+                        android:id="@+id/logout_btn"/>
+                </TableRow>
             </TableLayout>
         </android.support.v7.widget.CardView>
         <android.support.v7.widget.CardView

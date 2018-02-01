@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">KTUice</string>
+    <string name="app_name">KTU ice</string>
 
     <string name="login_login_btn">Log In</string>
     <string name="login_username_hint">Username</string>
@@ -10,6 +10,7 @@
     <string name="info_student_code">Student code</string>
     <string name="info_student_name">Name</string>
     <string name="info_semesters_found">Semester count</string>
+    <string name="logout_text">Log out</string>
 
     <string name="grade_table_week_header">Week</string>
 </resources>

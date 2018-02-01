@@ -1,7 +1,6 @@
 package com.ice.ktuice.scraper.scraperService.handlers
 
 import com.ice.ktuice.scraper.models.*
-import org.jetbrains.anko.getStackTraceString
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -11,9 +10,9 @@ class DataHandler {
         fun getGrades(loginModel: LoginModel, planYear: YearModel)
                 = getGrades(loginModel, planYear.year, planYear.id)
 
-        private fun getGrades(loginModel: LoginModel, planYear: String, studId: String): MarkResponse {
+        private fun getGrades(loginModel: LoginModel, planYear: String, studId: String): GradeResponseModel {
             val moduleResponse = getModules(loginModel, planYear, studId)
-            val markResponse = MarkResponse(moduleResponse.statusCode)
+            val markResponse = GradeResponseModel(moduleResponse.statusCode)
             moduleResponse.forEach { moduleModel ->
                 val moduleMarkList = getModuleMarkList(loginModel, moduleModel)
                 markResponse.addAll(moduleMarkList)
@@ -22,7 +21,7 @@ class DataHandler {
             return markResponse
         }
 
-        fun getModules(loginModel: LoginModel, planYear: String, studId: String): ModuleResponse {
+        private fun getModules(loginModel: LoginModel, planYear: String, studId: String): ModuleResponseModel {
             val url = "https://uais.cr.ktu.lt/ktuis/STUD_SS2.planas_busenos?" +
                     "plano_metai=$planYear&" +
                     "p_stud_id=$studId"
@@ -33,19 +32,21 @@ class DataHandler {
                     .execute()
 
             request.charset("windows-1257")
-            //request.bufferUp()
-            //println("Module response:"+request.body())
             val parse = request.parse()
 
             val moduleList = if(UnauthenticatedRequestDetector.isResponseAuthError(parse)){
-                ModuleResponse(401) // unauthorized
+                ModuleResponseModel(401) // unauthorized
             }else{
-                ModuleResponse(request.statusCode())
+                ModuleResponseModel(request.statusCode())
             }
 
-            val moduleTable = parse.select(".table.table-hover > tbody > tr")
-            if (moduleTable.size > 0) {
-                moduleTable.forEach { moduleElement ->
+            val moduleTables = parse.select(".table.table-hover > tbody > tr")
+            if (moduleTables.size > 0) {
+                /*
+                Even though the semester number is discarded when selecting all table rows (from both tables)
+                it is parsed later via the parent selectors.
+                 */
+                moduleTables.forEachIndexed{index, moduleElement ->
                     val model = ModuleModel(moduleElement)
                     moduleList.add(model)
                 }
@@ -54,8 +55,8 @@ class DataHandler {
             return moduleList
         }
 
-        private fun getModuleMarkList(loginModel: LoginModel, moduleModel: ModuleModel): List<MarkModel> {
-            val markList = mutableListOf<MarkModel>()
+        private fun getModuleMarkList(loginModel: LoginModel, moduleModel: ModuleModel): List<GradeModel> {
+            val markList = mutableListOf<GradeModel>()
             val url = "https://uais.cr.ktu.lt/ktuis/STUD_SS2.infivert"
             println("Getting grades for:"+moduleModel.module_name + "("+moduleModel.module_code+")")
             val request = Jsoup.connect(url)
@@ -84,7 +85,7 @@ class DataHandler {
                 (0 until markWeekList.size-1).forEach { index ->
                     if (markTypeIdList[index] != " ") {
 
-                        val markModel = MarkModel(
+                        val markModel = GradeModel(
                                 name = moduleModel.module_name,
                                 id = moduleModel.module_code,
                                 semester = moduleModel.semester,

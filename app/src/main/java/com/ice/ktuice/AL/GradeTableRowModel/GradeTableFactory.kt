@@ -1,6 +1,6 @@
 package com.ice.ktuice.AL.GradeTableRowModel
 
-import com.ice.ktuice.scraper.models.MarkResponse
+import com.ice.ktuice.scraper.models.GradeResponseModel
 
 /**
  * Created by Andrius on 1/28/2018.
@@ -9,7 +9,7 @@ import com.ice.ktuice.scraper.models.MarkResponse
  */
 class GradeTableFactory {
     companion object {
-        fun buildGradeTableFromMarkResponse(markResponse: MarkResponse): GradeTableModel{
+        fun buildGradeTableFromMarkResponse(markResponse: GradeResponseModel): GradeTableModel{
             val table = GradeTableModel()
             markResponse.forEach {
                 if(!it.isEmpty()) {

@@ -30,13 +30,13 @@ class ModuleModel(
     )
 
     //since the model information is embedded into the mark model, this constructor makes sense.
-    constructor(markModel: MarkModel): this(
-            semester = markModel.semester,
-            semester_number = markModel.semester_number,
-            module_code = markModel.module_code,
-            module_name = markModel.module_name,
-            credits = markModel.credits,
-            language = markModel.language,
+    constructor(gradeModel: GradeModel): this(
+            semester = gradeModel.semester,
+            semester_number = gradeModel.semester_number,
+            module_code = gradeModel.module_code,
+            module_name = gradeModel.module_name,
+            credits = gradeModel.credits,
+            language = gradeModel.language,
             misc = "",
             p1 = null,
             p2 = null

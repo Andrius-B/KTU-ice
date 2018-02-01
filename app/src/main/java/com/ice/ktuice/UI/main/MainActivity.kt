@@ -5,11 +5,11 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.google.gson.Gson
 import com.ice.ktuice.AL.GradeTableRowModel.GradeTableFactory
+import com.ice.ktuice.DAL.repositories.gradeResponseRepository.GradeResponseRepository
 import com.ice.ktuice.DAL.repositories.loginRepository.LoginRepository
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
-import com.ice.ktuice.scraper.models.LoginModel
-import com.ice.ktuice.scraper.models.LoginResponse
+import com.ice.ktuice.scraper.models.*
 import com.ice.ktuice.scraper.scraperService.Exceptions.AuthenticationException
 import com.ice.ktuice.scraper.scraperService.ScraperService
 import com.ice.ktuice.scraper.scraperService.handlers.DataHandler
@@ -20,12 +20,14 @@ import org.jetbrains.anko.getStackTraceString
 import org.jetbrains.anko.runOnUiThread
 import org.jetbrains.anko.uiThread
 import org.koin.android.ext.android.inject
+import java.util.*
 import kotlin.math.log
 
 class MainActivity : AppCompatActivity() {
 
     private val loginRepository:LoginRepository by inject()
     private val preferenceRepository: PreferenceRepository by inject()
+    private val gradeRepository: GradeResponseRepository by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,11 +46,20 @@ class MainActivity : AppCompatActivity() {
         info_semesters_found.text = loginModel.studentSemesters.size.toString()
         info_student_code.text = loginModel.studentId
         info_student_name.text = loginModel.studentName
+        logout_btn.setOnClickListener{
+            runOnUiThread{
+                this.finish()
+                preferenceRepository.setValue(R.string.shared_preference_file_key, "") // clear out the logged in user code from prefrences
+            }
+        }
 
-        initializeGradeTable(loginModel)
+        val gradeResponseRepositoryContent = gradeRepository.getByYearModel(loginModel.studentId, loginModel.studentSemesters[0], Realm.getDefaultInstance())
+        println("Grade table null:"+(gradeResponseRepositoryContent == null))
+
+        initializeGradeTable(loginModel, gradeResponseRepositoryContent)
     }
 
-    private fun initializeGradeTable(loginModel: LoginModel){
+    private fun initializeGradeTable(loginModel: LoginModel, dbResp: GradeResponseModel? = null){
         doAsync(
                 {
                     when(it.javaClass){
@@ -66,20 +77,23 @@ class MainActivity : AppCompatActivity() {
                     }
                 },
                 {
+                    
+                    println("Db table found:"+(dbResp != null))
                     println(String.format("Getting grades for semester:%s, id: %s", loginModel.studentSemesters[0].year, loginModel.studentSemesters[0].id))
-                    val gson = Gson()
-                    val marks = ScraperService.getGrades(loginModel, loginModel.studentSemesters[0])
-                    Log.d("INFO", String.format("MarkResponse code:"+marks.statusCode))
+
+                    val marks = dbResp ?: ScraperService.getGrades(loginModel, loginModel.studentSemesters[0])
+                    Log.d("INFO", String.format("GradeResponseModel code:"+marks.statusCode))
 
                     val table = GradeTableFactory.buildGradeTableFromMarkResponse(marks)
                     println("Printing the grade table!")
                     println("Table:" + table.toString())
                     println("Seen weeks:" + table.getWeekListString())
                     table.printRowCounts()
-                    uiThread {
+                    uiThread ({
+                        gradeRepository.createOrUpdate(marks, ResponseMetadataModel(loginModel.studentId, loginModel.studentSemesters[0], Date()), Realm.getDefaultInstance())
                         if(grade_table_main.isAttachedToWindow)
                             grade_table_main.createViewForModel(table)
-                    }
+                    })
                 })
     }
 

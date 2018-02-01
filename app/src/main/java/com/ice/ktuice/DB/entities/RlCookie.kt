@@ -17,8 +17,8 @@ open class RlCookie(): RealmObject(){
         content = c
     }
 
-    open var key: String = ""
-    open var content:String = ""
+    var key: String = ""
+    var content:String = ""
 
     @LinkingObjects("cookies")
     open val owners: RealmResults<RlUserModel>? = null

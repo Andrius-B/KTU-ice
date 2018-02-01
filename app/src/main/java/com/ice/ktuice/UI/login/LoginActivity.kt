@@ -61,7 +61,6 @@ class LoginActivity: AppCompatActivity() {
         runOnUiThread{
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
-            this.finish()
         }
     }
 
@@ -100,7 +99,6 @@ class LoginActivity: AppCompatActivity() {
 
 
     private fun saveLoginToRealm(loginModel: LoginModel){
-        val realm = Realm.getDefaultInstance()
         loginRepository.createOrUpdate(loginModel, Realm.getDefaultInstance())
     }
 

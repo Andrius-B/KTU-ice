@@ -5,4 +5,4 @@ package com.ice.ktuice.scraper.models
  * A helper class to contain both the list of marks from the scraper service
  * and the response code from the http get.
  */
-class MarkResponse(val statusCode: Int) : ArrayList<MarkModel>()
+class GradeResponseModel(val statusCode: Int) : ArrayList<GradeModel>()
