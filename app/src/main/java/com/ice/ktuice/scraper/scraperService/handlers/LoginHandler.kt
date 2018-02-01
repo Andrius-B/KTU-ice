@@ -19,7 +19,6 @@ class LoginHandler: BaseHandler() {
         }
         // if there are no cookies returned from postLogin,
         // assume not authorized!
-        // TODO implement scraping if it actually is an authorization problem
         return LoginResponse(null, 401)
     }
 

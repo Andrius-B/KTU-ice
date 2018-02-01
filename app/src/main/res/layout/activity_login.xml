@@ -1,74 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <LinearLayout
-        android:padding="35dp"
-        android:layout_centerInParent="true"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:animateLayoutChanges="true">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="28sp"
-            android:text="@string/app_name"/>
-        <View
+        android:layout_height="match_parent"
+        android:src="@drawable/login_background_drawable"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/login_image_description"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="1">
+        <Space
             android:layout_width="0dp"
-            android:layout_height="48dp"/>
+            android:layout_height="0dp"
+            android:layout_weight="0.45" />
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:id="@+id/login_error_container"
-            android:orientation="vertical"
-            android:background="@color/colorErrorLight"
-            android:visibility="gone">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="22sp"
-                android:text="@string/login_error_title"/>
-            <TextView
-                android:id="@+id/login_error_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="Test error"/>
-        </LinearLayout>
-
-        <EditText
-            android:id="@+id/login_username_field"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:imeOptions="actionDone"
-            android:hint="@string/login_username_hint"/>
-        <EditText
-            android:id="@+id/login_password_field"
-            android:inputType="textPassword"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:imeOptions="actionSend"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/login_password_hint"/>
-        <View
             android:layout_width="0dp"
-            android:layout_height="8dp"/>
-        <Button
-            android:id="@+id/login_submit_button"
-            android:padding="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/login_login_btn"/>
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="64dp"
-            android:visibility="gone"
-            android:id="@+id/login_spinner"/>
+            android:layout_height="match_parent"
+            android:layout_weight="0.55"
+            android:animateLayoutChanges="true"
+            android:gravity="center"
+            android:minWidth="400dp"
+            android:orientation="vertical"
+            android:weightSum="1"
+            android:padding="24dp">
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.1"/>
+            <!--TODO refactor login to not rely on layout_weights so much-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.9"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:animateLayoutChanges="true"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:textSize="28sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.6" />
+
+                <LinearLayout
+                    android:id="@+id/login_error_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorErrorLight"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/login_error_title"
+                        android:textSize="22sp" />
+
+                    <TextView
+                        android:id="@+id/login_error_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Test error"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/login_username_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/login_username_hint"
+                    android:imeOptions="actionNext"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+
+                <EditText
+                    android:id="@+id/login_password_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/login_password_hint"
+                    android:imeOptions="actionSend"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="8dp" />
+
+                <Button
+                    android:id="@+id/login_submit_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/login_button_ripple_mask"
+                    android:padding="4dp"
+                    android:text="@string/login_login_btn" />
+
+                <ProgressBar
+                    android:id="@+id/login_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="64dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+</FrameLayout>
