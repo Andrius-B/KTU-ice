@@ -22,11 +22,15 @@ class MainActivity : AppCompatActivity() {
         val requestedStudentId = preferenceRepository.getValue(R.string.logged_in_user_code)
         if(requestedStudentId.isBlank()){
             println("StudentCode not found, quitting!")
+            logout()
             return@onCreate
+        }else{
+            println("Student code is:"+requestedStudentId)
         }
         val loginModel = loginRepository.getByStudCode(requestedStudentId, Realm.getDefaultInstance())
         if(loginModel == null){
             println("Login model is null!")
+            logout()
             return@onCreate
         }
         println("login model created!")
@@ -35,10 +39,14 @@ class MainActivity : AppCompatActivity() {
         info_student_name.text = loginModel.studentName
         logout_btn.setOnClickListener{
             runOnUiThread{
-                this.finish()
-                preferenceRepository.setValue(R.string.shared_preference_file_key, "") // clear out the logged in user code from prefrences
+                logout()
             }
         }
+    }
+
+    private fun logout(){
+        this.finish()
+        preferenceRepository.setValue(R.string.shared_preference_file_key, "") // clear out the logged in user code from prefrences
     }
 
 }

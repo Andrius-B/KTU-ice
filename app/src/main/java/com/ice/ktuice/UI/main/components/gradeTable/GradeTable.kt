@@ -7,6 +7,7 @@ import android.content.res.Configuration
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.Log
+import android.util.TypedValue
 import android.view.ViewGroup
 import android.widget.*
 import com.ice.ktuice.AL.GradeTableRowModel.GradeTableFactory
@@ -39,6 +40,8 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
     private val gradeRepository: GradeResponseRepository by inject()
     private val loginRepository: LoginRepository by inject()
 
+    private var horizontalScroll: Int = 0
+
     constructor(c: Context): this(c, null)
 
     init {
@@ -48,18 +51,21 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
         val requestedStudentId = preferenceRepository.getValue(R.string.logged_in_user_code)
         if(requestedStudentId.isBlank()){
             println("StudentCode not found, quitting!")
-            throw NullPointerException("Student code is not found, can not initialize the grade table component!")
+            //throw NullPointerException("Student code is not found, can not initialize the grade table component!")
         }
         val loginModel = loginRepository.getByStudCode(requestedStudentId, Realm.getDefaultInstance())
         if(loginModel == null){
             println("Login model is null!")
-            throw NullPointerException("Login model for the requested code is null, can not initialize the grade table component")
+            //throw NullPointerException("Login model for the requested code is null, can not initialize the grade table component")
         }
+        try{
+            val gradeResponseRepositoryContent = gradeRepository.getByYearModel(loginModel!!.studentId, loginModel.studentSemesters[0], Realm.getDefaultInstance())
+            println("Grade table null:"+(gradeResponseRepositoryContent == null))
 
-        val gradeResponseRepositoryContent = gradeRepository.getByYearModel(loginModel.studentId, loginModel.studentSemesters[0], Realm.getDefaultInstance())
-        println("Grade table null:"+(gradeResponseRepositoryContent == null))
-
-        initializeGradeTable(loginModel, gradeResponseRepositoryContent)
+            initializeGradeTable(loginModel, gradeResponseRepositoryContent)
+        }catch (e:Exception){
+            println(e.getStackTraceString())
+        }
     }
 
     fun createViewForModel(gradeTableModel: GradeTableModel){
@@ -68,9 +74,6 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
 
         //header generation
         val tableRow = TableRow(context)
-        val header = TextView(context)
-        //header.text  = context.getText(R.string.grade_table_week_header)
-        //tableRow.addView(header)
         weekModelList.forEach {
             val weekText = TextView(context)
             weekText.text = it.week
@@ -80,7 +83,7 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
 
 
         grade_table_headers.addView(TextView(context)) // add a spacer dummy text
-        rowModelList.forEach{
+        rowModelList.forEach {
             val tableRow = TableRow(context)
             val moduleName = it.moduleModel.module_name
             val moduleNameText = TextView(context)
@@ -88,15 +91,19 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
             moduleNameText.setSingleLine(true)
             moduleNameText.ellipsize = TextUtils.TruncateAt.END
             moduleNameText.maxLines = 1
+            moduleNameText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
+            moduleNameText.setBackgroundResource(R.drawable.grade_cell_background)
 
             grade_table_headers.addView(moduleNameText)
 
-            weekModelList.forEach{weekModel ->
+            weekModelList.forEach { weekModel ->
 
                 val markCellText = TextView(context)
-                markCellText.setPadding(6,0,6,0)
+                markCellText.setPadding(6, 6, 6, 6)
+                markCellText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
                 val cellModel = it.getByWeekModel(weekModel)
                 markCellText.text = cellModel?.getDisplayString() ?: "" // default is empty cell
+                markCellText.setBackgroundResource(R.drawable.grade_cell_background)
                 tableRow.addView(markCellText)
             }
             grade_table_table_layout.addView(tableRow, ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
@@ -105,6 +112,28 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
             grade_table_grade_scroll_view.requestLayout()
             grade_table_grade_scroll_view_content.requestLayout()
             requestLayout()
+
+//            println(String.format("Header width: %d", grade_table_headers.width))
+//            grade_table_grade_scroll_view.viewTreeObserver.addOnScrollChangedListener {
+//                val scrollX = grade_table_grade_scroll_view.scrollX
+//                if(horizontalScroll != scrollX) {
+//                    println(String.format("Scroll changed to: %d", scrollX))
+//                    horizontalScroll = scrollX
+//
+//                    val headerWidth = grade_table_headers.width
+//                    if(horizontalScroll < headerWidth){
+//                        grade_table_headers.layoutParams.width = 128 - horizontalScroll
+//                        println("Gradte table headers width changed!")
+//                    }else if(horizontalScroll >= headerWidth){
+//                        grade_table_headers.layoutParams.width = 1
+//                        println("Gradte table headers width changed!")
+//                    }else{
+//                        grade_table_headers.layoutParams.width = 128
+//                        println("Gradte table headers width changed!")
+//                    }
+//                    grade_table_headers.requestLayout()
+//                }
+//            }
         }
     }
 
@@ -134,7 +163,7 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
 
                     val table = GradeTableFactory.buildGradeTableFromMarkResponse(marks)
                     println("Printing the grade table!")
-                    println("Table:" + table.toString())
+                    //println("Table:" + table.toString())
                     println("Seen weeks:" + table.getWeekListString())
                     table.printRowCounts()
                     uiThread ({

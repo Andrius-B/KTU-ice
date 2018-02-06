@@ -31,7 +31,9 @@ class LoginActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
+        println("Creating login activity!")
         if(preferenceRepository.getValue(R.string.logged_in_user_code).isNotBlank()){
+            println("Launching with logged in user code:"+preferenceRepository.getValue(R.string.logged_in_user_code))
             launchMainActivity()
         }
         setContentView(R.layout.activity_login)

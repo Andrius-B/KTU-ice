@@ -1,34 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_content_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
     android:baselineAligned="true"
-    android:weightSum="2">
-    <LinearLayout
-        android:orientation="vertical"
-        android:id="@+id/grade_table_headers"
-        android:layout_weight="0.5"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"/>
+    android:minWidth="100dp"
+    tools:layout_editor_absoluteY="25dp">
+
     <HorizontalScrollView
-        android:background="#ffefff"
         android:id="@+id/grade_table_grade_scroll_view"
-        android:layout_weight="1.5"
         android:layout_width="0dp"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="#ffefff"
+        android:minHeight="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/grade_table_headers">
+
         <LinearLayout
+            android:id="@+id/grade_table_grade_scroll_view_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/grade_table_grade_scroll_view_content"
             android:orientation="horizontal">
+
             <TableLayout
+                android:id="@+id/grade_table_table_layout"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/grade_table_table_layout">
-                <!--<TextView android:text="Well that's an interesting question, and to be honest I don't really know why they call both methods in e.g. TextView. I thought that maybe they want to draw the View for the last time before they change its layout-related parameters, but it doesn't really make any sense if we think about those calls being invoked in the different order (and they call invalidate() right after requestLayout() in TextView as well). Maybe it deserves another question on StackOverflow :)?"/>-->
-            </TableLayout>
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </HorizontalScrollView>
-</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/grade_table_headers"
+        android:layout_width="72dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/grade_table_grade_scroll_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/grade_table_grade_scroll_view" />
+
+    <!--<Spinner-->
+        <!--android:id="@+id/grade_table_semmester_spinner"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent" />-->
+</android.support.constraint.ConstraintLayout>
