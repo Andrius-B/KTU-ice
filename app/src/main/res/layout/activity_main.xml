@@ -42,7 +42,7 @@
             style="@style/mainActivityCardStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <com.ice.ktuice.UI.main.components.GradeTable
+            <com.ice.ktuice.UI.main.components.gradeTable.GradeTable
                 android:padding="12dp"
                 android:id="@+id/grade_table_main"
                 android:layout_width="wrap_content"
