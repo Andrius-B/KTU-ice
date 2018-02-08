@@ -33,6 +33,7 @@
                 <TableRow>
                     <Button android:text="@string/logout_text"
                         android:id="@+id/logout_btn"/>
+                    <Button android:text="Test" android:id="@+id/test_button"/>
                 </TableRow>
             </TableLayout>
         </android.support.v7.widget.CardView>

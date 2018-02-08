@@ -1,17 +1,14 @@
 package com.ice.ktuice.UI.main.components.gradeTable
 
-import android.content.ComponentCallbacks
-import android.content.ComponentCallbacks2
 import android.content.Context
-import android.content.res.Configuration
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.Log
 import android.util.TypedValue
 import android.view.ViewGroup
 import android.widget.*
-import com.ice.ktuice.AL.GradeTableRowModel.GradeTableFactory
-import com.ice.ktuice.AL.GradeTableRowModel.GradeTableModel
+import com.ice.ktuice.AL.GradeTableModels.GradeTableFactory
+import com.ice.ktuice.AL.GradeTableModels.GradeTableModel
 import com.ice.ktuice.DAL.repositories.gradeResponseRepository.GradeResponseRepository
 import com.ice.ktuice.DAL.repositories.loginRepository.LoginRepository
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
@@ -26,7 +23,6 @@ import kotlinx.android.synthetic.main.grade_table_layout.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.getStackTraceString
 import org.jetbrains.anko.uiThread
-import org.koin.android.ext.android.*
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import java.util.*

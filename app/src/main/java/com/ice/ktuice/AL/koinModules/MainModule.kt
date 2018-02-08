@@ -1,4 +1,4 @@
-package com.ice.ktuice.koinModules
+package com.ice.ktuice.AL.koinModules
 
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.SharedPreferenceRepositoryImpl

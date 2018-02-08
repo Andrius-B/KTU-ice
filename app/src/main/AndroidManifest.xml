@@ -19,6 +19,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".UI.main.MainActivity"/>
+
+        <service
+            android:name=".AL.SyncJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true"/>
     </application>
 
 </manifest>

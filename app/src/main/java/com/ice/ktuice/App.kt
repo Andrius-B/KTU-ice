@@ -2,8 +2,8 @@ package com.ice.ktuice
 
 import android.app.Application
 import com.ice.ktuice.DB.RealmConfig
-import com.ice.ktuice.koinModules.mainModule
-import com.ice.ktuice.koinModules.repositoryModule
+import com.ice.ktuice.AL.koinModules.mainModule
+import com.ice.ktuice.AL.koinModules.repositoryModule
 import io.realm.Realm
 import org.koin.android.ext.android.startKoin
 import org.koin.dsl.module.Module
