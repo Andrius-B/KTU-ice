@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="grade_table_cell_padding_horizontal">6</integer>
+    <integer name="grade_table_cell_padding_vertical">6</integer>
+    <integer name="grade_table_cell_text_size">14</integer>
+
+    <dimen name="grade_table_details_title_text_size">24sp</dimen>
+</resources>

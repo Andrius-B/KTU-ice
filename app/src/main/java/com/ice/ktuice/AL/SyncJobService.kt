@@ -24,7 +24,7 @@ import java.util.*
 
 /**
  * Created by Andrius on 2/7/2018.
- * A job service to be used for polling the KTU AIS about weather there are any new grades
+ * A job service to be used for polling the KTU AIS about whether there are any new grades
  */
 class SyncJobService: JobService(), KoinComponent {
 

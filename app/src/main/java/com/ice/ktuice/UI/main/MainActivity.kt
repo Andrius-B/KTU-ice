@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         info_semesters_found.text = loginModel.studentSemesters.size.toString()
         info_student_code.text = loginModel.studentId
         info_student_name.text = loginModel.studentName
+
         logout_btn.setOnClickListener{
             runOnUiThread{
                 logout()

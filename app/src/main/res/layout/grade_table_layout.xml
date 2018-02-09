@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
     android:baselineAligned="true"
-    android:minWidth="100dp"
-    tools:layout_editor_absoluteY="25dp">
+    android:minWidth="100dp">
+
+    <LinearLayout
+        android:id="@+id/grade_table_headers"
+        android:layout_width="72dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/grade_table_grade_scroll_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/grade_table_grade_scroll_view" />
+
+    <Spinner
+        android:id="@+id/grade_table_semmester_spinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <HorizontalScrollView
         android:id="@+id/grade_table_grade_scroll_view"
@@ -19,7 +37,8 @@
         android:minHeight="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/grade_table_headers">
+        app:layout_constraintStart_toEndOf="@+id/grade_table_headers"
+        app:layout_constraintTop_toBottomOf="@+id/grade_table_semmester_spinner">
 
         <LinearLayout
             android:id="@+id/grade_table_grade_scroll_view_content"
@@ -33,24 +52,4 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
     </HorizontalScrollView>
-
-    <LinearLayout
-        android:id="@+id/grade_table_headers"
-        android:layout_width="72dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/grade_table_grade_scroll_view"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/grade_table_grade_scroll_view" />
-
-    <!--<Spinner-->
-        <!--android:id="@+id/grade_table_semmester_spinner"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:layout_marginStart="8dp"-->
-        <!--android:layout_marginTop="8dp"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent" />-->
 </android.support.constraint.ConstraintLayout>

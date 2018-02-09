@@ -14,4 +14,11 @@
 
     <string name="grade_table_week_header">Week</string>
     <string name="dummy_error_text">Test error</string>
+    <string name="grade_table_mark_cell_details">Details</string>
+    <string name="module_name">Module name:</string>
+    <string name="module_code">Module code:</string>
+    <string name="mark_influence">Mark influence:</string>
+    <string name="past_versions">Past versions:</string>
+    <string name="mark">Mark:</string>
+    <string name="no_marks_found">No marks found!</string>
 </resources>
