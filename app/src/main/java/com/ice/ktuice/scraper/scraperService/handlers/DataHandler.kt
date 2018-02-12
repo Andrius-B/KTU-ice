@@ -10,15 +10,29 @@ class DataHandler {
         fun getGrades(loginModel: LoginModel, planYear: YearModel)
                 = getGrades(loginModel, planYear.year, planYear.id)
 
-        private fun getGrades(loginModel: LoginModel, planYear: String, studId: String): GradeResponseModel {
-            val moduleResponse = getModules(loginModel, planYear, studId)
-            val markResponse = GradeResponseModel(moduleResponse.statusCode)
+        private fun getGrades(loginModel: LoginModel, planYear: String, yearId: String): YearGradesResponseModel {
+            println("Getting grades @DataHandler!")
+            val moduleResponse = getModules(loginModel, planYear, yearId)
+            println("Modules found:"+moduleResponse.size)
+            val yearGrades = YearGradesModel(YearModel(planYear, yearId))
             moduleResponse.forEach { moduleModel ->
-                val moduleMarkList = getModuleMarkList(loginModel, moduleModel)
-                markResponse.addAll(moduleMarkList)
+                println("Getting grades for module:"+moduleModel.module_name)
+                /*
+                    Get grades for each module, and then add the modules to the appropriate semester
+                 */
+                moduleModel.grades = getModuleMarkList(loginModel, moduleModel)
+                val semesterNumber = moduleModel.semester_number.toInt()-1
+
+                val moduleSemester = yearGrades.semesterList.getOrNull(semesterNumber)
+                if(moduleSemester == null) {
+                    yearGrades.semesterList.add(semesterNumber, SemesterModel(moduleModel.semester, moduleModel.semester_number,
+                                                                            mutableListOf()))
+                }
+
+                yearGrades.semesterList[semesterNumber].moduleList.add(moduleModel)
             }
 
-            return markResponse
+            return YearGradesResponseModel(moduleResponse.statusCode, yearGrades)
         }
 
         private fun getModules(loginModel: LoginModel, planYear: String, studId: String): ModuleResponseModel {
@@ -33,7 +47,6 @@ class DataHandler {
 
             request.charset("windows-1257")
             val parse = request.parse()
-
             val moduleList = if(UnauthenticatedRequestDetector.isResponseAuthError(parse)){
                 ModuleResponseModel(401) // unauthorized
             }else{
@@ -55,10 +68,9 @@ class DataHandler {
             return moduleList
         }
 
-        private fun getModuleMarkList(loginModel: LoginModel, moduleModel: ModuleModel): List<GradeModel> {
+        private fun getModuleMarkList(loginModel: LoginModel, moduleModel: ModuleModel): MutableList<GradeModel> {
             val markList = mutableListOf<GradeModel>()
             val url = "https://uais.cr.ktu.lt/ktuis/STUD_SS2.infivert"
-            println("Getting grades for:"+moduleModel.module_name + "("+moduleModel.module_code+")")
             val request = Jsoup.connect(url)
                     .cookies(loginModel.authCookies)
                     .method(Connection.Method.POST)

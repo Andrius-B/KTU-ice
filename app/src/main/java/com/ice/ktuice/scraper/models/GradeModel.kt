@@ -21,7 +21,7 @@ class GradeModel(
         fun isEmpty():Boolean{
                 var empty = true
                 marks.forEach {
-                        if(!it.isBlank()) empty = false // and if atleast one mark is not blank
+                        if(!it.isBlank()) empty = false // and if at least one mark is not blank
                         // the mark is not empty!
                 }
                 return empty

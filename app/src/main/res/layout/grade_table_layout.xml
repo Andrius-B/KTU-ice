@@ -11,11 +11,13 @@
     <LinearLayout
         android:id="@+id/grade_table_headers"
         android:layout_width="72dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:minHeight="50dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/grade_table_grade_scroll_view"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/grade_table_grade_scroll_view" />
+        app:layout_constraintTop_toBottomOf="@+id/grade_table_semmester_spinner" />
 
     <Spinner
         android:id="@+id/grade_table_semmester_spinner"
@@ -31,14 +33,14 @@
     <HorizontalScrollView
         android:id="@+id/grade_table_grade_scroll_view"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_height="0dp"
         android:background="#ffefff"
         android:minHeight="50dp"
+        app:layout_constraintBottom_toBottomOf="@+id/grade_table_headers"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/grade_table_headers"
-        app:layout_constraintTop_toBottomOf="@+id/grade_table_semmester_spinner">
+        app:layout_constraintTop_toTopOf="@+id/grade_table_headers">
 
         <LinearLayout
             android:id="@+id/grade_table_grade_scroll_view_content"

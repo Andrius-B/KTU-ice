@@ -76,7 +76,7 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
 
         //header generation
         val tableRow = TableRow(context)
-        weekModelList.forEach {
+        weekModelList?.forEach {
             val weekText = TextView(context)
             weekText.text = it.week
             tableRow.addView(weekText)
@@ -86,7 +86,7 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
         // add a spacer dummy text to keep the spacing even for the table and module names
         grade_table_headers.addView(TextView(context), ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
 
-        rowModelList.forEach {
+        rowModelList?.forEach {
             val tableRow = TableRow(context)
             val moduleName = it.moduleModel.module_name
             val moduleNameText = TextView(context)
@@ -98,14 +98,15 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
             moduleNameText.setTextSize(TypedValue.COMPLEX_UNIT_SP, CELL_TEXT_SIZE)
             moduleNameText.setBackgroundResource(R.drawable.grade_cell_background)
 
+            println(String.format("Adding row:%s", it.moduleModel.module_name))
             grade_table_headers.addView(moduleNameText)
 
-            weekModelList.forEach { weekModel ->
+            weekModelList?.forEach { weekModel ->
                 val markCellText = TextView(context)
                 markCellText.setPadding(CELL_PADDING_H, CELL_PADDING_V, CELL_PADDING_V, CELL_PADDING_H)
                 markCellText.setTextSize(TypedValue.COMPLEX_UNIT_SP, CELL_TEXT_SIZE)
                 val cellModel = it.getByWeekModel(weekModel)
-                markCellText.text = cellModel?.getDisplayString() ?: "" // default is empty cell
+                markCellText.text = cellModel?.getDisplayString() // default is empty cell
                 markCellText.setOnClickListener{
                     markCellText.post({
                         tableCellDetailsDialog.CellModel = cellModel
@@ -117,21 +118,17 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
             }
             grade_table_table_layout.addView(tableRow, ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
 
-            grade_table_table_layout.requestLayout()
-            grade_table_grade_scroll_view.requestLayout()
-            grade_table_grade_scroll_view_content.requestLayout()
-            requestLayout()
         }
     }
 
-    private fun initializeGradeTable(loginModel: LoginModel, dbResp: GradeResponseModel? = null){
+    private fun initializeGradeTable(login: LoginModel, dbResp: GradeResponseModel? = null){
         doAsync(
                 {
                     when(it.javaClass){
                         AuthenticationException::class.java -> {
                             try {
                                 println("refreshing login cookies!")
-                                val newLoginModel = refreshLoginCookies(loginModel)
+                                val newLoginModel = refreshLoginCookies(login)
                                 println("login cookies refreshed, initializing grade table")
                                 initializeGradeTable(newLoginModel)
                                 println("grade table initialized!")
@@ -140,22 +137,24 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
                             }
                         }
                     }
+                    println(it.getStackTraceString())
                 },
                 {
                     println("Db table found:"+(dbResp != null))
-                    println(String.format("Getting grades for semester:%s, id: %s", loginModel.studentSemesters[0].year, loginModel.studentSemesters[0].id))
+                    println(String.format("Getting grades for semester:%s, id: %s", login.studentSemesters[0].year, login.studentSemesters[0].id))
 
-                    val marks = dbResp ?: ScraperService.getGrades(loginModel, loginModel.studentSemesters[0])
-                    Log.d("INFO", String.format("GradeResponseModel code:"+marks.statusCode))
-
-                    val table = GradeTableFactory.buildGradeTableFromMarkResponse(marks)
+                    val loginModel = refreshLoginCookies(login)
+                    val marks = ScraperService.getGrades(loginModel, loginModel.studentSemesters[0])
+                    val table = GradeTableFactory.buildGradeTableFromYearGradesModel(marks)
+                    table.selectSemester(1)
                     println("Printing the grade table!")
-                    //println("Table:" + table.toString())
+                    println("Table:" + table.toString())
                     println("Seen weeks:" + table.getWeekListString())
                     table.printRowCounts()
                     uiThread ({
-                        gradeRepository.createOrUpdate(marks, ResponseMetadataModel(loginModel.studentId, loginModel.studentSemesters[0], Date()), Realm.getDefaultInstance())
-                            createViewForModel(table)
+                        //gradeRepository.createOrUpdate(marks, ResponseMetadataModel(loginModel.studentId, loginModel.studentSemesters[0], Date()), Realm.getDefaultInstance())
+                        println("Creating view!")
+                        createViewForModel(table)
                     })
                 })
     }

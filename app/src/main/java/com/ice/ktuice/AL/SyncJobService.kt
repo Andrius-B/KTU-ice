@@ -91,17 +91,17 @@ class SyncJobService: JobService(), KoinComponent {
                 },
                 {
 
-                    val marks = ScraperService.getGrades(loginModel, yearModel)
-                    Log.d("INFO", String.format("GradeResponseModel code:"+marks.statusCode))
-
-                    val table = GradeTableFactory.buildGradeTableFromMarkResponse(marks)
-                    println("Printing the grade table!")
-                    //println("Table:" + table.toString())
-                    println("Seen weeks:" + table.getWeekListString())
-                    table.printRowCounts()
-                    uiThread ({
-                        gradeRepository.createOrUpdate(marks, ResponseMetadataModel(loginModel.studentId, yearModel, Date()), Realm.getDefaultInstance())
-                    })
+//                    val marks = ScraperService.getGrades(loginModel, yearModel)
+//                    Log.d("INFO", String.format("GradeResponseModel code:"+marks.statusCode))
+//
+//                    val table = GradeTableFactory.buildGradeTableFromMarkResponse(marks)
+//                    println("Printing the grade table!")
+//                    //println("Table:" + table.toString())
+//                    println("Seen weeks:" + table.getWeekListString())
+//                    table.printRowCounts()
+//                    uiThread ({
+//                        gradeRepository.createOrUpdate(marks, ResponseMetadataModel(loginModel.studentId, yearModel, Date()), Realm.getDefaultInstance())
+//                    })
                 })
     }
 

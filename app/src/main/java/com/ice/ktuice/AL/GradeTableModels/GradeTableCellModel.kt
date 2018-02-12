@@ -12,7 +12,7 @@ class GradeTableCellModel(val gradeModels:MutableList<GradeModel>, val weekModel
         val markSeparator = ", "
         var text = ""
         gradeModels.forEachIndexed{ index, mark ->
-            text += mark.marks.last()
+            text += mark.marks.firstOrNull() ?: ""
             if(index < gradeModels.size - 1){
                 text += markSeparator
             }
@@ -20,4 +20,12 @@ class GradeTableCellModel(val gradeModels:MutableList<GradeModel>, val weekModel
         return text
     }
 
+    fun isEmpty():Boolean{
+        var empty = true
+        gradeModels.forEach {
+            if(it.marks.isNotEmpty()) empty = false
+            if(it.marks.firstOrNull()?.isNotBlank() == true)empty = false
+        }
+        return empty
+    }
 }

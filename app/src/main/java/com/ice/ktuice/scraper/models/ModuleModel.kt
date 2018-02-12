@@ -15,7 +15,8 @@ class ModuleModel(
         val language: String,
         val misc: String,
         val p1: String?, // aka p1
-        val p2: String? // aka p2
+        val p2: String?, // aka p2
+        var grades: MutableList<GradeModel>
 ) {
     constructor(element: Element): this(
             semester = element.getSemester(),
@@ -26,7 +27,8 @@ class ModuleModel(
             language = element.getLanguage(),
             misc = element.getMisc(),
             p1 = element.getP1(),
-            p2 = element.getP2()
+            p2 = element.getP2(),
+            grades = mutableListOf()
     )
 
     //since the model information is embedded into the mark model, this constructor makes sense.
@@ -39,7 +41,8 @@ class ModuleModel(
             language = gradeModel.language,
             misc = "",
             p1 = null,
-            p2 = null
+            p2 = null,
+            grades = mutableListOf(gradeModel)
     )
 
 }
