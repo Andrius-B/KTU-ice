@@ -1,6 +1,14 @@
 package com.ice.ktuice.scraper.models
 
+import io.realm.RealmList
+import io.realm.RealmObject
+import io.realm.annotations.RealmClass
+
 /**
  * Created by Andrius on 2/11/2018.
  */
-class SemesterModel(val semester:String, val semester_number:String,val moduleList: MutableList<ModuleModel>)
+@RealmClass
+open class SemesterModel(var semester:String = "",
+                         var semester_number:String = "",
+                         var moduleList: RealmList<ModuleModel> = RealmList()
+): RealmObject()

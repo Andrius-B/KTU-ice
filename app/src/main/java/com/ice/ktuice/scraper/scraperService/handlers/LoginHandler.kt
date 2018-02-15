@@ -1,8 +1,10 @@
 package com.ice.ktuice.scraper.handlers
 
 import com.ice.ktuice.scraper.models.LoginModel
-import com.ice.ktuice.scraper.models.LoginResponse
+import com.ice.ktuice.scraper.models.SemesterModel
+import com.ice.ktuice.scraper.models.responses.LoginResponse
 import com.ice.ktuice.scraper.models.YearModel
+import io.realm.RealmList
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 
@@ -139,13 +141,13 @@ class LoginHandler: BaseHandler() {
             }
         }
         val loginModel = LoginModel(
-                authCookies = authResponse.authCookies,
                 studentName = studentName,
                 studentId = studentId,
-                studentSemesters = studyList,
+                studentSemesters = RealmList<YearModel>().apply { addAll(studyList) },
                 username = username,
                 password = password
         )
+        loginModel.setCookieMap(authResponse.authCookies)
         return LoginResponse(loginModel, request.statusCode())
     }
 }

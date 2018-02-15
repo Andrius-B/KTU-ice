@@ -1,4 +1,4 @@
-package com.ice.ktuice.AL.GradeTableModels
+package com.ice.ktuice.AL.GradeTable.GradeTableModels
 
 import com.ice.ktuice.scraper.models.ModuleModel
 
@@ -8,10 +8,6 @@ import com.ice.ktuice.scraper.models.ModuleModel
  * for the module information, of which this row grades consist.
  */
 class GradeTableRowModel(val moduleModel: ModuleModel): ArrayList<GradeTableCellModel>(){
-    fun sortByWeek(){
-        this.sortBy { it.weekModel.weekValue }
-    }
-
     /**
      * Gets a single cell by week model.
      * Only a single cell should exist in one row for a weekModel.

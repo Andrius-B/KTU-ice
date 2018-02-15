@@ -1,6 +1,10 @@
 package com.ice.ktuice.scraper.scraperService.handlers
 
 import com.ice.ktuice.scraper.models.*
+import com.ice.ktuice.scraper.models.responses.ModuleResponseModel
+import com.ice.ktuice.scraper.models.responses.YearGradesResponseModel
+import com.ice.ktuice.scraper.scraperService.Exceptions.AuthenticationException
+import io.realm.RealmList
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -14,7 +18,7 @@ class DataHandler {
             println("Getting grades @DataHandler!")
             val moduleResponse = getModules(loginModel, planYear, yearId)
             println("Modules found:"+moduleResponse.size)
-            val yearGrades = YearGradesModel(YearModel(planYear, yearId))
+            val yearGrades = YearGradesModel(YearModel(planYear, yearId), loginModel = loginModel)
             moduleResponse.forEach { moduleModel ->
                 println("Getting grades for module:"+moduleModel.module_name)
                 /*
@@ -26,10 +30,10 @@ class DataHandler {
                 val moduleSemester = yearGrades.semesterList.getOrNull(semesterNumber)
                 if(moduleSemester == null) {
                     yearGrades.semesterList.add(semesterNumber, SemesterModel(moduleModel.semester, moduleModel.semester_number,
-                                                                            mutableListOf()))
+                                                                            RealmList()))
                 }
 
-                yearGrades.semesterList[semesterNumber].moduleList.add(moduleModel)
+                yearGrades.semesterList[semesterNumber]?.moduleList?.add(moduleModel)
             }
 
             return YearGradesResponseModel(moduleResponse.statusCode, yearGrades)
@@ -41,14 +45,14 @@ class DataHandler {
                     "p_stud_id=$studId"
 
             val request = Jsoup.connect(url)
-                    .cookies(loginModel.authCookies)
+                    .cookies(loginModel.getCookieMap())
                     .method(Connection.Method.GET)
                     .execute()
 
             request.charset("windows-1257")
             val parse = request.parse()
             val moduleList = if(UnauthenticatedRequestDetector.isResponseAuthError(parse)){
-                ModuleResponseModel(401) // unauthorized
+                throw AuthenticationException("Request not authenticated!")
             }else{
                 ModuleResponseModel(request.statusCode())
             }
@@ -72,7 +76,7 @@ class DataHandler {
             val markList = mutableListOf<GradeModel>()
             val url = "https://uais.cr.ktu.lt/ktuis/STUD_SS2.infivert"
             val request = Jsoup.connect(url)
-                    .cookies(loginModel.authCookies)
+                    .cookies(loginModel.getCookieMap())
                     .method(Connection.Method.POST)
                     .data(mapOf(
                             "p1" to moduleModel.p1,
@@ -110,9 +114,9 @@ class DataHandler {
                                 typeId = markTypeIdList[index],
                                 type = infoTypeRowList[markTypeIdList[index]],
                                 week = markWeekList[index],
-                                marks = markDataList[index]?.toMutableList() ?: mutableListOf()
+                                markList = markDataList[index] ?: listOf()
                         )
-
+                        println("adding grade:"+markDataList[index]?.firstOrNull())
                         markList.add(markModel)
                     }
                 }

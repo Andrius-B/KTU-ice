@@ -1,4 +1,4 @@
-package com.ice.ktuice.AL.GradeTableModels
+package com.ice.ktuice.AL.GradeTable.GradeTableModels
 
 import org.jetbrains.anko.getStackTraceString
 

@@ -1,8 +1,8 @@
-package com.ice.ktuice.AL.GradeTableModels
+package com.ice.ktuice.AL.GradeTable.GradeTableModels
 
 import com.ice.ktuice.scraper.models.GradeModel
-import com.ice.ktuice.scraper.models.ModuleModel
 import com.ice.ktuice.scraper.models.SemesterModel
+import com.ice.ktuice.scraper.models.YearModel
 
 /**
  * Created by Andrius on 1/26/2018.
@@ -15,7 +15,7 @@ import com.ice.ktuice.scraper.models.SemesterModel
  * to find a mark on the same day or as close as possible.
  */
 class GradeTableModel(val semesterList: MutableList<GradeTableSemesterModel> = mutableListOf()){
-    var selectedSemester: GradeTableSemesterModel? = semesterList.lastOrNull()
+    private var selectedSemester: GradeTableSemesterModel? = semesterList.lastOrNull()
 
     @Deprecated("Grade table should only be build using semester models!",
                 ReplaceWith("GradeTableFactory.buildGradeTableFromYearGradesModel()"))
@@ -23,8 +23,8 @@ class GradeTableModel(val semesterList: MutableList<GradeTableSemesterModel> = m
             semesterList.lastOrNull()?.addMark(grade)
     }
 
-    fun addSemester(semester: SemesterModel){
-        val semesterModel = GradeTableSemesterModel(semester.semester, semester.semester_number)
+    fun addSemester(semester: SemesterModel, yearModel: YearModel){
+        val semesterModel = GradeTableSemesterModel(semester.semester, semester.semester_number, yearModel)
         semester.moduleList.forEach {
             println("Adding module to gradeTable:"+it.module_name)
             semesterModel.addModule(it)

@@ -1,34 +1,59 @@
 package com.ice.ktuice.scraper.models
 
+import io.realm.Realm
+import io.realm.RealmList
+import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
+import io.realm.annotations.RealmClass
 import org.jsoup.nodes.Element
 
 /**
  * Created by simonas on 9/16/17.
  */
 
-class ModuleModel(
-        val semester: String,
-        val semester_number: String,
-        val module_code: String,
-        val module_name: String,
-        val credits: String,
-        val language: String,
-        val misc: String,
-        val p1: String?, // aka p1
-        val p2: String?, // aka p2
-        var grades: MutableList<GradeModel>
-) {
+@RealmClass
+open class ModuleModel(
+        var semester: String = "",
+        var semester_number: String = "",
+        @PrimaryKey
+        var module_code: String = "",
+        var module_name: String = "",
+        var credits: String = "",
+        var language: String = "",
+        var misc: String = "",
+        var p1: String? = "", // aka p1
+        var p2: String? = "", // aka p2
+        gradesList: List<GradeModel> = listOf()
+):RealmObject() {
+
+    private var _grades: RealmList<GradeModel> = RealmList()
+    var grades: List<GradeModel>
+        get(){
+            val list = mutableListOf<GradeModel>()
+            _grades.forEach{ list.add(it) }
+            return list
+        }
+        set(value){
+            _grades = RealmList()
+            value.forEach { _grades.add(it) }
+        }
+    init{
+        gradesList.forEach {
+            _grades.add(it)
+        }
+    }
+
     constructor(element: Element): this(
-            semester = element.getSemester(),
-            semester_number = element.getSemesterNumber(),
-            module_code = element.getModuleCode(),
-            module_name = element.getModuleName(),
-            credits = element.getCredits(),
-            language = element.getLanguage(),
-            misc = element.getMisc(),
-            p1 = element.getP1(),
-            p2 = element.getP2(),
-            grades = mutableListOf()
+            semester = getSemester(element),
+            semester_number = getSemesterNumber(element),
+            module_code = getModuleCode(element),
+            module_name = getModuleName(element),
+            credits = getCredits(element),
+            language = getLanguage(element),
+            misc = getMisc(element),
+            p1 = getP1(element),
+            p2 = getP2(element),
+            gradesList = RealmList()
     )
 
     //since the model information is embedded into the mark model, this constructor makes sense.
@@ -42,46 +67,51 @@ class ModuleModel(
             misc = "",
             p1 = null,
             p2 = null,
-            grades = mutableListOf(gradeModel)
+            gradesList = RealmList(gradeModel)
     )
 
-}
+    /**
+     * static helpers to parse the html document for construction
+     */
+    companion object {
 
-private fun Element.getSemester()
-        = parent().parent().children().first().children().first().text().split("(")[0].trim()
+        private fun getSemester(e: Element)
+                = e.parent().parent().children().first().children().first().text().split("(")[0].trim()
 
-private fun Element.getSemesterNumber()
-        = parent().parent().children().first().children().first().text().split("(")[1].split(')')[0].trim()
+        private fun getSemesterNumber(e: Element)
+                = e.parent().parent().children().first().children().first().text().split("(")[1].split(')')[0].trim()
 
-private fun Element.getModuleCode()
-        = children().first().text()
+        private fun getModuleCode(e: Element)
+                = e.children().first().text()
 
-private fun Element.getModuleName()
-        = children().eq(1).text()
+        private fun getModuleName(e: Element)
+                = e.children().eq(1).text()
 
-private fun Element.getCredits()
-        = children().eq(3).text()
+        private fun getCredits(e: Element)
+                = e.children().eq(3).text()
 
-private fun Element.getLanguage()
-        = children().eq(4).text()
+        private fun getLanguage(e: Element)
+                = e.children().eq(4).text()
 
-private fun Element.getMisc()
-        = children().eq(5).text()
+        private fun getMisc(e: Element)
+                = e.children().eq(5).text()
 
-private fun Element.getP1(): String? {
-    val jsFunction = children().getOrNull(5)?.children()?.first()?.attr("onclick")
-    if (jsFunction != null) {
-        val split = "([0-9]*)(?:,')(.*)(?:'\\);)".toRegex().find(jsFunction)
-        return split?.groupValues?.getOrNull(1)
+        private fun getP1(e: Element): String? {
+            val jsFunction = e.children().getOrNull(5)?.children()?.first()?.attr("onclick")
+            if (jsFunction != null) {
+                val split = "([0-9]*)(?:,')(.*)(?:'\\);)".toRegex().find(jsFunction)
+                return split?.groupValues?.getOrNull(1)
+            }
+            return null
+        }
+
+        private fun getP2(e: Element): String? {
+            val jsFunction = e.children().getOrNull(5)?.children()?.first()?.attr("onclick")
+            if (jsFunction != null) {
+                val split = "([0-9]*)(?:,')(.*)(?:'\\);)".toRegex().find(jsFunction)
+                return split?.groupValues?.getOrNull(2)
+            }
+            return null
+        }
     }
-    return null
-}
-
-private fun Element.getP2(): String? {
-    val jsFunction = children().getOrNull(5)?.children()?.first()?.attr("onclick")
-    if (jsFunction != null) {
-        val split = "([0-9]*)(?:,')(.*)(?:'\\);)".toRegex().find(jsFunction)
-        return split?.groupValues?.getOrNull(2)
-    }
-    return null
 }

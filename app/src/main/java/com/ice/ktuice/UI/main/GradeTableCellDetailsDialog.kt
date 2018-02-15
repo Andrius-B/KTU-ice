@@ -4,9 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
-import android.widget.LinearLayout
-import com.ice.ktuice.AL.GradeTableModels.GradeTableCellModel
+import com.ice.ktuice.AL.GradeTable.GradeTableModels.GradeTableCellModel
 import com.ice.ktuice.R
 import kotlinx.android.synthetic.main.dialog_mark_cell_details.*
 

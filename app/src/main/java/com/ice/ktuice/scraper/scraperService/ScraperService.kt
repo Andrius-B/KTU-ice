@@ -3,7 +3,6 @@ package com.ice.ktuice.scraper.scraperService
 import com.ice.ktuice.scraper.scraperService.handlers.DataHandler
 import com.ice.ktuice.scraper.handlers.LoginHandler
 import com.ice.ktuice.scraper.models.LoginModel
-import com.ice.ktuice.scraper.models.GradeResponseModel
 import com.ice.ktuice.scraper.models.YearGradesModel
 import com.ice.ktuice.scraper.models.YearModel
 import com.ice.ktuice.scraper.scraperService.Exceptions.AuthenticationException

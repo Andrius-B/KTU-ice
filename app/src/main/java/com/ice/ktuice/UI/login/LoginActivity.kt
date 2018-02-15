@@ -52,6 +52,7 @@ class LoginActivity: AppCompatActivity() {
                     activityUiThreadWithContext {
                         saveLoginToRealm(loginModel)
                         preferenceRepository.setValue(R.string.logged_in_user_code, loginModel.studentId)
+                        println("login saved to database, launching main activity!")
                         launchMainActivity()
                     }
                 }
@@ -77,9 +78,6 @@ class LoginActivity: AppCompatActivity() {
                     }
                 },
                 {
-                    /**
-                     * Login testing
-                     */
                     var loginModel: LoginModel? = null
                     try {
                         setLoadingVisible(true)
@@ -101,7 +99,7 @@ class LoginActivity: AppCompatActivity() {
 
 
     private fun saveLoginToRealm(loginModel: LoginModel){
-        loginRepository.createOrUpdate(loginModel, Realm.getDefaultInstance())
+        loginRepository.createOrUpdate(loginModel)
     }
 
     private fun setLoadingVisible(visible:Boolean){

@@ -4,7 +4,6 @@ import android.content.ComponentName
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.ice.ktuice.AL.SyncJobService
-import com.ice.ktuice.DAL.repositories.gradeResponseRepository.GradeResponseRepository
 import com.ice.ktuice.DAL.repositories.loginRepository.LoginRepository
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
@@ -14,7 +13,6 @@ import org.koin.android.ext.android.inject
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.os.Build
-import android.support.annotation.RequiresApi
 
 
 class MainActivity : AppCompatActivity() {
@@ -34,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         }else{
             println("Student code is:"+requestedStudentId)
         }
-        val loginModel = loginRepository.getByStudCode(requestedStudentId, Realm.getDefaultInstance())
+        val loginModel = loginRepository.getByStudCode(requestedStudentId)
         if(loginModel == null){
             println("Login model is null!")
             logout()

@@ -1,4 +1,6 @@
-package com.ice.ktuice.scraper.models
+package com.ice.ktuice.scraper.models.responses
+
+import com.ice.ktuice.scraper.models.LoginModel
 
 /**
  * Created by Andrius on 1/23/2018.

@@ -3,40 +3,26 @@ package com.ice.ktuice.UI.main.components.gradeTable
 import android.content.Context
 import android.text.TextUtils
 import android.util.AttributeSet
-import android.util.Log
 import android.util.TypedValue
+import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.ice.ktuice.AL.GradeTableModels.GradeTableFactory
-import com.ice.ktuice.AL.GradeTableModels.GradeTableModel
-import com.ice.ktuice.DAL.repositories.gradeResponseRepository.GradeResponseRepository
-import com.ice.ktuice.DAL.repositories.loginRepository.LoginRepository
-import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
+import com.ice.ktuice.AL.GradeTable.GradeTableManager
+import com.ice.ktuice.AL.GradeTable.GradeTableModels.GradeTableModel
 import com.ice.ktuice.R
 import com.ice.ktuice.UI.main.GradeTableCellDetailsDialog
-import com.ice.ktuice.scraper.models.GradeResponseModel
-import com.ice.ktuice.scraper.models.LoginModel
-import com.ice.ktuice.scraper.models.ResponseMetadataModel
-import com.ice.ktuice.scraper.scraperService.Exceptions.AuthenticationException
-import com.ice.ktuice.scraper.scraperService.ScraperService
-import io.realm.Realm
+import com.ice.ktuice.scraper.models.YearGradesModel
 import kotlinx.android.synthetic.main.grade_table_layout.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.getStackTraceString
 import org.jetbrains.anko.uiThread
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
-import java.util.*
 
 /**
  * Created by Andrius on 1/29/2018.
  */
-class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), KoinComponent {
+class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs){
     private val tableCellDetailsDialog: GradeTableCellDetailsDialog = GradeTableCellDetailsDialog(context)
-
-    private val preferenceRepository: PreferenceRepository by inject()
-    private val gradeRepository: GradeResponseRepository by inject()
-    private val loginRepository: LoginRepository by inject()
+    private var tableModel: GradeTableModel? = null
 
     private val CELL_PADDING_H: Int = context.resources.getInteger(R.integer.grade_table_cell_padding_horizontal)
     private val CELL_PADDING_V: Int = context.resources.getInteger(R.integer.grade_table_cell_padding_vertical)
@@ -47,30 +33,30 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
     constructor(c: Context): this(c, null)
 
     init {
-
         inflate(context, R.layout.grade_table_layout, this)
-
-        val requestedStudentId = preferenceRepository.getValue(R.string.logged_in_user_code)
-        if(requestedStudentId.isBlank()){
-            println("StudentCode not found, quitting!")
-            throw NullPointerException("Student code is not found, can not initialize the grade table component!")
-        }
-        val loginModel = loginRepository.getByStudCode(requestedStudentId, Realm.getDefaultInstance())
-        if(loginModel == null){
-            println("Login model is null!")
-            throw NullPointerException("Login model for the requested code is null, can not initialize the grade table component")
-        }
-        try{
-            val gradeResponseRepositoryContent = gradeRepository.getByYearModel(loginModel.studentId, loginModel.studentSemesters[0], Realm.getDefaultInstance())
-            println("Grade table null:"+(gradeResponseRepositoryContent == null))
-
-            initializeGradeTable(loginModel, gradeResponseRepositoryContent)
-        }catch (e:Exception){
-            println(e.getStackTraceString())
-        }
+        val tableManager = GradeTableManager()
+        doAsync({
+            println(it.getStackTraceString())
+        },{
+            val login = tableManager.getLoginForCurrentUser()
+            println("User has semesters:"+login.studentSemesters.size)
+            val grades = tableManager.getYearGradesList(login)
+            tableModel = tableManager.constructGradeTableModel(login, grades)
+            uiThread {
+                createViewForModel(tableModel!!)
+                setUpSemesterSpinner(grades)
+            }
+        })
     }
 
-    private fun createViewForModel(gradeTableModel: GradeTableModel){
+    private fun createViewForModel(gradeTableModel: GradeTableModel, semesterAdapterItem: SemesterSpinnerAdapter.SemesterAdapterItem? = null){
+        grade_table_table_layout.removeAllViews()
+        grade_table_headers.removeAllViews()
+
+        if(semesterAdapterItem != null){
+            gradeTableModel.selectSemester(semesterAdapterItem.semesterNumber)
+        }
+
         val rowModelList = gradeTableModel.getRows()
         val weekModelList = gradeTableModel.getTotalWeekList()
 
@@ -98,7 +84,7 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
             moduleNameText.setTextSize(TypedValue.COMPLEX_UNIT_SP, CELL_TEXT_SIZE)
             moduleNameText.setBackgroundResource(R.drawable.grade_cell_background)
 
-            println(String.format("Adding row:%s", it.moduleModel.module_name))
+            //println(String.format("Adding row:%s", it.moduleModel.module_name))
             grade_table_headers.addView(moduleNameText)
 
             weekModelList?.forEach { weekModel ->
@@ -117,55 +103,25 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
                 tableRow.addView(markCellText)
             }
             grade_table_table_layout.addView(tableRow, ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+        }
+    }
+
+    private fun setUpSemesterSpinner(gradeList: List<YearGradesModel>){
+        val adapter = SemesterSpinnerAdapter(context, gradeList)
+        grade_table_semmester_spinner.adapter = adapter
+        grade_table_semmester_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                val item = adapter.getItem(p2)
+                //createViewForModel(tableModel!!, item)
+            }
 
         }
     }
 
-    private fun initializeGradeTable(login: LoginModel, dbResp: GradeResponseModel? = null){
-        doAsync(
-                {
-                    when(it.javaClass){
-                        AuthenticationException::class.java -> {
-                            try {
-                                println("refreshing login cookies!")
-                                val newLoginModel = refreshLoginCookies(login)
-                                println("login cookies refreshed, initializing grade table")
-                                initializeGradeTable(newLoginModel)
-                                println("grade table initialized!")
-                            }catch (e: Exception){
-                                println(e.getStackTraceString())
-                            }
-                        }
-                    }
-                    println(it.getStackTraceString())
-                },
-                {
-                    println("Db table found:"+(dbResp != null))
-                    println(String.format("Getting grades for semester:%s, id: %s", login.studentSemesters[0].year, login.studentSemesters[0].id))
-
-                    val loginModel = refreshLoginCookies(login)
-                    val marks = ScraperService.getGrades(loginModel, loginModel.studentSemesters[0])
-                    val table = GradeTableFactory.buildGradeTableFromYearGradesModel(marks)
-                    table.selectSemester(1)
-                    println("Printing the grade table!")
-                    println("Table:" + table.toString())
-                    println("Seen weeks:" + table.getWeekListString())
-                    table.printRowCounts()
-                    uiThread ({
-                        //gradeRepository.createOrUpdate(marks, ResponseMetadataModel(loginModel.studentId, loginModel.studentSemesters[0], Date()), Realm.getDefaultInstance())
-                        println("Creating view!")
-                        createViewForModel(table)
-                    })
-                })
-    }
-
-    private fun refreshLoginCookies(loginModel: LoginModel): LoginModel {
-        println(String.format("login cookies username:%s ,pw:%s",loginModel.username, loginModel.password))
-        val newLoginModelResponse = ScraperService.login(loginModel.username, loginModel.password)
-        println("refreshing login cookies response:"+newLoginModelResponse.statusCode)
-        val newLoginModel = newLoginModelResponse.loginModel!!
-        loginRepository.createOrUpdate(newLoginModel, Realm.getDefaultInstance())
-        return newLoginModel
-    }
 
 }

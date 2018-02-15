@@ -1,4 +1,4 @@
-package com.ice.ktuice.DB.entities
+package com.ice.ktuice.scraper.models
 
 import io.realm.RealmObject
 import io.realm.RealmResults
@@ -10,7 +10,7 @@ import io.realm.annotations.RealmClass
  * Stores the cookie map content in the database
  */
 @RealmClass
-open class RlCookie(): RealmObject(){
+open class Cookie(): RealmObject(){
 
     constructor(k:String, c:String): this(){
         key = k
@@ -20,6 +20,6 @@ open class RlCookie(): RealmObject(){
     var key: String = ""
     var content:String = ""
 
-    @LinkingObjects("cookies")
-    open val owners: RealmResults<RlUserModel>? = null
+    @LinkingObjects("authCookies")
+    open val owners: RealmResults<LoginModel>? = null
 }

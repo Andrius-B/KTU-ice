@@ -1,15 +1,17 @@
-package com.ice.ktuice.AL.GradeTableModels
+package com.ice.ktuice.AL.GradeTable.GradeTableModels
 
 import com.ice.ktuice.scraper.models.GradeModel
 import com.ice.ktuice.scraper.models.ModuleModel
+import com.ice.ktuice.scraper.models.YearModel
 
 /**
  * Created by Andrius on 2/11/2018.
  */
-class GradeTableSemesterModel(val semester: String, val semester_number:String) {
+class GradeTableSemesterModel(val semester: String, val semester_number:String, val yearModel: YearModel) {
     private val rowMap: HashMap<String, GradeTableRowModel> = HashMap()
     private val weekList = mutableListOf<WeekModel>()
     fun getTotalWeekList(): List<WeekModel>{ // public getter to expose the seen weekModel list
+        weekList.sortBy { it.weekValue }
         return weekList.toList()
     }
 
@@ -27,7 +29,6 @@ class GradeTableSemesterModel(val semester: String, val semester_number:String) 
         }
 
         val markWeekModel = WeekModel(grade.week)
-
         val currentCell = row.getByWeekModel(markWeekModel) // get a cell at the particular column
         if(currentCell?.gradeModels == null){
             val newCell = GradeTableCellModel(mutableListOf(grade), markWeekModel)
@@ -84,7 +85,6 @@ class GradeTableSemesterModel(val semester: String, val semester_number:String) 
             }
         }
         removeEmptyWeekModels() // after empty grades are removed, we can discard empty columns in the table
-        sortByWeekValue()
     }
 
     fun removeEmptyWeekModels(){
@@ -103,12 +103,6 @@ class GradeTableSemesterModel(val semester: String, val semester_number:String) 
             if(weekEmpty){
                 weekIterator.remove()
             }
-        }
-    }
-
-    private fun sortByWeekValue(){
-        rowMap.forEach {
-            it.value.sortByWeek()
         }
     }
 

@@ -1,4 +1,4 @@
-package com.ice.ktuice.AL.GradeTableModels
+package com.ice.ktuice.AL.GradeTable.GradeTableModels
 
 import com.ice.ktuice.scraper.models.GradeModel
 

@@ -1,4 +1,6 @@
-package com.ice.ktuice.scraper.models
+package com.ice.ktuice.scraper.models.responses
+
+import com.ice.ktuice.scraper.models.YearGradesModel
 
 /**
  * Created by Andrius on 2/11/2018.

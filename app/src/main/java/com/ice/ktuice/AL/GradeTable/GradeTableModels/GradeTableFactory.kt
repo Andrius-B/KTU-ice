@@ -1,9 +1,7 @@
-package com.ice.ktuice.AL.GradeTableModels
+package com.ice.ktuice.AL.GradeTable.GradeTableModels
 
-import com.ice.ktuice.scraper.models.GradeResponseModel
+import com.ice.ktuice.scraper.models.responses.GradeResponseModel
 import com.ice.ktuice.scraper.models.YearGradesModel
-import com.ice.ktuice.scraper.models.YearModel
-import java.time.Year
 
 /**
  * Created by Andrius on 1/28/2018.
@@ -21,15 +19,15 @@ class GradeTableFactory {
             }
             return table
         }
-        fun buildGradeTableFromYearGradesModel(yearModel: YearGradesModel): GradeTableModel {
+        fun buildGradeTableFromYearGradesModel(yearGradesList: List<YearGradesModel>): GradeTableModel {
             val table = GradeTableModel()
-            println("Creating grade table from yearGradesModel, semester len:"+yearModel.semesterList.size)
-            yearModel.semesterList.forEach {
-                println("adding semester:"+it.semester_number)
-                table.addSemester(it)
+            yearGradesList.forEach {
+                val yearGrades = it
+                yearGrades.semesterList.forEach {
+                    table.addSemester(it, yearGrades.year)
+                }
             }
             table.removeEmptyCells()
-            println("Semester count:"+table.semesterList.size)
             return table
         }
     }
