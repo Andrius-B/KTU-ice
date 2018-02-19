@@ -1,9 +1,8 @@
 package com.ice.ktuice.scraper.handlers
 
-import com.ice.ktuice.scraper.models.LoginModel
-import com.ice.ktuice.scraper.models.SemesterModel
-import com.ice.ktuice.scraper.models.responses.LoginResponse
-import com.ice.ktuice.scraper.models.YearModel
+import com.ice.ktuice.models.LoginModel
+import com.ice.ktuice.models.responses.LoginResponse
+import com.ice.ktuice.models.YearModel
 import io.realm.RealmList
 import org.jsoup.Connection
 import org.jsoup.Jsoup

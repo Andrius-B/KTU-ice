@@ -5,11 +5,10 @@ import android.app.job.JobService
 import com.ice.ktuice.DAL.repositories.loginRepository.LoginRepository
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
-import com.ice.ktuice.scraper.models.LoginModel
-import com.ice.ktuice.scraper.models.YearModel
-import com.ice.ktuice.scraper.scraperService.Exceptions.AuthenticationException
-import com.ice.ktuice.scraper.scraperService.ScraperService
-import io.realm.Realm
+import com.ice.ktuice.models.LoginModel
+import com.ice.ktuice.models.YearModel
+import com.ice.ktuice.scraperService.Exceptions.AuthenticationException
+import com.ice.ktuice.scraperService.ScraperService
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.getStackTraceString
 import org.koin.standalone.KoinComponent

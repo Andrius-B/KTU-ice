@@ -6,25 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
+import com.ice.ktuice.AL.GradeTable.GradeTableModels.SemesterAdapterItem
 import com.ice.ktuice.R
-import com.ice.ktuice.scraper.models.SemesterModel
-import com.ice.ktuice.scraper.models.YearGradesModel
-import com.ice.ktuice.scraper.models.YearModel
+import com.ice.ktuice.models.YearGradesModel
 
 /**
  * Created by Andrius on 2/15/2018.
  */
-class SemesterSpinnerAdapter(val context: Context, yearsList: List<YearGradesModel>): BaseAdapter() {
-    private val itemList: MutableList<SemesterAdapterItem> = mutableListOf()
-
-    init{
-        yearsList.forEach {
-            val year = it.year
-            it.semesterList.forEach {
-                itemList.add(SemesterAdapterItem(it.semester, it.semester_number, year))
-            }
-        }
-    }
+class SemesterSpinnerAdapter(val context: Context,private val itemList: List<SemesterAdapterItem>): BaseAdapter() {
 
     override fun getView(index: Int, recycleView: View?, parent: ViewGroup?): View {
         val model = itemList[index]
@@ -35,7 +24,7 @@ class SemesterSpinnerAdapter(val context: Context, yearsList: List<YearGradesMod
         }
 
         val textView = view.findViewById<TextView>(android.R.id.text1)
-        textView.text = String.format("%s \\ %s", model.year.id, model.semester)
+        textView.text = String.format("%s %s", model.year.year, model.semester)
 
         return view
     }
@@ -46,6 +35,4 @@ class SemesterSpinnerAdapter(val context: Context, yearsList: List<YearGradesMod
 
     override fun getCount() = itemList.size
 
-
-    class SemesterAdapterItem(val semester: String, val semesterNumber: String,val year: YearModel)
 }

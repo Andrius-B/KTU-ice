@@ -1,6 +1,6 @@
 package com.ice.ktuice.AL.GradeTable.GradeTableModels
 
-import com.ice.ktuice.scraper.models.GradeModel
+import com.ice.ktuice.models.GradeModel
 
 /**
  * Created by Andrius on 1/27/2018.

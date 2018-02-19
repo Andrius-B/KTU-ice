@@ -1,8 +1,8 @@
 package com.ice.ktuice.AL.GradeTable.GradeTableModels
 
-import com.ice.ktuice.scraper.models.GradeModel
-import com.ice.ktuice.scraper.models.SemesterModel
-import com.ice.ktuice.scraper.models.YearModel
+import com.ice.ktuice.models.GradeModel
+import com.ice.ktuice.models.SemesterModel
+import com.ice.ktuice.models.YearModel
 
 /**
  * Created by Andrius on 1/26/2018.
@@ -26,7 +26,6 @@ class GradeTableModel(val semesterList: MutableList<GradeTableSemesterModel> = m
     fun addSemester(semester: SemesterModel, yearModel: YearModel){
         val semesterModel = GradeTableSemesterModel(semester.semester, semester.semester_number, yearModel)
         semester.moduleList.forEach {
-            println("Adding module to gradeTable:"+it.module_name)
             semesterModel.addModule(it)
         }
         semesterList.add(semesterModel)
@@ -47,6 +46,9 @@ class GradeTableModel(val semesterList: MutableList<GradeTableSemesterModel> = m
         selectedSemester = semesterList[index]
     }
 
+    /**
+     * Delegate most of the uses to the semester model
+     */
     fun getRows() = selectedSemester?.getRows()
     fun getTotalWeekList() = selectedSemester?.getTotalWeekList()
     fun getWeekListString() = selectedSemester?.getWeekListString()

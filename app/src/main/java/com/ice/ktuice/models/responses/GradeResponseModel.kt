@@ -1,6 +1,6 @@
-package com.ice.ktuice.scraper.models.responses
+package com.ice.ktuice.models.responses
 
-import com.ice.ktuice.scraper.models.GradeModel
+import com.ice.ktuice.models.GradeModel
 
 /**
  * Created by Andrius on 1/23/2018.

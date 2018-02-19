@@ -1,6 +1,6 @@
 package com.ice.ktuice.AL.GradeTable.GradeTableModels
 
-import com.ice.ktuice.scraper.models.ModuleModel
+import com.ice.ktuice.models.ModuleModel
 
 /**
  * Class used for storing marks of a single module

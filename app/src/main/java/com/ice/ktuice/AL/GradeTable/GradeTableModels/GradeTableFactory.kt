@@ -1,7 +1,7 @@
 package com.ice.ktuice.AL.GradeTable.GradeTableModels
 
-import com.ice.ktuice.scraper.models.responses.GradeResponseModel
-import com.ice.ktuice.scraper.models.YearGradesModel
+import com.ice.ktuice.models.responses.GradeResponseModel
+import com.ice.ktuice.models.YearGradesModel
 
 /**
  * Created by Andrius on 1/28/2018.

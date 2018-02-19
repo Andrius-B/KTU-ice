@@ -1,4 +1,4 @@
-package com.ice.ktuice.scraper.scraperService
+package com.ice.ktuice.scraperService
 
 import retrofit2.Retrofit
 

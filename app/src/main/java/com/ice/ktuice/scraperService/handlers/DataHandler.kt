@@ -1,13 +1,14 @@
-package com.ice.ktuice.scraper.scraperService.handlers
+package com.ice.ktuice.scraperService.handlers
 
-import com.ice.ktuice.scraper.models.*
-import com.ice.ktuice.scraper.models.responses.ModuleResponseModel
-import com.ice.ktuice.scraper.models.responses.YearGradesResponseModel
-import com.ice.ktuice.scraper.scraperService.Exceptions.AuthenticationException
+import com.ice.ktuice.models.*
+import com.ice.ktuice.models.responses.ModuleResponseModel
+import com.ice.ktuice.models.responses.YearGradesResponseModel
+import com.ice.ktuice.scraperService.Exceptions.AuthenticationException
 import io.realm.RealmList
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import java.util.*
 
 class DataHandler {
     companion object {
@@ -18,9 +19,8 @@ class DataHandler {
             println("Getting grades @DataHandler!")
             val moduleResponse = getModules(loginModel, planYear, yearId)
             println("Modules found:"+moduleResponse.size)
-            val yearGrades = YearGradesModel(YearModel(planYear, yearId), loginModel = loginModel)
+            val yearGrades = YearGradesModel(YearModel(yearId, planYear), loginModel = loginModel)
             moduleResponse.forEach { moduleModel ->
-                println("Getting grades for module:"+moduleModel.module_name)
                 /*
                     Get grades for each module, and then add the modules to the appropriate semester
                  */
@@ -35,7 +35,9 @@ class DataHandler {
 
                 yearGrades.semesterList[semesterNumber]?.moduleList?.add(moduleModel)
             }
-
+            yearGrades.studCode = loginModel.studentId
+            yearGrades.dateStamp = Date()
+            yearGrades.hashCode = yearGrades.hashCode()
             return YearGradesResponseModel(moduleResponse.statusCode, yearGrades)
         }
 
@@ -116,7 +118,6 @@ class DataHandler {
                                 week = markWeekList[index],
                                 markList = markDataList[index] ?: listOf()
                         )
-                        println("adding grade:"+markDataList[index]?.firstOrNull())
                         markList.add(markModel)
                     }
                 }

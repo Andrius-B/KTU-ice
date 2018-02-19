@@ -1,20 +1,22 @@
 package com.ice.ktuice.AL.GradeTable
 
+import android.support.annotation.UiThread
+import android.util.Log
 import com.ice.ktuice.AL.GradeTable.GradeTableModels.GradeTableFactory
 import com.ice.ktuice.AL.GradeTable.GradeTableModels.GradeTableModel
+import com.ice.ktuice.AL.GradeTable.GradeTableModels.SemesterAdapterItem
+import com.ice.ktuice.DAL.repositories.gradeResponseRepository.YearGradesRepository
 import com.ice.ktuice.DAL.repositories.loginRepository.LoginRepository
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
-import com.ice.ktuice.scraper.models.LoginModel
-import com.ice.ktuice.scraper.models.YearGradesModel
-import com.ice.ktuice.scraper.scraperService.Exceptions.AuthenticationException
-import com.ice.ktuice.scraper.scraperService.ScraperService
-import io.realm.Realm
-import org.jetbrains.anko.doAsyncResult
+import com.ice.ktuice.models.LoginModel
+import com.ice.ktuice.models.YearGradesModel
+import com.ice.ktuice.models.YearModel
+import com.ice.ktuice.scraperService.Exceptions.AuthenticationException
+import com.ice.ktuice.scraperService.ScraperService
 import org.jetbrains.anko.getStackTraceString
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
-import java.util.concurrent.Future
 
 /**
  * Created by Andrius on 2/15/2018.
@@ -23,13 +25,15 @@ import java.util.concurrent.Future
  */
 class GradeTableManager: KoinComponent {
     private val preferenceRepository: PreferenceRepository by inject()
-    //private val gradeRepository: GradeResponseRepository by inject()
+    private val yearGradesRepository: YearGradesRepository by inject()
     private val loginRepository: LoginRepository by inject()
 
     fun getGradeTableModel(): GradeTableModel{
         val oldLogin = getLoginForCurrentUser()
         val login = refreshLoginCookies(oldLogin)
-        val table = constructGradeTableModel(login)
+
+        val yearList = getYearGradesListFromWeb(login)
+        val table = constructGradeTableModel(login, yearList)
         return table!!
     }
 
@@ -48,10 +52,10 @@ class GradeTableManager: KoinComponent {
         }
     }
 
-    fun constructGradeTableModel(login: LoginModel, yearGradesList: List<YearGradesModel>? = null): GradeTableModel?{
+    fun constructGradeTableModel(login: LoginModel, yearGradesList: List<YearGradesModel>): GradeTableModel?{
         try{
-            val loginModel = refreshLoginCookies(login)
-            val marks = yearGradesList ?: getYearGradesList(loginModel)
+
+            val marks = yearGradesList
             val table = GradeTableFactory.buildGradeTableFromYearGradesModel(marks)
             /*println("Printing the grade table!")
             println("Table:" + table.toString())
@@ -65,9 +69,7 @@ class GradeTableManager: KoinComponent {
                         println("refreshing login cookies!")
                         val newLoginModel = refreshLoginCookies(login)
                         println("login cookies refreshed, should initialize grade table")
-                        //TODO cookie refreshing
-                        return constructGradeTableModel(newLoginModel)
-                        //println("grade table initialized!")
+                        return constructGradeTableModel(newLoginModel, yearGradesList)
                     }catch (e: Exception){
                         println(e.getStackTraceString())
                     }
@@ -78,7 +80,22 @@ class GradeTableManager: KoinComponent {
         return null
     }
 
-    fun getYearGradesList(loginModel: LoginModel): List<YearGradesModel> {
+
+    fun constructSemesterAdapterSpinnerItemList(yearsList: List<YearGradesModel>):List<SemesterAdapterItem>{
+        val itemList = mutableListOf<SemesterAdapterItem>()
+        yearsList.forEach {
+            val year = it.year
+            it.semesterList.forEach {
+                // deep copy to avoid realm thread issues
+                itemList.add(SemesterAdapterItem(it.semester, it.semester_number, YearModel(year.id, year.year)))
+            }
+        }
+        return itemList
+    }
+
+
+    fun getYearGradesListFromWeb(login: LoginModel): List<YearGradesModel> {
+        val loginModel = refreshLoginCookies(login)
         val marks = mutableListOf<YearGradesModel>()
         loginModel.studentSemesters.forEach {
             marks.add(ScraperService.getGrades(loginModel, it))
@@ -86,10 +103,28 @@ class GradeTableManager: KoinComponent {
         return marks
     }
 
+    fun getYearGradesListFromDB(login: LoginModel): List<YearGradesModel> {
+        println("Reading year grade models from the database!")
+        val dbGrades = yearGradesRepository.getByStudCode(login.studentId)
+        dbGrades.forEach {
+            println(String.format("YearGradesModel found: date stamp at %s, of year %s with semesters %s and hash %s",
+                                  it.dateStamp.toString(), it.year.year, it.semesterList.size, it.hashCode.toString()))
+        }
+        return dbGrades.toList()
+    }
+
     private fun refreshLoginCookies(loginModel: LoginModel): LoginModel {
         val newLoginModelResponse = ScraperService.login(loginModel.username, loginModel.password)
         val newLoginModel = newLoginModelResponse.loginModel!!
         return newLoginModel
+    }
+
+    fun persistYearGradeModels(modelList: List<YearGradesModel>){
+        modelList.forEach{ persistYearGradeModel(it) }
+    }
+
+    fun persistYearGradeModel(model: YearGradesModel){
+        yearGradesRepository.createOrUpdate(model)
     }
 
 }

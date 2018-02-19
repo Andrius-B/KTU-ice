@@ -1,7 +1,6 @@
 package com.ice.ktuice.DAL.repositories.loginRepository
 
-import com.ice.ktuice.scraper.models.LoginModel
-import io.realm.Realm
+import com.ice.ktuice.models.LoginModel
 
 /**
  * Created by Andrius on 1/30/2018.

@@ -1,10 +1,8 @@
 package com.ice.ktuice.DAL.repositories.loginRepository
 
 import com.ice.ktuice.DAL.repositories.BaseRepository
-import com.ice.ktuice.scraper.models.LoginModel
+import com.ice.ktuice.models.LoginModel
 import io.realm.Realm
-import java.util.*
-import kotlin.math.log
 
 /**
  * Created by Andrius on 1/30/2018.

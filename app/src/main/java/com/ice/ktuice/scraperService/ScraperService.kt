@@ -1,12 +1,13 @@
-package com.ice.ktuice.scraper.scraperService
+package com.ice.ktuice.scraperService
 
-import com.ice.ktuice.scraper.scraperService.handlers.DataHandler
+import com.ice.ktuice.scraperService.handlers.DataHandler
 import com.ice.ktuice.scraper.handlers.LoginHandler
-import com.ice.ktuice.scraper.models.LoginModel
-import com.ice.ktuice.scraper.models.YearGradesModel
-import com.ice.ktuice.scraper.models.YearModel
-import com.ice.ktuice.scraper.scraperService.Exceptions.AuthenticationException
-import com.ice.ktuice.scraper.scraperService.Exceptions.ServerErrorException
+import com.ice.ktuice.models.LoginModel
+import com.ice.ktuice.models.YearGradesModel
+import com.ice.ktuice.models.YearModel
+import com.ice.ktuice.models.responses.YearGradesResponseModel
+import com.ice.ktuice.scraperService.Exceptions.AuthenticationException
+import com.ice.ktuice.scraperService.Exceptions.ServerErrorException
 
 
 object ScraperService {
@@ -29,14 +30,24 @@ object ScraperService {
      * @throws ServerErrorException if the server responds with code 500
      */
     fun getGrades(authCookie: LoginModel, yearModel: YearModel): YearGradesModel {
-        val response = DataHandler.getGrades(authCookie, yearModel)
+        var response: YearGradesResponseModel
+        try {
+             response = DataHandler.getGrades(authCookie, yearModel)
+        }catch (e: AuthenticationException){
+            println("Cookies expired! Logging in again!")
+            val newLogin = refreshLoginCookies(authCookie)!!
+            response = DataHandler.getGrades(newLogin, yearModel)
+        }
+
         println("Grades response code(@Scraper service):"+response.statusCode)
-        if(response.statusCode == 401){
-            throw AuthenticationException("Getting grades failed, because the cookies on the login model are incorrect!")
-        }else if(response.statusCode >= 500){
+        if(response.statusCode >= 500){
             throw ServerErrorException("Server error, something went wrong!")
         }
         return response.yearGradesModel
+    }
+
+    fun refreshLoginCookies(login: LoginModel): LoginModel?{
+        return login(login.username, login.password).loginModel
     }
 
 }

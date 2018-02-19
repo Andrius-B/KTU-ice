@@ -9,9 +9,10 @@ import android.view.ViewGroup
 import android.widget.*
 import com.ice.ktuice.AL.GradeTable.GradeTableManager
 import com.ice.ktuice.AL.GradeTable.GradeTableModels.GradeTableModel
+import com.ice.ktuice.AL.GradeTable.GradeTableModels.SemesterAdapterItem
 import com.ice.ktuice.R
 import com.ice.ktuice.UI.main.GradeTableCellDetailsDialog
-import com.ice.ktuice.scraper.models.YearGradesModel
+import com.ice.ktuice.models.YearGradesModel
 import kotlinx.android.synthetic.main.grade_table_layout.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.getStackTraceString
@@ -38,18 +39,23 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs){
         doAsync({
             println(it.getStackTraceString())
         },{
-            val login = tableManager.getLoginForCurrentUser()
-            println("User has semesters:"+login.studentSemesters.size)
-            val grades = tableManager.getYearGradesList(login)
-            tableModel = tableManager.constructGradeTableModel(login, grades)
+
             uiThread {
+                val login = tableManager.getLoginForCurrentUser()
+                println("User has semesters:"+login.studentSemesters.size)
+                val grades = tableManager.getYearGradesListFromDB(login).toList()
+                //val grades = tableManager.getYearGradesListFromWeb(login)
+                val semesterSpinnerItems = tableManager.constructSemesterAdapterSpinnerItemList(grades)
+                tableModel = tableManager.constructGradeTableModel(login, grades)
                 createViewForModel(tableModel!!)
-                setUpSemesterSpinner(grades)
+                println("Persisting grade table from UI thread!")
+                setUpSemesterSpinner(semesterSpinnerItems)
+                //tableManager.persistYearGradeModels(grades)
             }
         })
     }
 
-    private fun createViewForModel(gradeTableModel: GradeTableModel, semesterAdapterItem: SemesterSpinnerAdapter.SemesterAdapterItem? = null){
+    private fun createViewForModel(gradeTableModel: GradeTableModel, semesterAdapterItem: SemesterAdapterItem? = null){
         grade_table_table_layout.removeAllViews()
         grade_table_headers.removeAllViews()
 
@@ -106,8 +112,8 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs){
         }
     }
 
-    private fun setUpSemesterSpinner(gradeList: List<YearGradesModel>){
-        val adapter = SemesterSpinnerAdapter(context, gradeList)
+    private fun setUpSemesterSpinner(itemList: List<SemesterAdapterItem>){
+        val adapter = SemesterSpinnerAdapter(context, itemList)
         grade_table_semmester_spinner.adapter = adapter
         grade_table_semmester_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -117,7 +123,7 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs){
 
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 val item = adapter.getItem(p2)
-                //createViewForModel(tableModel!!, item)
+                createViewForModel(tableModel!!, item)
             }
 
         }

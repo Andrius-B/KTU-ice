@@ -8,10 +8,8 @@ import com.ice.ktuice.DAL.repositories.loginRepository.LoginRepository
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
 import com.ice.ktuice.UI.main.MainActivity
-import com.ice.ktuice.scraper.handlers.LoginHandler
-import com.ice.ktuice.scraper.models.LoginModel
-import com.ice.ktuice.scraper.scraperService.ScraperService
-import io.realm.Realm
+import com.ice.ktuice.models.LoginModel
+import com.ice.ktuice.scraperService.ScraperService
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.activityUiThreadWithContext
 import org.jetbrains.anko.doAsync
