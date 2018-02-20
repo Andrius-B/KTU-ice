@@ -12,7 +12,17 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
+import android.content.Context
+import android.support.graphics.drawable.Animatable2Compat
+import android.graphics.drawable.AnimatedVectorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Build
+import android.support.annotation.RequiresApi
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat
+import android.widget.ImageView
+import android.widget.TextView
+import org.jetbrains.anko.childrenSequence
+import org.jetbrains.anko.forEachChild
 
 
 class MainActivity : AppCompatActivity() {
@@ -54,7 +64,7 @@ class MainActivity : AppCompatActivity() {
             scheduleJob()
         }
 
-
+        prepareDrawerButtons()
     }
 
     private fun logout(){
@@ -74,4 +84,39 @@ class MainActivity : AppCompatActivity() {
         jobScheduler.schedule(builder.build())
     }
 
+    // TODO move to another file
+    private fun prepareDrawerButtons(){
+        val buttonList = mutableListOf<Pair<TextView, Int>>()
+        buttonList.add(Pair(marks_button, R.drawable.avd_table_to_square))
+        buttonList.add(Pair(student_info_button, R.drawable.avd_account_to_square))
+        buttonList.forEach{
+        //if(it is TextView) {
+            println("Registered click listener for textview with text:"+it.first.text)
+            val drawable = AnimatedVectorDrawableCompat.create(applicationContext, it.second)!!
+            it.first.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null)
+            it.first.invalidate()
+            println("drawables set!")
+            drawable.registerAnimationCallback(DrawableAnimationCallback(applicationContext, it.first, it.second))
+            it.first.setOnClickListener {
+                println("item click!")
+                drawable.start()
+            }
+        //}
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private class DrawableAnimationCallback(val context: Context, val textView: TextView, val resource: Int): Animatable2Compat.AnimationCallback() {
+
+        override fun onAnimationEnd(drawable: Drawable?) {
+            //super.onAnimationEnd(drawable)
+            val newDrawable = AnimatedVectorDrawableCompat.create(context, resource)!!
+            newDrawable.registerAnimationCallback(this)
+            textView.setCompoundDrawablesWithIntrinsicBounds(null, newDrawable, null, null)
+            textView.setOnClickListener {
+                println("item click!")
+                newDrawable.start()
+            }
+        }
+    }
 }

@@ -21,4 +21,6 @@
     <string name="past_versions">Past versions:</string>
     <string name="mark">Mark:</string>
     <string name="no_marks_found">No marks found!</string>
+    <string name="marks_button">Marks</string>
+    <string name="student_info_button">Student Info</string>
 </resources>
