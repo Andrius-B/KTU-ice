@@ -95,10 +95,14 @@ class GradeTableManager: KoinComponent {
 
 
     fun getYearGradesListFromWeb(login: LoginModel): List<YearGradesModel> {
-        val loginModel = refreshLoginCookies(login)
         val marks = mutableListOf<YearGradesModel>()
-        loginModel.studentSemesters.forEach {
-            marks.add(ScraperService.getGrades(loginModel, it))
+        try {
+            login.studentSemesters.forEach {
+                marks.add(ScraperService.getGrades(login, it))
+            }
+        }catch (e :AuthenticationException){
+            val refreshedLogin = refreshLoginCookies(login)
+            return getYearGradesListFromWeb(refreshedLogin)
         }
         return marks
     }

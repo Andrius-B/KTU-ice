@@ -30,9 +30,13 @@ class LoginActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         println("Creating login activity!")
-        if(preferenceRepository.getValue(R.string.logged_in_user_code).isNotBlank()){
-            println("Launching with logged in user code:"+preferenceRepository.getValue(R.string.logged_in_user_code))
-            launchMainActivity()
+        val loggedInUserCode = preferenceRepository.getValue(R.string.logged_in_user_code)
+        if(loggedInUserCode.isNotBlank()){
+            val login = loginRepository.getByStudCode(loggedInUserCode)
+            if(login!= null){
+                println("Launching with logged in user code:"+login.studentId)
+                launchMainActivity()
+            }
         }
         setContentView(R.layout.activity_login)
 

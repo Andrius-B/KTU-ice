@@ -2,15 +2,17 @@ package com.ice.ktuice.AL
 
 import android.app.job.JobParameters
 import android.app.job.JobService
+import com.ice.ktuice.AL.GradeTable.GradeTableManager
+import com.ice.ktuice.AL.GradeTable.NotificationFactory
+import com.ice.ktuice.AL.GradeTable.yearGradesModelComparator.Difference
+import com.ice.ktuice.AL.GradeTable.yearGradesModelComparator.YearGradesModelComparator
+import com.ice.ktuice.AL.GradeTable.yearGradesModelComparator.YearGradesModelComparatorImpl
 import com.ice.ktuice.DAL.repositories.loginRepository.LoginRepository
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
-import com.ice.ktuice.R
-import com.ice.ktuice.models.LoginModel
-import com.ice.ktuice.models.YearModel
-import com.ice.ktuice.scraperService.Exceptions.AuthenticationException
-import com.ice.ktuice.scraperService.ScraperService
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.getStackTraceString
+import org.jetbrains.anko.toast
+import org.jetbrains.anko.uiThread
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
@@ -22,79 +24,56 @@ class SyncJobService: JobService(), KoinComponent {
 
     private val preferenceRepository: PreferenceRepository by inject()
     private val loginRepository: LoginRepository by inject()
+    private val yearGradesComparator: YearGradesModelComparator by inject()
+
     private var jobParams: JobParameters? = null
 
     override fun onStartJob(params: JobParameters?): Boolean {
         println("onStartJob testing out the jobScheduler API")
         jobParams = params
+        val tableManager = GradeTableManager()
         doAsync({
             println(it.getStackTraceString())
             jobFinished(jobParams, false)
         },{
             println("Getting logged in user on the service!")
-            val login = getLoggedInUser()
+            val login = tableManager.getLoginForCurrentUser()
             println("gettring grade table on the service!")
-            fetchGradeTable(login!!, login.studentSemesters[0]!!)
+            val yearList = tableManager.getYearGradesListFromWeb(login)
+            val dbYearList = tableManager.getYearGradesListFromDB(login)
+
+            val totalDifference = mutableListOf<Difference>()
+
+            yearList.forEach {
+                val freshYear = it
+                val previousYear = dbYearList.find { it.year.equals(freshYear.year) }
+                if(previousYear != null) {
+                    totalDifference.addAll(yearGradesComparator.compare(previousYear, freshYear))
+                }
+            }
+
+            uiThread {
+                println("Differences found:" + totalDifference.size)
+                if(totalDifference.size > 0){
+                    NotificationFactory(applicationContext).pushNotification(generateDifSummary(totalDifference))
+                }
+                println("Persisting the year list to the database, from the service!")
+                tableManager.persistYearGradeModels(yearList)
+            }
             println("service finished without errors!")
             jobFinished(jobParams, false)
         })
-        return false
+        return true
     }
 
-    private fun getLoggedInUser(): LoginModel? {
-        val requestedStudentId = preferenceRepository.getValue(R.string.logged_in_user_code)
-        if(requestedStudentId.isBlank()){
-            println("StudentCode not found, quitting!")
-            //throw NullPointerException("Student code is not found, can not initialize the grade table component!")
+    private fun generateDifSummary(diff: List<Difference>): String{
+        var marksAdded = 0
+        diff.forEach {
+            if(it.field == Difference.Field.Grade && it.change == Difference.FieldChange.Added){
+                marksAdded++
+            }
         }
-        val loginModel = loginRepository.getByStudCode(requestedStudentId)
-        if(loginModel == null){
-            println("Login model is null!")
-            //throw NullPointerException("Login model for the requested code is null, can not initialize the grade table component")
-        }
-        return loginModel
-    }
-
-    private fun fetchGradeTable(loginModel: LoginModel, yearModel: YearModel){
-        doAsync(
-                {
-                    when(it.javaClass){
-                        AuthenticationException::class.java -> {
-                            try {
-                                println("refreshing login cookies!")
-                                val newLoginModel = refreshLoginCookies(loginModel)
-                                println("login cookies refreshed, initializing grade table")
-                                fetchGradeTable(newLoginModel, yearModel)
-                                println("grade table initialized!")
-                            }catch (e: Exception){
-                                println(e.getStackTraceString())
-                            }
-                        }
-                    }
-                },
-                {
-
-//                    val marks = ScraperService.getGrades(loginModel, yearModel)
-//                    Log.d("INFO", String.format("GradeResponseModel code:"+marks.statusCode))
-//
-//                    val table = GradeTableFactory.buildGradeTableFromMarkResponse(marks)
-//                    println("Printing the grade table!")
-//                    //println("Table:" + table.toString())
-//                    println("Seen weeks:" + table.getWeekListString())
-//                    table.printRowCounts()
-//                    uiThread ({
-//                        gradeRepository.createOrUpdate(marks, YearGradesMetadataModel(loginModel.studentId, yearModel, Date()), Realm.getDefaultInstance())
-//                    })
-                })
-    }
-
-    private fun refreshLoginCookies(loginModel: LoginModel): LoginModel {
-        println(String.format("login cookies username:%s ,pw:%s",loginModel.username, loginModel.password))
-        val newLoginModelResponse = ScraperService.login(loginModel.username, loginModel.password)
-        println("refreshing login cookies response:"+newLoginModelResponse.statusCode)
-        val newLoginModel = newLoginModelResponse.loginModel!!
-        loginRepository.createOrUpdate(newLoginModel)
-        return newLoginModel
+        return String.format("New marks found:%s", marksAdded)
     }
 
     override fun onStopJob(params: JobParameters?): Boolean {

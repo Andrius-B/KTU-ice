@@ -90,7 +90,6 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs){
             moduleNameText.setTextSize(TypedValue.COMPLEX_UNIT_SP, CELL_TEXT_SIZE)
             moduleNameText.setBackgroundResource(R.drawable.grade_cell_background)
 
-            //println(String.format("Adding row:%s", it.moduleModel.module_name))
             grade_table_headers.addView(moduleNameText)
 
             weekModelList?.forEach { weekModel ->
