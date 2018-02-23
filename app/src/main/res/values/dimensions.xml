@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="grade_table_cell_padding_horizontal">6</integer>
-    <integer name="grade_table_cell_padding_vertical">6</integer>
-    <integer name="grade_table_cell_text_size">14</integer>
+    <integer name="grade_table_cell_padding_horizontal">16</integer>
+    <integer name="grade_table_cell_padding_vertical">24</integer>
+    <integer name="grade_table_cell_text_size">16</integer>
 
     <dimen name="grade_table_details_title_text_size">24sp</dimen>
+
+    <dimen name="calendar_event_item_color_stroke_width">3dp</dimen>
+    <dimen name="calendar_event_item_corner_radius">8dp</dimen>
+    <dimen name="calendar_event_text_offset_from_header">12dp</dimen>
 </resources>

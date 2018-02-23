@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#8fa3ad</color>
-    <color name="colorPrimaryLight">#ace2ff</color>
+    <color name="colorPrimaryLight">#bfd4df</color>
     <color name="colorPrimaryDark">#61747e</color>
     <color name="colorAccent">#00e5ff</color>
     <color name="colorErrorLight">#fec6c6</color>
     
     <color name="loginButtonRipple">#1f00e5ff</color>
     <color name="loginButtonFocused">#a000e5ff</color>
+
+    <!--Calendar category coloring-->
+    <color name="transparent">#00000000</color>
+    <color name="event_red_category">#dd2c00</color>
+    <color name="event_green_category">#1de9b6</color>
+    <color name="event_blue_category">#2962ff</color>
 </resources>

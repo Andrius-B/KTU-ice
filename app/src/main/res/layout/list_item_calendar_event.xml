@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="12dp"
+    android:padding="12dp"
+    android:stretchColumns="1"
+    android:gravity="center">
+    <TableRow>
+        <TextView
+            android:id="@+id/header_event_summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/header_event_summary" />
+        <TextView
+            android:layout_marginStart="@dimen/calendar_event_text_offset_from_header"
+            android:id="@+id/event_summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </TableRow>
+    <TableRow>
+        <TextView
+            android:id="@+id/header_event_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/header_event_location" />
+        <TextView
+            android:layout_marginStart="@dimen/calendar_event_text_offset_from_header"
+            android:id="@+id/event_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </TableRow>
+    <TableRow>
+        <TextView
+            android:id="@+id/header_event_start_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/header_event_start" />
+        <TextView
+            android:layout_marginStart="@dimen/calendar_event_text_offset_from_header"
+            android:id="@+id/event_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </TableRow>
+</TableLayout>

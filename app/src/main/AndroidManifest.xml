@@ -11,16 +11,17 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/iceTheme">
-        <activity android:name=".UI.login.LoginActivity">
+        <activity android:name=".ui.login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UI.main.MainActivity"/>
+        <activity android:name=".ui.main.MainActivity"/>
+        <activity android:name=".ui.main.TimeTableActivity"/>
 
         <service
-            android:name=".AL.SyncJobService"
+            android:name=".al.SyncJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="true"/>
     </application>

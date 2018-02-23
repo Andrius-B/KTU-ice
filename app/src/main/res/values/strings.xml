@@ -23,4 +23,9 @@
     <string name="no_marks_found">No marks found!</string>
     <string name="marks_button">Marks</string>
     <string name="student_info_button">Student Info</string>
+    <string name="daily_agenda_title">Daily agenda</string>
+    <string name="time_table">Time Table</string>
+    <string name="header_event_summary">Summary:</string>
+    <string name="header_event_location">Location:</string>
+    <string name="header_event_start">Starts at:</string>
 </resources>
