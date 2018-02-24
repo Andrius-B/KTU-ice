@@ -5,6 +5,7 @@ import com.ice.ktuice.DAL.repositories.loginRepository.LoginRepository
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.al.services.userService.UserService
 import com.ice.ktuice.models.LoginModel
+import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.models.YearGradesModel
 import com.ice.ktuice.scraperService.ScraperService
 import com.ice.ktuice.scraperService.exceptions.AuthenticationException
@@ -14,15 +15,16 @@ import org.koin.standalone.inject
 
 /**
  * Created by Andrius on 2/24/2018.
+ * Access point for getting year grades from both the web and the database
  */
 class YearGradesServiceImpl: YearGradesService, KoinComponent {
 
     private val yearGradesRepository: YearGradesRepository by inject()
     private val userService: UserService by inject()
 
-    override fun getYearGradesListFromWeb(): List<YearGradesModel> {
+    override fun getYearGradesListFromWeb(): YearGradesCollectionModel {
         val login = userService.getLoginForCurrentUser()!!
-        val marks = mutableListOf<YearGradesModel>()
+        val marks = YearGradesCollectionModel(login.studentId)
         try {
             login.studentSemesters.forEach {
                 marks.add(ScraperService.getGrades(login, it))
@@ -34,23 +36,20 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent {
         return marks
     }
 
-    override fun getYearGradesListFromDB(): RealmResults<YearGradesModel> {
+    override fun getYearGradesListFromDB(async: Boolean): YearGradesCollectionModel {
         println("Reading year grade models from the database!")
         val login = userService.getLoginForCurrentUser()!!
-        val dbGrades = yearGradesRepository.getByStudCode(login.studentId)
-//        dbGrades.forEach {
-//            println(String.format("YearGradesModel found: date stamp at %s, of year %s with semesters %s and hash %s",
-//                                  it.dateStamp.toString(), it.year.year, it.semesterList.size, it.hashCode.toString()))
-//        }
+        var dbGrades = yearGradesRepository.getByStudCode(login.studentId, async)
+        if(dbGrades == null){
+            persistYearGradesModel(YearGradesCollectionModel(login.studentId))
+            dbGrades = getYearGradesListFromDB(async) // create a managed version if none exists
+        }
         return dbGrades
     }
 
 
-    override fun persistYearGradeModels(modelList: List<YearGradesModel>){
-        modelList.forEach{ persistYearGradeModel(it) }
-    }
-
-    override fun persistYearGradeModel(model: YearGradesModel){
+    override fun persistYearGradesModel(model: YearGradesCollectionModel){
         yearGradesRepository.createOrUpdate(model)
     }
+
 }

@@ -1,5 +1,6 @@
 package com.ice.ktuice.al.GradeTable.gradeTableModels
 
+import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.models.responses.GradeResponseModel
 import com.ice.ktuice.models.YearGradesModel
 
@@ -19,7 +20,7 @@ class GradeTableFactory {
             }
             return table
         }
-        fun buildGradeTableFromYearGradesModel(yearGradesList: List<YearGradesModel>): GradeTableModel {
+        fun buildGradeTableFromYearGradesModel(yearGradesList: YearGradesCollectionModel): GradeTableModel {
             val table = GradeTableModel()
             yearGradesList.forEach {
                 val yearGrades = it

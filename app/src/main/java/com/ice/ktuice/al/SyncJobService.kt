@@ -57,7 +57,7 @@ class SyncJobService: JobService(), KoinComponent {
                     NotificationFactory(applicationContext).pushNotification(generateDifSummary(totalDifference))
                 }
                 println("Persisting the year list to the database, from the service!")
-                yearGradesService.persistYearGradeModels(yearList)
+                yearGradesService.persistYearGradesModel(yearList)
             }
             println("service finished without errors!")
             jobFinished(jobParams, false)

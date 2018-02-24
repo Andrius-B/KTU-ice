@@ -13,8 +13,10 @@ import com.ice.ktuice.al.GradeTable.gradeTableModels.SemesterAdapterItem
 import com.ice.ktuice.R
 import com.ice.ktuice.al.services.userService.UserService
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
+import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.ui.adapters.SemesterSpinnerAdapter
 import com.ice.ktuice.ui.main.dialogs.GradeTableCellDetailsDialog
+import io.realm.Realm
 import kotlinx.android.synthetic.main.grade_table_layout.view.*
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
@@ -36,28 +38,28 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
     private val CELL_PADDING_V: Int = context.resources.getInteger(R.integer.grade_table_cell_padding_vertical)
     private val CELL_TEXT_SIZE = context.resources.getInteger(R.integer.grade_table_cell_text_size).toFloat()
 
+    /**
+     * Class refrence for the realm result proxy to not get GC'ed
+     */
+    private var grades = yearGradesService.getYearGradesListFromDB(true)
     constructor(c: Context): this(c, null)
 
     init {
+        val realm = Realm.getDefaultInstance()
         inflate(context, R.layout.grade_table_layout, this)
         val tableManager = GradeTableManager()
 
         val login = userService.getLoginForCurrentUser()!!
         println("User has semesters:"+login.studentSemesters.size)
-        val grades = yearGradesService.getYearGradesListFromDB()
-        if(grades.isEmpty()){
-            println("no yearmodels found!")
-        }else{
-            println("Year model count:"+grades.size)
-        }
-        //val grades = tableManager.getYearGradesListFromWeb(login)
-        val semesterSpinnerItems = tableManager.constructSemesterAdapterSpinnerItemList(grades)
-        tableModel = tableManager.constructGradeTableModel(grades)
-        setUpSemesterSpinner(semesterSpinnerItems)
-        grade_table_semmester_spinner.setSelection(semesterSpinnerItems.lastIndex, true)
 
         grades.addChangeListener{
-            t ->
+            t:YearGradesCollectionModel ->
+            println("Grades changed!")
+            if(grade_table_semmester_spinner.adapter == null){
+                val semesterSpinnerItems = tableManager.constructSemesterAdapterSpinnerItemList(t)
+                setUpSemesterSpinner(semesterSpinnerItems)
+                grade_table_semmester_spinner.setSelection(semesterSpinnerItems.lastIndex, true)
+            }
             //TODO change repositories to only keep a single copy of required yearGradesModels, so that realms change listeners work
             val changedSemesterSpinnerItems = tableManager.constructSemesterAdapterSpinnerItemList(t)
             val changedTableModel = tableManager.constructGradeTableModel(t)

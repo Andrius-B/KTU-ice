@@ -1,8 +1,10 @@
 package com.ice.ktuice.DAL.repositories.gradeResponseRepository
 
+import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.models.YearGradesModel
 import com.ice.ktuice.models.YearModel
 import io.realm.Realm
+import io.realm.RealmModel
 import io.realm.RealmResults
 import io.realm.Sort
 
@@ -11,40 +13,37 @@ import io.realm.Sort
  */
 class YearGradesRepositoryImpl: YearGradesRepository {
 
-    override fun getByStudCode(studCode:String): RealmResults<YearGradesModel> {
+    override fun getByStudCode(studCode:String, async:Boolean): YearGradesCollectionModel? {
         val realm = Realm.getDefaultInstance()
-        return realm.where(YearGradesModel::class.java)
-                .equalTo("studCode", studCode)
-                .sort("dateStamp", Sort.DESCENDING)
-                .distinctValues("yearStr")
-                .findAll()
+        return if(async) {
+            realm.where(YearGradesCollectionModel::class.java)
+                    .equalTo("studentId", studCode)
+                    .findFirstAsync()
+            }else{
+                realm.where(YearGradesCollectionModel::class.java)
+                        .equalTo("studentId", studCode)
+                        .findFirst()
+            }
     }
 
 
 
-    override fun createOrUpdate(yearGradesModel: YearGradesModel) {
+    override fun createOrUpdate(yearGradesModel: YearGradesCollectionModel) {
+        println("Create or update called for yearGradesCollection!")
+        val current = getByStudCode(yearGradesModel.studentId!!)
+        val isUpdate = if(current != null) {
+                                    println("An instance found, this must be an update call!")
+                                    true
+                                }else false
+
         val realm = Realm.getDefaultInstance()
-
-        /**
-         * For this version, testing out the ability of our database to only maintain two copies of
-         * a single yearGradesModel, to keep other filtering simpler.
-         */
-        val dbModels = getByStudCode(yearGradesModel.studCode)
-        dbModels.where()
-                .equalTo("_year.year", yearGradesModel.year.year)
-                .equalTo("_year.id", yearGradesModel.year.id)
-                .lessThan("dateStamp", yearGradesModel.dateStamp)
-                .sort("dateStamp", Sort.DESCENDING)
-                .findAll()
-
         realm.use {
             realm.beginTransaction()
-            /*if(dbModels.size >= 2){
-                dbModels.deleteFirstFromRealm()
-            }*/
-            realm.insertOrUpdate(yearGradesModel)
+            realm.insertOrUpdate(yearGradesModel as RealmModel)
             realm.commitTransaction()
             realm.close()
         }
+        println("Realm transaction complete, collection updated!")
     }
+
 }

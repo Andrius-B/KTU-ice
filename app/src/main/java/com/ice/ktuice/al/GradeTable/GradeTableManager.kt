@@ -10,10 +10,12 @@ import com.ice.ktuice.R
 import com.ice.ktuice.al.services.userService.UserService
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.models.LoginModel
+import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.models.YearGradesModel
 import com.ice.ktuice.models.YearModel
 import com.ice.ktuice.scraperService.exceptions.AuthenticationException
 import com.ice.ktuice.scraperService.ScraperService
+import io.realm.RealmList
 import io.realm.RealmResults
 import org.jetbrains.anko.getStackTraceString
 import org.koin.standalone.KoinComponent
@@ -34,7 +36,7 @@ class GradeTableManager: KoinComponent {
         return table!!
     }
 
-    fun constructGradeTableModel(yearGradesList: List<YearGradesModel>): GradeTableModel?{
+    fun constructGradeTableModel(yearGradesList: YearGradesCollectionModel): GradeTableModel?{
         try{
             val table = GradeTableFactory.buildGradeTableFromYearGradesModel(yearGradesList)
             println("Printing the grade table!")
@@ -61,7 +63,7 @@ class GradeTableManager: KoinComponent {
     }
 
 
-    fun constructSemesterAdapterSpinnerItemList(yearsList: List<YearGradesModel>):List<SemesterAdapterItem>{
+    fun constructSemesterAdapterSpinnerItemList(yearsList: YearGradesCollectionModel):List<SemesterAdapterItem>{
         val itemList = mutableListOf<SemesterAdapterItem>()
         yearsList.forEach {
             val year = it.year
