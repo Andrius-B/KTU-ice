@@ -15,7 +15,7 @@ import org.koin.standalone.KoinComponent
 class LectureCalendar(context:Context, attributeSet: AttributeSet): LinearLayout(context, attributeSet), KoinComponent{
 
     init{
-        inflate(context, R.layout.activity_timetable, this)
+        inflate(context, R.layout.fragment_timetable, this)
         val tableManager =  GradeTableManager()
         doAsync({
             println(it)

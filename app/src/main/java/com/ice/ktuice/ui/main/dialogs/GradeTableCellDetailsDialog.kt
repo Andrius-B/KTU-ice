@@ -1,10 +1,10 @@
-package com.ice.ktuice.ui.main
+package com.ice.ktuice.ui.main.dialogs
 
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import com.ice.ktuice.al.GradeTable.GradeTableModels.GradeTableCellModel
+import com.ice.ktuice.al.GradeTable.gradeTableModels.GradeTableCellModel
 import com.ice.ktuice.R
 import kotlinx.android.synthetic.main.dialog_mark_cell_details.*
 

@@ -1,4 +1,4 @@
-package com.ice.ktuice.ui.main.components.gradeTable
+package com.ice.ktuice.ui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
-import com.ice.ktuice.al.GradeTable.GradeTableModels.SemesterAdapterItem
+import com.ice.ktuice.al.GradeTable.gradeTableModels.SemesterAdapterItem
 import com.ice.ktuice.R
 
 /**

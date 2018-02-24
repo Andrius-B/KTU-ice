@@ -1,118 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
     android:orientation="vertical">
-
-    <LinearLayout
-        android:id="@+id/top_nav_menu_drawer"
+    <android.support.v4.view.ViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/main_activity_view_pager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
-        <TextView
-            android:padding="16dp"
-            android:drawableTint="@color/colorPrimaryLight"
-            android:drawableTop="@drawable/avd_table_to_square"
-            android:gravity="center"
-            android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab_layout_main"
             android:layout_height="wrap_content"
-            android:id="@+id/marks_button"
-            android:text="@string/marks_button"/>
-        <TextView
-            android:padding="16dp"
-            android:drawableTint="@color/colorPrimaryLight"
-            android:drawableTop="@drawable/avd_account_to_square"
-            android:drawablePadding="6dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/student_info_button"
-            android:text="@string/student_info_button"/>
+            android:layout_width="match_parent"/>
+    </android.support.v4.view.ViewPager>
+</LinearLayout>
 
-        <TextView
-            android:padding="16dp"
-            android:drawableTint="@color/colorPrimaryLight"
-            android:drawableTop="@drawable/icon_timetable_72"
-            android:drawablePadding="6dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/time_table_button"
-            android:text="@string/time_table"/>
-    </LinearLayout>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/main_content_card"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="56dp"
-        android:minHeight="100dp"
-        app:layout_constraintBottom_toTopOf="@+id/card_view"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/top_nav_menu_drawer">
-
-        <com.ice.ktuice.ui.main.components.gradeTable.GradeTable
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/card_view"
-        style="@style/mainActivityCardStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <TableLayout
-            android:id="@+id/bottom_info_drawer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="12dp"
-            android:stretchColumns="*">
-
-            <TableRow>
-
-                <TextView android:text="@string/info_student_name" />
-
-                <TextView android:id="@+id/info_student_name" />
-            </TableRow>
-
-            <TableRow>
-
-                <TextView android:text="@string/info_student_code" />
-
-                <TextView android:id="@+id/info_student_code" />
-            </TableRow>
-
-            <TableRow>
-
-                <TextView android:text="@string/info_semesters_found" />
-
-                <TextView android:id="@+id/info_semesters_found" />
-            </TableRow>
-
-            <TableRow>
-
-                <Button
-                    android:id="@+id/logout_btn"
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:text="@string/logout_text" />
-
-                <Button
-                    android:id="@+id/test_button"
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:text="Launch Service" />
-            </TableRow>
-        </TableLayout>
-    </android.support.v7.widget.CardView>
-
-</android.support.constraint.ConstraintLayout>

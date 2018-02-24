@@ -1,8 +1,8 @@
 package com.ice.ktuice.al.GradeTable
 
-import com.ice.ktuice.al.GradeTable.GradeTableModels.GradeTableFactory
-import com.ice.ktuice.al.GradeTable.GradeTableModels.GradeTableModel
-import com.ice.ktuice.al.GradeTable.GradeTableModels.SemesterAdapterItem
+import com.ice.ktuice.al.GradeTable.gradeTableModels.GradeTableFactory
+import com.ice.ktuice.al.GradeTable.gradeTableModels.GradeTableModel
+import com.ice.ktuice.al.GradeTable.gradeTableModels.SemesterAdapterItem
 import com.ice.ktuice.DAL.repositories.gradeResponseRepository.YearGradesRepository
 import com.ice.ktuice.DAL.repositories.loginRepository.LoginRepository
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
@@ -10,7 +10,7 @@ import com.ice.ktuice.R
 import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.models.YearGradesModel
 import com.ice.ktuice.models.YearModel
-import com.ice.ktuice.scraperService.Exceptions.AuthenticationException
+import com.ice.ktuice.scraperService.exceptions.AuthenticationException
 import com.ice.ktuice.scraperService.ScraperService
 import io.realm.RealmResults
 import org.jetbrains.anko.getStackTraceString

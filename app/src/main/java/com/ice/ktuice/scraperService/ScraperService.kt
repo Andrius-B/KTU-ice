@@ -6,8 +6,8 @@ import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.models.YearGradesModel
 import com.ice.ktuice.models.YearModel
 import com.ice.ktuice.models.responses.YearGradesResponseModel
-import com.ice.ktuice.scraperService.Exceptions.AuthenticationException
-import com.ice.ktuice.scraperService.Exceptions.ServerErrorException
+import com.ice.ktuice.scraperService.exceptions.AuthenticationException
+import com.ice.ktuice.scraperService.exceptions.ServerErrorException
 
 
 object ScraperService {

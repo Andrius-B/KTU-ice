@@ -9,20 +9,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.ice.ktuice.al.GradeTable.GradeTableManager
-import com.ice.ktuice.al.GradeTable.GradeTableModels.GradeTableModel
-import com.ice.ktuice.al.GradeTable.GradeTableModels.SemesterAdapterItem
+import com.ice.ktuice.al.GradeTable.gradeTableModels.GradeTableModel
+import com.ice.ktuice.al.GradeTable.gradeTableModels.SemesterAdapterItem
 import com.ice.ktuice.R
-import com.ice.ktuice.ui.main.GradeTableCellDetailsDialog
+import com.ice.ktuice.ui.adapters.SemesterSpinnerAdapter
+import com.ice.ktuice.ui.main.dialogs.GradeTableCellDetailsDialog
 import kotlinx.android.synthetic.main.grade_table_layout.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.getStackTraceString
-import org.jetbrains.anko.uiThread
 
 /**
  * Created by Andrius on 1/29/2018.
  */
 class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs){
-    private val tableCellDetailsDialog: GradeTableCellDetailsDialog = GradeTableCellDetailsDialog(context)
+    private var tableCellDetailsDialog: GradeTableCellDetailsDialog? = null
     private var tableModel: GradeTableModel? = null
 
     private val CELL_PADDING_H: Int = context.resources.getInteger(R.integer.grade_table_cell_padding_horizontal)
@@ -36,38 +36,38 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs){
     init {
         inflate(context, R.layout.grade_table_layout, this)
         val tableManager = GradeTableManager()
+
+        val login = tableManager.getLoginForCurrentUser()
+        println("User has semesters:"+login.studentSemesters.size)
+        val grades = tableManager.getYearGradesListFromDB(login)
+        if(grades.isEmpty()){
+            println("no yearmodels found!")
+        }else{
+            println("Year model count:"+grades.size)
+        }
+        //val grades = tableManager.getYearGradesListFromWeb(login)
+        val semesterSpinnerItems = tableManager.constructSemesterAdapterSpinnerItemList(grades)
+        tableModel = tableManager.constructGradeTableModel(login, grades)
+        setUpSemesterSpinner(semesterSpinnerItems)
+        grade_table_semmester_spinner.setSelection(semesterSpinnerItems.lastIndex, true)
+
+        grades.addChangeListener{
+            t ->
+            //TODO change repositories to only keep a single copy of required yearGradesModels, so that realms change listeners work
+            val changedSemesterSpinnerItems = tableManager.constructSemesterAdapterSpinnerItemList(t)
+            val changedTableModel = tableManager.constructGradeTableModel(login, t)
+            val selectedSemesterSpinnerItem = grade_table_semmester_spinner.adapter.getItem(grade_table_semmester_spinner.selectedItemPosition) as SemesterAdapterItem
+
+            setUpSemesterSpinner(changedSemesterSpinnerItems)
+            tableModel = changedTableModel
+            grade_table_semmester_spinner.setSelection(changedSemesterSpinnerItems.indexOfFirst { it.semesterNumber.equals(selectedSemesterSpinnerItem.semesterNumber) })
+            println("_____________________________\n\r--------TABLE UPDATED")
+        }
+
         doAsync({
             println(it.getStackTraceString())
         },{
-
-            uiThread {
-                val login = tableManager.getLoginForCurrentUser()
-                println("User has semesters:"+login.studentSemesters.size)
-                val grades = tableManager.getYearGradesListFromDB(login)
-                if(grades.isEmpty()){
-                    println("no yearmodels found!")
-                }else{
-                    println("Year model count:"+grades.size)
-                }
-                //val grades = tableManager.getYearGradesListFromWeb(login)
-                val semesterSpinnerItems = tableManager.constructSemesterAdapterSpinnerItemList(grades)
-                tableModel = tableManager.constructGradeTableModel(login, grades)
-                setUpSemesterSpinner(semesterSpinnerItems)
-                grade_table_semmester_spinner.setSelection(semesterSpinnerItems.lastIndex, true)
-
-                grades.addChangeListener{
-                    t ->
-                    //TODO change repositories to only keep a single copy of required yearGradesModels, so that realms change listeners work
-                    val changedSemesterSpinnerItems = tableManager.constructSemesterAdapterSpinnerItemList(t)
-                    val changedTableModel = tableManager.constructGradeTableModel(login, t)
-                    val selectedSemesterSpinnerItem = grade_table_semmester_spinner.adapter.getItem(grade_table_semmester_spinner.selectedItemPosition) as SemesterAdapterItem
-
-                    setUpSemesterSpinner(changedSemesterSpinnerItems)
-                    tableModel = changedTableModel
-                    grade_table_semmester_spinner.setSelection(changedSemesterSpinnerItems.indexOfFirst { it.semesterNumber.equals(selectedSemesterSpinnerItem.semesterNumber) })
-                    println("_____________________________\n\r--------TABLE UPDATED")
-                }
-            }
+            tableCellDetailsDialog = GradeTableCellDetailsDialog(context)
         })
     }
 
@@ -118,8 +118,8 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs){
                 markCellText.text = cellModel?.getDisplayString() // default is empty cell
                 markCellText.setOnClickListener{
                     markCellText.post({
-                        tableCellDetailsDialog.CellModel = cellModel
-                        tableCellDetailsDialog.show()
+                        tableCellDetailsDialog?.CellModel = cellModel
+                        tableCellDetailsDialog?.show()
                     })
                 }
 //                markCellText.setBackgroundResource(R.drawable.grade_cell_background)
