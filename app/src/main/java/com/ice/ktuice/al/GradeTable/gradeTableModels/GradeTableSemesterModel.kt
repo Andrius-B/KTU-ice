@@ -44,9 +44,7 @@ class GradeTableSemesterModel(val semester: String, val semester_number:String, 
     fun addModule(module: ModuleModel){
         val moduleIdentifier = module.module_code
         val row: GradeTableRowModel
-        if(rowMap.containsKey(moduleIdentifier)){
-            row = rowMap[moduleIdentifier]!!
-        }else{
+        if(!rowMap.containsKey(moduleIdentifier)){
             row = GradeTableRowModel(module) // extracting the module information from the grade
             rowMap[moduleIdentifier] = row
         }
@@ -113,7 +111,6 @@ class GradeTableSemesterModel(val semester: String, val semester_number:String, 
     override fun toString(): String {
         val tableRowMarker = "\n\r" + "---------------------------------" + "\n\r"
         val columnMarker = " | "
-        val markSeparator = ", "
         val emptyMarkMarker = " * "
         var text = tableRowMarker
         rowMap.forEach {

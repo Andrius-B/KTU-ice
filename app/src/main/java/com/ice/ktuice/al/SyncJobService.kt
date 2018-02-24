@@ -8,6 +8,8 @@ import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.Difference
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparator
 import com.ice.ktuice.DAL.repositories.loginRepository.LoginRepository
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
+import com.ice.ktuice.al.services.userService.UserService
+import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.getStackTraceString
 import org.jetbrains.anko.uiThread
@@ -19,9 +21,7 @@ import org.koin.standalone.inject
  * A job service to be used for polling the KTU AIS about whether there are any new grades
  */
 class SyncJobService: JobService(), KoinComponent {
-
-    private val preferenceRepository: PreferenceRepository by inject()
-    private val loginRepository: LoginRepository by inject()
+    private val yearGradesService: YearGradesService by inject()
     private val yearGradesComparator: YearGradesModelComparator by inject()
 
     private var jobParams: JobParameters? = null
@@ -29,16 +29,13 @@ class SyncJobService: JobService(), KoinComponent {
     override fun onStartJob(params: JobParameters?): Boolean {
         println("onStartJob testing out the jobScheduler API")
         jobParams = params
-        val tableManager = GradeTableManager()
         doAsync({
             println(it.getStackTraceString())
             jobFinished(jobParams, false)
         },{
             println("Getting logged in user on the service!")
-            val login = tableManager.getLoginForCurrentUser()
-            println("gettring grade table on the service!")
-            val yearList = tableManager.getYearGradesListFromWeb(login)
-            val dbYearList = tableManager.getYearGradesListFromDB(login)
+            val yearList = yearGradesService.getYearGradesListFromWeb()
+            val dbYearList = yearGradesService.getYearGradesListFromDB()
 
             val totalDifference = mutableListOf<Difference>()
 
@@ -60,7 +57,7 @@ class SyncJobService: JobService(), KoinComponent {
                     NotificationFactory(applicationContext).pushNotification(generateDifSummary(totalDifference))
                 }
                 println("Persisting the year list to the database, from the service!")
-                tableManager.persistYearGradeModels(yearList)
+                yearGradesService.persistYearGradeModels(yearList)
             }
             println("service finished without errors!")
             jobFinished(jobParams, false)

@@ -65,8 +65,8 @@ class DataHandler {
                 Even though the semester number is discarded when selecting all table rows (from both tables)
                 it is parsed later via the parent selectors.
                  */
-                moduleTables.forEachIndexed{index, moduleElement ->
-                    val model = ModuleModel(moduleElement)
+                moduleTables.forEach{
+                    val model = ModuleModel(it)
                     moduleList.add(model)
                 }
             }

@@ -7,11 +7,10 @@ import com.ice.ktuice.al.LectureCalendar.LectureCalendarModels.CalendarModel
 import com.ice.ktuice.models.LoginModel
 import org.jsoup.Connection
 import org.jsoup.Jsoup
-
 /**
  * Created by Andrius on 2/23/2018.
  */
-class CalendarHandler {
+class CalendarHandler{
     companion object {
         fun getCalendar(login: LoginModel): CalendarModel{
             val url = String.format("https://uais.cr.ktu.lt/ktuis/tv_rprt2.ical1?p=%s&t=basic.ics", login.studentId)

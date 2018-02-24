@@ -4,6 +4,10 @@ import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelCom
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparatorImpl
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.SharedPreferenceRepositoryImpl
+import com.ice.ktuice.al.services.userService.UserService
+import com.ice.ktuice.al.services.userService.UserServiceImpl
+import com.ice.ktuice.al.services.yearGradesService.YearGradesService
+import com.ice.ktuice.al.services.yearGradesService.YearGradesServiceImpl
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module.Module
 import org.koin.dsl.module.applicationContext
@@ -14,4 +18,6 @@ import org.koin.dsl.module.applicationContext
 val mainModule: Module = applicationContext {
     provide { SharedPreferenceRepositoryImpl(this.androidApplication()) as PreferenceRepository }
     provide { YearGradesModelComparatorImpl() as YearGradesModelComparator }
+    provide { YearGradesServiceImpl() as YearGradesService }
+    provide { UserServiceImpl() as UserService }
 }

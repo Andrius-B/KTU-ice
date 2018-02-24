@@ -18,9 +18,6 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
         RealmConfig.init(this) // initialize the db
-        val realmModule : Module = applicationContext {
-            provide { Realm.getDefaultInstance() as Realm }
-        }
 
         startKoin(this, listOf(mainModule, repositoryModule))
 

@@ -11,8 +11,6 @@ class UnauthenticatedRequestDetector {
         private val unauthorizedRequestPostAction = "/ktuis/stp_prisijungimas"
 
         fun isResponseAuthError(doc: Document): Boolean{
-            val assurance = 0
-
             //val title = doc.select("title").firstOrNull()
             val button = doc.select("input").firstOrNull()
             val form = doc.select("form").firstOrNull()
