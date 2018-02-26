@@ -1,47 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="12dp"
     android:padding="12dp"
     android:minHeight="70dp"
-    android:stretchColumns="1"
-    android:gravity="center">
-    <TableRow android:id="@+id/event_summary_row" android:visibility="gone">
-        <TextView
-            android:id="@+id/header_event_summary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/header_event_summary" />
-        <TextView
-            android:layout_marginStart="@dimen/calendar_event_text_offset_from_header"
-            android:id="@+id/event_summary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </TableRow>
-    <TableRow android:id="@+id/event_location_row" android:visibility="gone">
-        <TextView
-            android:id="@+id/header_event_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/header_event_location" />
-        <TextView
-            android:layout_marginStart="@dimen/calendar_event_text_offset_from_header"
-            android:id="@+id/event_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </TableRow>
-    <TableRow android:id="@+id/event_start_time_row" android:visibility="gone">
-        <TextView
-            android:id="@+id/header_event_start_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/header_event_start" />
-        <TextView
-            android:layout_marginStart="@dimen/calendar_event_text_offset_from_header"
-            android:id="@+id/event_start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </TableRow>
-</TableLayout>
+    android:gravity="start"
+    android:layout_margin="12dp"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/event_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="11:00"/>
+    <TextView
+        android:id="@+id/event_header_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Feb 1, Mon"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/calendar_event_text_offset_from_header"
+        android:stretchColumns="1"
+        android:gravity="center">
+        <TableRow android:id="@+id/event_summary_row">
+            <TextView
+                android:id="@+id/header_event_summary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/header_event_summary" />
+            <TextView
+                android:id="@+id/event_summary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </TableRow>
+        <TableRow android:id="@+id/event_location_row">
+            <TextView
+                android:id="@+id/header_event_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/header_event_location" />
+            <TextView
+                android:id="@+id/event_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </TableRow>
+    </TableLayout>
+    <TextView
+        android:id="@+id/event_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="12:00"/>
+</LinearLayout>

@@ -1,13 +1,11 @@
-package com.ice.ktuice.al.LectureCalendar.LectureCalendarModels
+package com.ice.ktuice.models.lectureCalendarModels
 
 import android.content.Context
-import android.graphics.Color
 import android.support.v4.content.ContextCompat
 import com.ice.ktuice.R
 import io.realm.RealmObject
 import io.realm.annotations.Ignore
 import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.*
 
 /**

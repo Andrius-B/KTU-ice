@@ -2,8 +2,8 @@ package com.ice.ktuice.scraperService.handlers
 
 import biweekly.Biweekly
 import biweekly.ICalendar
-import com.ice.ktuice.al.LectureCalendar.LectureCalendarModels.CalendarEvent
-import com.ice.ktuice.al.LectureCalendar.LectureCalendarModels.CalendarModel
+import com.ice.ktuice.models.lectureCalendarModels.CalendarEvent
+import com.ice.ktuice.models.lectureCalendarModels.CalendarModel
 import com.ice.ktuice.models.LoginModel
 import org.jsoup.Connection
 import org.jsoup.Jsoup
@@ -20,6 +20,7 @@ class CalendarHandler{
             val ical = Biweekly.parse(response.bodyStream()).first()
             val calendarModel = ical.toCalendarModel()
             calendarModel.studCode = login.studentId
+            calendarModel.eventList.sortBy { it.dateStart }
             return calendarModel
         }
 

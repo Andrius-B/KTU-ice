@@ -2,10 +2,15 @@
 
     <!-- Base application theme. -->
     <style name="iceTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/background</item>
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="iceLoginTheme" parent="iceTheme">
+        <item name="android:background">@drawable/splash</item>
     </style>
 
     <style name="mainActivityCardStyle">

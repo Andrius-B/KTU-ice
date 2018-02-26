@@ -42,7 +42,7 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent {
         var dbGrades = yearGradesRepository.getByStudCode(login.studentId, async)
         if(dbGrades == null){
             persistYearGradesModel(YearGradesCollectionModel(login.studentId))
-            dbGrades = getYearGradesListFromDB(async) // create a managed version if none exists
+            dbGrades = getYearGradesListFromDB(false) // create a managed version if none exists
         }
         return dbGrades
     }

@@ -26,16 +26,7 @@ class YearGradesRepositoryImpl: YearGradesRepository {
             }
     }
 
-
-
     override fun createOrUpdate(yearGradesModel: YearGradesCollectionModel) {
-        println("Create or update called for yearGradesCollection!")
-        val current = getByStudCode(yearGradesModel.studentId!!)
-        val isUpdate = if(current != null) {
-                                    println("An instance found, this must be an update call!")
-                                    true
-                                }else false
-
         val realm = Realm.getDefaultInstance()
         realm.use {
             realm.beginTransaction()

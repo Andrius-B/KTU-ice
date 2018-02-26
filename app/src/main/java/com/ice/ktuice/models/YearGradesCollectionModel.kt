@@ -25,6 +25,12 @@ open class YearGradesCollectionModel(): RealmObject(){
      */
     open var dateUpdated = Date()
 
+    /**
+     * The syncing flag between the view and the background
+     * service, that updates this collection
+     */
+    open var isUpdating = false
+
 
     /**
      * List interface delegation to the yearList variable
@@ -53,7 +59,7 @@ open class YearGradesCollectionModel(): RealmObject(){
     }
 
     fun forEach(action: (YearGradesModel) -> Unit): Unit {
-        for (element in yearList) action(element)
+        yearList.forEach(action)
     }
 
     fun find (action: (YearGradesModel) -> Boolean): YearGradesModel? {

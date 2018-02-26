@@ -41,35 +41,59 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
     /**
      * Class refrence for the realm result proxy to not get GC'ed
      */
-    private var grades = yearGradesService.getYearGradesListFromDB(true)
+    private var grades: YearGradesCollectionModel
+
+
+    private val tableManager = GradeTableManager()
     constructor(c: Context): this(c, null)
 
     init {
-        val realm = Realm.getDefaultInstance()
         inflate(context, R.layout.grade_table_layout, this)
-        val tableManager = GradeTableManager()
 
         val login = userService.getLoginForCurrentUser()!!
         println("User has semesters:"+login.studentSemesters.size)
-
+        grades  = yearGradesService.getYearGradesListFromDB(true)
         grades.addChangeListener{
             t:YearGradesCollectionModel ->
             println("Grades changed!")
-            if(grade_table_semmester_spinner.adapter == null){
-                val semesterSpinnerItems = tableManager.constructSemesterAdapterSpinnerItemList(t)
-                setUpSemesterSpinner(semesterSpinnerItems)
-                grade_table_semmester_spinner.setSelection(semesterSpinnerItems.lastIndex, true)
+            println("New Grades valid:"+t.isValid)
+            if(!t.isValid){
+                /*
+                    On the initial load, the returned value is just a placeholder,
+                    here we subscribe to the whole realm to keep track of the freshly loaded
+                    grade table
+                 */
+                isLoadingOverlayShown = true
+                Realm.getDefaultInstance().addChangeListener {
+                    grades  = yearGradesService.getYearGradesListFromDB(false)
+                    updateGradeTable(grades)
+                }
+                return@addChangeListener // break out of invalid changes
             }
-            //TODO change repositories to only keep a single copy of required yearGradesModels, so that realms change listeners work
-            val changedSemesterSpinnerItems = tableManager.constructSemesterAdapterSpinnerItemList(t)
-            val changedTableModel = tableManager.constructGradeTableModel(t)
-            val selectedSemesterSpinnerItem = grade_table_semmester_spinner.adapter.getItem(grade_table_semmester_spinner.selectedItemPosition) as SemesterAdapterItem
-
-            setUpSemesterSpinner(changedSemesterSpinnerItems)
-            tableModel = changedTableModel
-            grade_table_semmester_spinner.setSelection(changedSemesterSpinnerItems.indexOfFirst { it.semesterNumber.equals(selectedSemesterSpinnerItem.semesterNumber) })
-            println("_____________________________\n\r--------TABLE UPDATED")
+            Realm.getDefaultInstance().removeAllChangeListeners()
+            updateGradeTable(t)
         }
+    }
+    private fun updateGradeTable(grades: YearGradesCollectionModel){
+        if(grades.yearList.size == 0){
+
+            return@updateGradeTable
+        }
+        isLoadingOverlayShown = false
+        if(grade_table_semmester_spinner.adapter == null){
+            //construct table spinner on initial widget construction
+            val semesterSpinnerItems = tableManager.constructSemesterAdapterSpinnerItemList(grades)
+            setUpSemesterSpinner(semesterSpinnerItems)
+            grade_table_semmester_spinner.setSelection(semesterSpinnerItems.lastIndex, true)
+        }
+        val changedSemesterSpinnerItems = tableManager.constructSemesterAdapterSpinnerItemList(grades)
+        val changedTableModel = tableManager.constructGradeTableModel(grades)
+        val selectedSemesterSpinnerItem = grade_table_semmester_spinner.adapter.getItem(grade_table_semmester_spinner.selectedItemPosition) as SemesterAdapterItem
+
+        setUpSemesterSpinner(changedSemesterSpinnerItems)
+        tableModel = changedTableModel
+        grade_table_semmester_spinner.setSelection(changedSemesterSpinnerItems.indexOfFirst { it.semesterNumber.equals(selectedSemesterSpinnerItem.semesterNumber) })
+        println("_____________________________\n\r--------TABLE UPDATED--------")
     }
 
     /**
@@ -164,5 +188,14 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
         }
     }
 
-
+    /**
+     * Displays or hides the simple loading overlay, that covers the whole view
+     */
+    private var isLoadingOverlayShown: Boolean
+        get() = loading_overlay.isShown
+        set(value){
+            val newVisibility = if(value)View.VISIBLE
+                                    else View.GONE
+            loading_overlay.visibility = newVisibility
+        }
 }

@@ -1,4 +1,4 @@
-package com.ice.ktuice.al.LectureCalendar.LectureCalendarModels
+package com.ice.ktuice.models.lectureCalendarModels
 
 import io.realm.RealmList
 import io.realm.RealmObject

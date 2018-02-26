@@ -20,6 +20,8 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <CalendarView
+        android:visibility="gone"
+        android:background="@color/colorBackground"
         android:id="@+id/calendar_view"
         android:firstDayOfWeek="2"
         android:layout_width="0dp"
@@ -32,6 +34,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <ListView
+        android:background="@color/colorBackground"
         android:id="@+id/agenda_items"
         android:divider="@null"
         android:dividerHeight="0dp"
