@@ -19,35 +19,49 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <CalendarView
-        android:visibility="gone"
-        android:background="@color/colorBackground"
-        android:id="@+id/calendar_view"
-        android:firstDayOfWeek="2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <ListView
-        android:background="@color/colorBackground"
         android:id="@+id/agenda_items"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:scrollbars="none"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/calendar_view"
+        android:background="@color/colorBackground"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/calendar_layout_title"
         app:layout_constraintVertical_bias="0.0" />
+
+    <LinearLayout
+        android:id="@+id/calendar_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+        <ImageButton
+            android:id="@+id/calendar_toggle_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="@dimen/calendar_elevation"
+            android:background="@drawable/cal_button"
+            android:contentDescription="@string/expand_calendar_button_description"/>
+        <CalendarView
+            android:background="@color/colorBackground"
+            android:id="@+id/calendar_view"
+            android:firstDayOfWeek="2"
+            android:elevation="@dimen/calendar_elevation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

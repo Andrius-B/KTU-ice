@@ -9,7 +9,6 @@ import com.ice.ktuice.models.lectureCalendarModels.CalendarEvent
  * The data class for the calendar event adapter.
  * It might contain a Calendar event, but it sometimes does not - this should
  * be treated carefully, and mostly resoled by the type variable
- * for instance its nonsensical for a header to have an event.
  */
 class CalendarListItemModel(private var ce: CalendarEvent? = null){
     /**

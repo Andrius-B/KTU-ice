@@ -38,7 +38,9 @@ class CalendarManager {
              * the first event ends on a different day, then the latter starts,
              * insert a header with the date between them
              */
-            ret = CalendarListItemModel()
+            ret = CalendarListItemModel(CalendarEvent())
+            ret.dateStart = latter.dateStart
+            ret.dateEnd = latter.dateStart
             ret.type = Header
             ret.text = headerDateFormat.format(latter.dateStart)
         }else if(latter.dateEnd.time - former.dateStart.time < 1000*60*60*8){ // if dates are on the same
@@ -62,7 +64,6 @@ class CalendarManager {
 
         val cal1Day = headerDateFormat.format(d1)
         val cal2Day = headerDateFormat.format(d2)
-        println(String.format("comparing days of month:%s %s", cal1Day, cal2Day))
         return cal1Day == cal2Day
     }
 }

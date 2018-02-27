@@ -20,6 +20,7 @@ import java.text.DateFormat
 import java.util.*
 import com.ice.ktuice.al.LectureCalendar.CalendarListItemModel.ItemType.*
 import com.ice.ktuice.al.LectureCalendar.CalendarManager
+import java.lang.Math.abs
 
 /**
  * Created by Andrius on 2/24/2018.
@@ -30,31 +31,28 @@ class FragmentTimeTable: Fragment(), KoinComponent {
 
     private val calendarManager = CalendarManager()
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        println("Creating TimeTable fragment!")
-    }
+    /**
+     * On inflation the calendar is shown, but is moved (via setX()) as soon as possible
+     */
+    private var _calShowing = false
+    var isCalendarShowing: Boolean
+        get(){
+            return _calShowing
+        }
+        set(value){
+            val offset = if(value){
+                -calendar_view.width.toFloat()
+            }else{
+                calendar_view.width.toFloat()
+            }
+            calendar_view.postDelayed({
+                calendar_container.animate().xBy(offset)
+                _calShowing = value
+            }, 5)
+        }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater.inflate(R.layout.fragment_timetable, container, false)
-
-
-
-        doAsync ({
-            println(it)
-        },{
-            val eventList = calendarManager.getCalendarEventsModelFromWeb(userService.getLoginForCurrentUser()!!)
-            val now = Calendar.getInstance()
-            uiThread {
-                agenda_items.adapter = CalendarEventAdapter(it.activity!!, eventList)
-//                setViewForDate(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH))
-//                calendar_view.setOnDateChangeListener {
-//                    view, year, month, dayOfMonth ->
-//                    setViewForDate(year, month, dayOfMonth)
-//                }
-            }
-        })
         return view
     }
 
@@ -62,26 +60,51 @@ class FragmentTimeTable: Fragment(), KoinComponent {
         super.onViewCreated(view, savedInstanceState)
         agenda_items.isVerticalScrollBarEnabled = false
         agenda_items.isHorizontalScrollBarEnabled = false
-    }
 
-    private fun setViewForDate(year: Int, month:Int, dayOfMonth:Int){
-        val beforeDate = Calendar.getInstance()
-        val afterDate = Calendar.getInstance()
-        beforeDate.set(year, month, dayOfMonth, 0, 0, 0)
-        afterDate.set(year, month, dayOfMonth, 23, 59, 59)
-        /*val items = calendarModel.eventList.filter{
-            it.dateStart.after(beforeDate.time) && it.dateEnd.before(afterDate.time)
-        }.sortedBy { it.dateStart }
+        /**
+         * Download the calendar data and update the adapter
+         */
+        doAsync ({
+            println(it)
+        },{
+            val eventList = calendarManager.getCalendarEventsModelFromWeb(userService.getLoginForCurrentUser()!!)
+            val now = Calendar.getInstance()
+            uiThread {
+                val tableAdapter = CalendarEventAdapter(it.activity!!, eventList)
+                agenda_items.adapter = tableAdapter
+                setViewForDate(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), tableAdapter)
+                calendar_view.setOnDateChangeListener {
+                    _, year, month, dayOfMonth ->
+                    setViewForDate(year, month, dayOfMonth, tableAdapter)
+                }
+            }
+        })
 
-        val events = mutableListOf<CalendarListItemModel>()
-        val header = CalendarListItemModel()
-        header.type = Header
-        header.text = dateFormat.format(beforeDate.time)
-        events.add(header)
-        items.forEach {
-            events.add(CalendarListItemModel(it))
+        /**
+         * Toggle the calendar on button click
+         */
+        calendar_toggle_button.setOnClickListener {
+            isCalendarShowing = !isCalendarShowing
         }
 
-        agenda_items.adapter = CalendarEventAdapter(this.activity!!, events)*/
+        /**
+         * Hide the calendar initially
+         */
+        calendar_view.post{
+            calendar_container.x = calendar_view.measuredWidth.toFloat()
+        }
+    }
+
+    private fun setViewForDate(year: Int, month:Int, dayOfMonth:Int, adapter: CalendarEventAdapter){
+        val targetPos = adapter.getPositionFromDate(year,month, dayOfMonth)
+        agenda_items.smoothScrollToPosition(targetPos)
+        /* TODO scroll instantly if the delta scroll is too large
+        val currentPos = agenda_items.selectedItemPosition
+        if(abs(targetPos - currentPos) <= 20){
+            agenda_items.smoothScrollToPosition(targetPos)
+        }else{
+            agenda_items.setSelection(targetPos)
+        }*/
+
     }
 }

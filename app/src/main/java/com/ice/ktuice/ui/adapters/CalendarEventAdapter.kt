@@ -12,15 +12,14 @@ import android.widget.TextView
 import com.ice.ktuice.R
 import com.ice.ktuice.al.LectureCalendar.CalendarListItemModel
 import com.ice.ktuice.al.LectureCalendar.CalendarListItemModel.ItemType.*
+import java.lang.Math.abs
+import java.util.*
 
 /**
  * Created by Andrius on 2/23/2018.
  * TODO pass itemModels as realm results
  */
 class CalendarEventAdapter(private val context: Context, private val itemModels: List<CalendarListItemModel>): BaseAdapter() {
-    init{
-        //itemModels.sort("dateStart")
-    }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val inflater = LayoutInflater.from(context)
@@ -109,6 +108,31 @@ class CalendarEventAdapter(private val context: Context, private val itemModels:
         return  view
     }
 
+    /**
+     * Finds a header element, that has a start date as close as possible to the specified date
+     * returns the position of the found element
+     */
+    fun getPositionFromDate(year: Int, month: Int, dayOfMonth: Int): Int{
+        val cal = Calendar.getInstance()
+        cal.set(year, month, dayOfMonth, 0, 0, 0)
+
+        var minTimeDiff = Long.MAX_VALUE
+        var index = -1
+        itemModels.forEachIndexed{
+            i, it ->
+            try {
+                val eventCal = Calendar.getInstance()
+                eventCal.time = it.dateStart
+                val timeDiff = abs(eventCal.timeInMillis - cal.timeInMillis)
+                if(timeDiff < minTimeDiff){
+                    index = i
+                    minTimeDiff = timeDiff
+                }
+            }catch (e: Exception){ ; } //in case the adapter item event is not present
+        }
+        return index
+    }
+
     override fun getItem(position: Int): CalendarListItemModel? {
         return try{
                     itemModels[position]
@@ -120,5 +144,5 @@ class CalendarEventAdapter(private val context: Context, private val itemModels:
 
     override fun getItemId(position: Int) = position.toLong()
 
-    override fun getCount() = Int.MAX_VALUE
+    override fun getCount() = itemModels.size
 }
