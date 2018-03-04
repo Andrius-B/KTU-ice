@@ -21,6 +21,8 @@ import android.support.graphics.drawable.AnimatedVectorDrawableCompat
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.app.ActionBar
 import android.widget.TextView
+import com.alamkanak.weekview.MonthLoader
+import com.alamkanak.weekview.WeekViewEvent
 import com.ice.ktuice.ui.adapters.FragmentAdapter
 
 

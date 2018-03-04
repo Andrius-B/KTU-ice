@@ -52,4 +52,5 @@ dependencies {
     compile 'org.jsoup:jsoup:1.11.2'
     compile 'net.sf.biweekly:biweekly:0.6.1'
     compile 'com.android.support:design:27.1.0'
+    compile 'com.github.quivr:android-week-view:2.2.2'
 }

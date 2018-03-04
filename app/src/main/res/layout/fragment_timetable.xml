@@ -1,67 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
     android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/calendar_layout_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/daily_agenda_title"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ListView
-        android:id="@+id/agenda_items"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/colorBackground"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:scrollbars="none"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calendar_layout_title"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <LinearLayout
-        android:id="@+id/calendar_container"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="bottom"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-        <ImageButton
-            android:id="@+id/calendar_toggle_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:elevation="@dimen/calendar_elevation"
-            android:background="@drawable/cal_button"
-            android:contentDescription="@string/expand_calendar_button_description"/>
-        <CalendarView
-            android:background="@color/colorBackground"
-            android:id="@+id/calendar_view"
-            android:firstDayOfWeek="2"
-            android:elevation="@dimen/calendar_elevation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"/>
-    </LinearLayout>
-</android.support.constraint.ConstraintLayout>
+    <com.alamkanak.weekview.WeekView
+        android:id="@+id/week_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:eventTextColor="@android:color/white"
+        app:textSize="12sp"
+        app:hourHeight="60dp"
+        app:headerColumnPadding="8dp"
+        app:headerColumnTextColor="@color/colorPrimaryDark"
+        app:headerRowPadding="12dp"
+        app:columnGap="8dp"
+        app:minTime="7"
+        app:maxTime="21"
+        app:autoLimitTime="false"
+        app:xScrollingSpeed="1.21"
+        app:headerRowBackgroundColor="@android:color/background_light"
+        app:dayBackgroundColor="#05000000"
+        app:todayBackgroundColor="#1848adff"
+        app:headerColumnBackground="#ffffffff"
+        app:todayHeaderTextColor="@color/colorAccent"
+        app:newEventTimeResolutionInMinutes="15"
+        app:timeColumnResolution="30"
+        app:dropListenerEnabled="false"
+        app:minOverlappingMinutes="5"/>
+</RelativeLayout>

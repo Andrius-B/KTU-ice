@@ -12,14 +12,14 @@ import com.ice.ktuice.ui.main.fragments.FragmentTimeTable
 class FragmentAdapter(fm: FragmentManager): FragmentStatePagerAdapter(fm) {
     override fun getItem(position: Int): Fragment {
         val retFrag: Fragment
-        if(position == 0) retFrag = FragmentGrades()
-        else retFrag = FragmentTimeTable()
+        retFrag = if(position == 0) FragmentGrades()
+                  else FragmentTimeTable()
         return retFrag
     }
 
     override fun getCount() = 2
 
-    private val titles = arrayListOf("Grades", "Time Table")
+    private val titles = arrayListOf("Grades","TimeTable")
     override fun getPageTitle(position: Int) = titles[position]
 
 }
