@@ -13,17 +13,11 @@ import io.realm.Sort
  */
 class YearGradesRepositoryImpl: YearGradesRepository {
 
-    override fun getByStudCode(studCode:String, async:Boolean): YearGradesCollectionModel? {
+    override fun getByStudCode(studCode:String): YearGradesCollectionModel? {
         val realm = Realm.getDefaultInstance()
-        return if(async) {
-            realm.where(YearGradesCollectionModel::class.java)
-                    .equalTo("studentId", studCode)
-                    .findFirstAsync()
-            }else{
-                realm.where(YearGradesCollectionModel::class.java)
+        return realm.where(YearGradesCollectionModel::class.java)
                         .equalTo("studentId", studCode)
                         .findFirst()
-            }
     }
 
     override fun createOrUpdate(yearGradesModel: YearGradesCollectionModel) {
@@ -34,7 +28,6 @@ class YearGradesRepositoryImpl: YearGradesRepository {
             realm.commitTransaction()
             realm.close()
         }
-        println("Realm transaction complete, collection updated!")
     }
 
 }

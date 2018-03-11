@@ -5,31 +5,21 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.alamkanak.weekview.MonthLoader
 import com.alamkanak.weekview.WeekViewEvent
 import com.ice.ktuice.R
-import com.ice.ktuice.al.LectureCalendar.CalendarListItemModel
-import com.ice.ktuice.ui.adapters.CalendarEventAdapter
 import com.ice.ktuice.models.lectureCalendarModels.CalendarModel
 import com.ice.ktuice.al.services.userService.UserService
-import com.ice.ktuice.scraperService.handlers.CalendarHandler
 import kotlinx.android.synthetic.main.fragment_timetable.*
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
-import java.text.DateFormat
-import java.util.*
-import com.ice.ktuice.al.LectureCalendar.CalendarListItemModel.ItemType.*
 import com.ice.ktuice.al.LectureCalendar.CalendarManager
-import java.lang.Math.abs
+import io.realm.Realm
+import io.realm.RealmChangeListener
 
 /**
  * Created by Andrius on 2/24/2018.
  */
 class FragmentTimeTable: Fragment(), KoinComponent {
-    //private var calendarModel: CalendarModel = CalendarModel()
-    private val userService: UserService by inject()
 
     private val calendarManager = CalendarManager()
 
@@ -39,6 +29,8 @@ class FragmentTimeTable: Fragment(), KoinComponent {
         val view = inflater.inflate(R.layout.fragment_timetable, container, false)
         return view
     }
+
+    private var initialLoadChangeListener: RealmChangeListener<Realm>? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -59,27 +51,42 @@ class FragmentTimeTable: Fragment(), KoinComponent {
         week_view.setEventLongPressListener{event, eventRect ->  println("Long click on event!")}
 
         //this is what the developers of the lib use, but i think its a little non responsive if scrolling slowly
-        //week_view.xScrollingSpeed = -1 * (Math.log(2.5) / Math.log(1.0 / (1 + week_view.numberOfVisibleDays))).toFloat()
+        week_view.xScrollingSpeed = -1 * (Math.log(2.5) / Math.log(1.0 / (1 + week_view.numberOfVisibleDays))).toFloat()
 
 
         /**
-         * Download the calendar data and update the adapter
+         * Display all the upcoming events
          */
-        doAsync ({
-            println(it)
-        },{
+        val calendarSubject = calendarManager.getCalendarModel(this.activity!!)
+        calendarSubject.subscribe{
+            println("Changed calendar valid:"+it.isValid)
+            println("--------------------------------")
+            println("________CALENDAR UPDATED________")
+            updateWeekViewToCalendar(it)
+        }
 
-            val eventsTemp = calendarManager.getCalendarEventsModelFromWeb(userService.getLoginForCurrentUser()!!)
-            events.clear()
-            events.addAll(eventsTemp)
-            uiThread {
-                println("Calendar downloaded!")
-                week_view.notifyDatasetChanged()
-            }
-        })
     }
 
-    private fun setViewForDate(year: Int, month:Int, dayOfMonth:Int, adapter: CalendarEventAdapter){
-        val targetPos = adapter.getPositionFromDate(year,month, dayOfMonth)
+
+    private fun updateWeekViewToCalendar(calendar: CalendarModel){
+        println("Updating the calendar view!")
+        val eventList = weekViewEventsFromCalendar(calendar)
+        events.clear()
+        events.addAll(eventList)
+        week_view.notifyDatasetChanged()
+    }
+
+    private fun weekViewEventsFromCalendar(calendar: CalendarModel): List<WeekViewEvent>{
+        val list = mutableListOf<WeekViewEvent>()
+        calendar.eventList.forEach {
+            val event = WeekViewEvent()
+            event.startTime = CalendarManager.convertDateToCalendar(it.dateStart)
+            event.endTime = CalendarManager.convertDateToCalendar(it.dateEnd)
+            event.color = it.getCategoryColor(this.activity!!)
+            event.name = it.summary
+            event.location = it.getLocationString()
+            list.add(event)
+        }
+        return list
     }
 }

@@ -17,6 +17,7 @@ import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.ui.adapters.SemesterSpinnerAdapter
 import com.ice.ktuice.ui.main.dialogs.GradeTableCellDetailsDialog
 import io.realm.Realm
+import io.realm.RealmChangeListener
 import kotlinx.android.synthetic.main.grade_table_layout.view.*
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
@@ -38,42 +39,34 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
     private val CELL_PADDING_V: Int = context.resources.getInteger(R.integer.grade_table_cell_padding_vertical)
     private val CELL_TEXT_SIZE = context.resources.getInteger(R.integer.grade_table_cell_text_size).toFloat()
 
-    /**
-     * Class refrence for the realm result proxy to not get GC'ed
-     */
-    private var grades: YearGradesCollectionModel
-
 
     private val tableManager = GradeTableManager()
     constructor(c: Context): this(c, null)
+
 
     init {
         inflate(context, R.layout.grade_table_layout, this)
 
         val login = userService.getLoginForCurrentUser()!!
         println("User has semesters:"+login.studentSemesters.size)
-        grades  = yearGradesService.getYearGradesListFromDB(true)
-        grades.addChangeListener{
-            t:YearGradesCollectionModel ->
-            println("Grades changed!")
-            println("New Grades valid:"+t.isValid)
-            if(!t.isValid){
+        val gradesSubject  = yearGradesService.getYearGradesList()
+        gradesSubject.subscribe{
+            println("Grades change detected!")
+            println("New Grades valid:"+it.isValid)
+            if(it.isEmpty()){
                 /*
                     On the initial load, the returned value is just a placeholder,
                     here we subscribe to the whole realm to keep track of the freshly loaded
                     grade table
                  */
                 isLoadingOverlayShown = true
-                Realm.getDefaultInstance().addChangeListener {
-                    grades  = yearGradesService.getYearGradesListFromDB(false)
-                    updateGradeTable(grades)
-                }
-                return@addChangeListener // break out of invalid changes
+            }else{
+                updateGradeTable(it)
             }
-            Realm.getDefaultInstance().removeAllChangeListeners()
-            updateGradeTable(t)
         }
     }
+
+
     private fun updateGradeTable(grades: YearGradesCollectionModel){
         if(grades.yearList.size == 0){
 
