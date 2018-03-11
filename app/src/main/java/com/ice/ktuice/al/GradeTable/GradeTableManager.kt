@@ -29,13 +29,6 @@ class GradeTableManager: KoinComponent {
     private val userService: UserService by inject()
     private val yearGradesService: YearGradesService by inject()
 
-    fun getGradeTableModel(): GradeTableModel{
-        val login = userService.getLoginForCurrentUser()!!
-        val yearList = yearGradesService.getYearGradesListFromWeb()
-        val table = constructGradeTableModel(yearList)
-        return table!!
-    }
-
     fun constructGradeTableModel(yearGradesList: YearGradesCollectionModel): GradeTableModel?{
         try{
             val table = GradeTableFactory.buildGradeTableFromYearGradesModel(yearGradesList)

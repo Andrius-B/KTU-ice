@@ -5,106 +5,88 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.alamkanak.weekview.WeekViewEvent
 import com.ice.ktuice.R
-import com.ice.ktuice.al.LectureCalendar.CalendarListItemModel
-import com.ice.ktuice.ui.adapters.CalendarEventAdapter
 import com.ice.ktuice.models.lectureCalendarModels.CalendarModel
 import com.ice.ktuice.al.services.userService.UserService
-import com.ice.ktuice.scraperService.handlers.CalendarHandler
 import kotlinx.android.synthetic.main.fragment_timetable.*
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
-import java.text.DateFormat
-import java.util.*
-import com.ice.ktuice.al.LectureCalendar.CalendarListItemModel.ItemType.*
 import com.ice.ktuice.al.LectureCalendar.CalendarManager
-import java.lang.Math.abs
+import io.realm.Realm
+import io.realm.RealmChangeListener
 
 /**
  * Created by Andrius on 2/24/2018.
  */
 class FragmentTimeTable: Fragment(), KoinComponent {
-    //private var calendarModel: CalendarModel = CalendarModel()
-    private val userService: UserService by inject()
 
     private val calendarManager = CalendarManager()
 
-    /**
-     * On inflation the calendar is shown, but is moved (via setX()) as soon as possible
-     */
-    private var _calShowing = false
-    var isCalendarShowing: Boolean
-        get(){
-            return _calShowing
-        }
-        set(value){
-            val offset = if(value){
-                -calendar_view.width.toFloat()
-            }else{
-                calendar_view.width.toFloat()
-            }
-            calendar_view.postDelayed({
-                calendar_container.animate().xBy(offset)
-                _calShowing = value
-            }, 5)
-        }
+    private val events = mutableListOf<WeekViewEvent>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater.inflate(R.layout.fragment_timetable, container, false)
         return view
     }
 
+    private var initialLoadChangeListener: RealmChangeListener<Realm>? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        agenda_items.isVerticalScrollBarEnabled = false
-        agenda_items.isHorizontalScrollBarEnabled = false
 
-        /**
-         * Download the calendar data and update the adapter
-         */
-        doAsync ({
-            println(it)
-        },{
-            val eventList = calendarManager.getCalendarEventsModelFromWeb(userService.getLoginForCurrentUser()!!)
-            val now = Calendar.getInstance()
-            uiThread {
-                val tableAdapter = CalendarEventAdapter(it.activity!!, eventList)
-                agenda_items.adapter = tableAdapter
-                setViewForDate(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), tableAdapter)
-                calendar_view.setOnDateChangeListener {
-                    _, year, month, dayOfMonth ->
-                    setViewForDate(year, month, dayOfMonth, tableAdapter)
-                }
+        // Set an action when any event is clicked.
+        week_view.setOnEventClickListener{event, eventRect ->  println("Click on event!")}
+
+        // The week view has infinite scrolling horizontally. We have to provide the events of a
+        // month every time the month changes on the week view.
+        week_view.setMonthChangeListener { newYear, newMonth ->
+            run{
+                println("set date set:$newYear $newMonth")
             }
-        })
-
-        /**
-         * Toggle the calendar on button click
-         */
-        calendar_toggle_button.setOnClickListener {
-            isCalendarShowing = !isCalendarShowing
+            events
         }
 
+        // Set long press listener for events.
+        week_view.setEventLongPressListener{event, eventRect ->  println("Long click on event!")}
+
+        //this is what the developers of the lib use, but i think its a little non responsive if scrolling slowly
+        week_view.xScrollingSpeed = -1 * (Math.log(2.5) / Math.log(1.0 / (1 + week_view.numberOfVisibleDays))).toFloat()
+
+
         /**
-         * Hide the calendar initially
+         * Display all the upcoming events
          */
-        calendar_view.post{
-            calendar_container.x = calendar_view.measuredWidth.toFloat()
+        val calendarSubject = calendarManager.getCalendarModel(this.activity!!)
+        calendarSubject.subscribe{
+            println("Changed calendar valid:"+it.isValid)
+            println("--------------------------------")
+            println("________CALENDAR UPDATED________")
+            updateWeekViewToCalendar(it)
         }
+
     }
 
-    private fun setViewForDate(year: Int, month:Int, dayOfMonth:Int, adapter: CalendarEventAdapter){
-        val targetPos = adapter.getPositionFromDate(year,month, dayOfMonth)
-        agenda_items.smoothScrollToPosition(targetPos)
-        /* TODO scroll instantly if the delta scroll is too large
-        val currentPos = agenda_items.selectedItemPosition
-        if(abs(targetPos - currentPos) <= 20){
-            agenda_items.smoothScrollToPosition(targetPos)
-        }else{
-            agenda_items.setSelection(targetPos)
-        }*/
 
+    private fun updateWeekViewToCalendar(calendar: CalendarModel){
+        println("Updating the calendar view!")
+        val eventList = weekViewEventsFromCalendar(calendar)
+        events.clear()
+        events.addAll(eventList)
+        week_view.notifyDatasetChanged()
+    }
+
+    private fun weekViewEventsFromCalendar(calendar: CalendarModel): List<WeekViewEvent>{
+        val list = mutableListOf<WeekViewEvent>()
+        calendar.eventList.forEach {
+            val event = WeekViewEvent()
+            event.startTime = CalendarManager.convertDateToCalendar(it.dateStart)
+            event.endTime = CalendarManager.convertDateToCalendar(it.dateEnd)
+            event.color = it.getCategoryColor(this.activity!!)
+            event.name = it.summary
+            event.location = it.getLocationString()
+            list.add(event)
+        }
+        return list
     }
 }

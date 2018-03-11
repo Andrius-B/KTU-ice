@@ -9,7 +9,11 @@ import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.models.YearGradesModel
 import com.ice.ktuice.scraperService.ScraperService
 import com.ice.ktuice.scraperService.exceptions.AuthenticationException
+import io.reactivex.subjects.ReplaySubject
+import io.reactivex.subjects.Subject
 import io.realm.RealmResults
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
@@ -21,6 +25,38 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent {
 
     private val yearGradesRepository: YearGradesRepository by inject()
     private val userService: UserService by inject()
+    /**
+     * This variable keeps the current state of the service
+     */
+    private val currentSubject: Subject<YearGradesCollectionModel>? = null
+
+
+    /**
+     * Queries the database for a current version, and
+     * later returns a new yearGradesCollection from the web
+     */
+    override fun getYearGradesList(): Subject<YearGradesCollectionModel> {
+        val subject: ReplaySubject<YearGradesCollectionModel> = ReplaySubject.create(2)
+        val dbGrades = getYearGradesListFromDB()
+        subject.onNext(dbGrades)
+        doAsync {
+            val webGrades = getYearGradesListFromWeb()
+            uiThread {
+                persistYearGradesModel(webGrades)
+                subject.onNext(webGrades)
+            }
+        }
+        return subject
+    }
+
+    /**
+     * This function returns an observable state without starting any actual queries
+     * or network requests
+     */
+    override fun getYearGradesListSubject(): Subject<YearGradesCollectionModel>? {
+        return currentSubject
+    }
+
 
     override fun getYearGradesListFromWeb(): YearGradesCollectionModel {
         val login = userService.getLoginForCurrentUser()!!
@@ -36,13 +72,13 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent {
         return marks
     }
 
-    override fun getYearGradesListFromDB(async: Boolean): YearGradesCollectionModel {
-        println("Reading year grade models from the database!")
+    override fun getYearGradesListFromDB(): YearGradesCollectionModel {
+
         val login = userService.getLoginForCurrentUser()!!
-        var dbGrades = yearGradesRepository.getByStudCode(login.studentId, async)
+        var dbGrades = yearGradesRepository.getByStudCode(login.studentId)
         if(dbGrades == null){
             persistYearGradesModel(YearGradesCollectionModel(login.studentId))
-            dbGrades = getYearGradesListFromDB(false) // create a managed version if none exists
+            dbGrades = getYearGradesListFromDB() // create a managed version if none exists
         }
         return dbGrades
     }
@@ -50,6 +86,7 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent {
 
     override fun persistYearGradesModel(model: YearGradesCollectionModel){
         yearGradesRepository.createOrUpdate(model)
+        currentSubject?.onNext(model)
     }
 
 }

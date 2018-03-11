@@ -10,6 +10,7 @@ import com.ice.ktuice.DAL.repositories.loginRepository.LoginRepository
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.al.services.userService.UserService
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
+import com.ice.ktuice.models.YearGradesCollectionModel
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.getStackTraceString
 import org.jetbrains.anko.uiThread
@@ -34,33 +35,36 @@ class SyncJobService: JobService(), KoinComponent {
             jobFinished(jobParams, false)
         },{
             println("Getting logged in user on the service!")
-            val yearList = yearGradesService.getYearGradesListFromWeb()
-            val dbYearList = yearGradesService.getYearGradesListFromDB()
+            //starts the network request
+            val dbYear: YearGradesCollectionModel? = yearGradesService.getYearGradesListFromDB()
+            val webYear: YearGradesCollectionModel? = yearGradesService.getYearGradesListFromWeb()
+            if(dbYear != null && webYear != null){
 
-            val totalDifference = mutableListOf<Difference>()
+                val totalDifference = mutableListOf<Difference>()
 
-            yearList.forEach {
-                val freshYear = it
-                val previousYear = dbYearList.find { it.year.equals(freshYear.year) }
-                if(previousYear != null) {
-                    totalDifference.addAll(yearGradesComparator.compare(previousYear, freshYear))
-                }
-            }
-
-            uiThread {
-                println("Differences found:" + totalDifference.size)
-                if(totalDifference.isNotEmpty()){
-                    println("Differences found:"+totalDifference.size)
-                    totalDifference.forEach{
-                        println(String.format("\t\t type:%s change:%s", it.field.toString(), it.change.toString()))
+                webYear.forEach {
+                    val freshYear = it
+                    val previousYear = dbYear.find { it.year.equals(freshYear.year) }
+                    if(previousYear != null) {
+                        totalDifference.addAll(yearGradesComparator.compare(previousYear, freshYear))
                     }
-                    NotificationFactory(applicationContext).pushNotification(generateDifSummary(totalDifference))
                 }
-                println("Persisting the year list to the database, from the service!")
-                yearGradesService.persistYearGradesModel(yearList)
+
+                uiThread {
+                    println("Differences found:" + totalDifference.size)
+                    if(totalDifference.isNotEmpty()){
+                        println("Differences found:"+totalDifference.size)
+                        totalDifference.forEach{
+                            println(String.format("\t\t type:%s change:%s", it.field.toString(), it.change.toString()))
+                        }
+                        NotificationFactory(applicationContext).pushNotification(generateDifSummary(totalDifference))
+                    }
+                    println("Persisting the year list to the database, from the service!")
+                    yearGradesService.persistYearGradesModel(webYear)
+                }
+                println("service finished without errors!")
+                jobFinished(jobParams, false)
             }
-            println("service finished without errors!")
-            jobFinished(jobParams, false)
         })
         return true
     }
