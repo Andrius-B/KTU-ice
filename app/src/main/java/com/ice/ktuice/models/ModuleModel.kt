@@ -26,7 +26,7 @@ open class ModuleModel(
 ):RealmObject() {
 
     private var _grades: RealmList<GradeModel> = RealmList()
-    var grades: List<GradeModel>
+    var grades: MutableList<GradeModel>
         get(){
             val list = mutableListOf<GradeModel>()
             _grades.forEach{ list.add(it) }

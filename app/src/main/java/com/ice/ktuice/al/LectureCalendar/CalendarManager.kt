@@ -33,8 +33,6 @@ class CalendarManager() : KoinComponent {
     private val calendarRepository = CalendarRepositoryImpl()
     private val userService: UserService by inject()
 
-    private val headerDateFormat = DateFormat.getDateInstance()
-
     fun getCalendarEventsModelFromWeb(context: Context): CalendarModel{
         val login = userService.getLoginForCurrentUser()!!
         val calendar = CalendarHandler.getCalendar(login)

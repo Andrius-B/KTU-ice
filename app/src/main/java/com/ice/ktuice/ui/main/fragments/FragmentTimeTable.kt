@@ -59,12 +59,11 @@ class FragmentTimeTable: Fragment(), KoinComponent {
          */
         val calendarSubject = calendarManager.getCalendarModel(this.activity!!)
         calendarSubject.subscribe{
-            println("Changed calendar valid:"+it.isValid)
-            println("--------------------------------")
-            println("________CALENDAR UPDATED________")
             updateWeekViewToCalendar(it)
         }
-
+        goto_today_btn.setOnClickListener {
+            week_view.goToToday()
+        }
     }
 
 

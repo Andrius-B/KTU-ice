@@ -32,9 +32,6 @@ dependencies {
     compile 'org.jetbrains.anko:anko-common:0.9'
     implementation 'com.android.support:appcompat-v7:27.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:1.1.0"
@@ -54,6 +51,15 @@ dependencies {
     compile 'com.android.support:design:27.1.0'
     compile 'com.github.quivr:android-week-view:2.2.2'
 
-
+    //rxJava for submitting the models to views
     compile 'io.reactivex.rxjava2:rxkotlin:2.2.0'
+
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+    // Koin testing tools
+    testCompile 'org.koin:koin-test:0.8.1'
+    testCompile "org.mockito:mockito-core:2.16.0"
 }

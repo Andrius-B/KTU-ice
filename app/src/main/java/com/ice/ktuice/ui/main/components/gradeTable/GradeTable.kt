@@ -48,11 +48,8 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
         inflate(context, R.layout.grade_table_layout, this)
 
         val login = userService.getLoginForCurrentUser()!!
-        println("User has semesters:"+login.studentSemesters.size)
         val gradesSubject  = yearGradesService.getYearGradesList()
         gradesSubject.subscribe{
-            println("Grades change detected!")
-            println("New Grades valid:"+it.isValid)
             if(it.isEmpty()){
                 /*
                     On the initial load, the returned value is just a placeholder,
@@ -73,20 +70,19 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
             return@updateGradeTable
         }
         isLoadingOverlayShown = false
-        if(grade_table_semmester_spinner.adapter == null){
+        if(grade_table_semester_spinner.adapter == null){
             //construct table spinner on initial widget construction
             val semesterSpinnerItems = tableManager.constructSemesterAdapterSpinnerItemList(grades)
             setUpSemesterSpinner(semesterSpinnerItems)
-            grade_table_semmester_spinner.setSelection(semesterSpinnerItems.lastIndex, true)
+            grade_table_semester_spinner.setSelection(semesterSpinnerItems.lastIndex, true)
         }
         val changedSemesterSpinnerItems = tableManager.constructSemesterAdapterSpinnerItemList(grades)
         val changedTableModel = tableManager.constructGradeTableModel(grades)
-        val selectedSemesterSpinnerItem = grade_table_semmester_spinner.adapter.getItem(grade_table_semmester_spinner.selectedItemPosition) as SemesterAdapterItem
+        val selectedSemesterSpinnerItem = grade_table_semester_spinner.adapter.getItem(grade_table_semester_spinner.selectedItemPosition) as SemesterAdapterItem
 
         setUpSemesterSpinner(changedSemesterSpinnerItems)
         tableModel = changedTableModel
-        grade_table_semmester_spinner.setSelection(changedSemesterSpinnerItems.indexOfFirst { it.semesterNumber.equals(selectedSemesterSpinnerItem.semesterNumber) })
-        println("_____________________________\n\r--------TABLE UPDATED--------")
+        grade_table_semester_spinner.setSelection(changedSemesterSpinnerItems.indexOfFirst { it.semesterNumber.equals(selectedSemesterSpinnerItem.semesterNumber) })
     }
 
     /**
@@ -95,7 +91,7 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
      */
     private fun createViewForModel(gradeTableModel: GradeTableModel, semesterAdapterItem: SemesterAdapterItem? = null){
         grade_table_table_layout.removeAllViews()
-        grade_table_headers.removeAllViews()
+//        grade_table_headers.removeAllViews()
 
         if(semesterAdapterItem != null)gradeTableModel.selectSemester(semesterAdapterItem.semesterNumber)
         val rowModelList = gradeTableModel.getRows()
@@ -103,6 +99,22 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
 
         //header generation
         val weekTableRow = TableRow(context)
+
+        /**
+         * Adding the "week" row header
+         */
+        val weekTitleContainer = LinearLayout(context)
+        val weekTitle = TextView(context)
+        weekTitle.setText(R.string.grade_table_week_header)
+        weekTitleContainer.setPadding(CELL_PADDING_H,0,0,0)
+        weekTitle.setBackgroundResource(R.drawable.grade_cell_background)
+        weekTitleContainer.addView(weekTitle)
+        weekTitle.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        weekTableRow.addView(weekTitleContainer)
+
+        /**
+         * Adding all available week numbers
+         */
         weekModelList?.forEach {
             val weekText = TextView(context)
             weekText.text = it.week
@@ -111,14 +123,6 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
         }
         grade_table_table_layout.addView(weekTableRow, TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
 
-        val weekTitleContainer = LinearLayout(context)
-        val weekTitle = TextView(context)
-        weekTitle.setText(R.string.grade_table_week_header)
-        weekTitleContainer.setPadding(CELL_PADDING_H,0,0,0)
-        weekTitle.setBackgroundResource(R.drawable.grade_cell_background)
-        weekTitleContainer.addView(weekTitle)
-        weekTitle.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        grade_table_headers.addView(weekTitleContainer, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
 
         rowModelList?.forEach {
             val tableRow = TableRow(context)
@@ -128,7 +132,7 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
             moduleNameText.setPadding(CELL_PADDING_H, CELL_PADDING_V, CELL_PADDING_V, CELL_PADDING_H)
             moduleNameText.setTextSize(TypedValue.COMPLEX_UNIT_SP, CELL_TEXT_SIZE)
 
-            grade_table_headers.addView(moduleNameText, LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
+            tableRow.addView(moduleNameText)
 
             weekModelList?.forEach { weekModel ->
                 val markCellText = TextView(context)
@@ -147,30 +151,14 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
             grade_table_table_layout.addView(tableRow, TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
         }
 
-        val rPadding = grade_table_grade_scroll_view_content.paddingRight
-        val bPadding = grade_table_grade_scroll_view_content.paddingBottom
-        val tPadding = grade_table_grade_scroll_view_content.paddingTop
-        val headerWidth = grade_table_headers.measuredWidth
-
-        grade_table_grade_scroll_view_content.setPadding(headerWidth, tPadding, rPadding, bPadding)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            grade_table_grade_scroll_view.setOnScrollChangeListener{
-                view, scrollX, scrollY, oldScrollX, oldScrollY ->
-                //TODO make a toolbar-esque animation for the table headers
-                grade_table_headers.x = -scrollX.toFloat()
-            }
-        }else{
-            //TODO hide headers on Build < M
-        }
     }
 
     private fun setUpSemesterSpinner(itemList: List<SemesterAdapterItem>){
         val adapter = SemesterSpinnerAdapter(context, itemList)
-        grade_table_semmester_spinner.adapter = adapter
-        grade_table_semmester_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        grade_table_semester_spinner.adapter = adapter
+        grade_table_semester_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(p0: AdapterView<*>?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                // this should never happen
             }
 
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
