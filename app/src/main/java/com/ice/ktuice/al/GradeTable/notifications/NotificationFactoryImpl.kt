@@ -1,4 +1,4 @@
-package com.ice.ktuice.al.GradeTable
+package com.ice.ktuice.al.GradeTable.notifications
 
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
-import android.app.PendingIntent
 import android.content.Intent
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
@@ -17,7 +16,7 @@ import com.ice.ktuice.ui.main.MainActivity
 /**
  * Created by Andrius on 2/20/2018.
  */
-class NotificationFactory(val context: Context) {
+class NotificationFactoryImpl(val context: Context): NotificationFactory{
     companion object {
 
         private var _notificationTrack = 416
@@ -30,7 +29,7 @@ class NotificationFactory(val context: Context) {
         createNotificationChannel()
     }
 
-    fun pushNotification(message: String){
+    override fun pushNotification(message: String){
         println("pushing notification!")
         // The id of the channel.
         val CHANNEL_ID = "test_notification_channel"

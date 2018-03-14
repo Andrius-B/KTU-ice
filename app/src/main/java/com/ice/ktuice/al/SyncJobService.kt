@@ -2,13 +2,10 @@ package com.ice.ktuice.al
 
 import android.app.job.JobParameters
 import android.app.job.JobService
-import com.ice.ktuice.al.GradeTable.GradeTableManager
-import com.ice.ktuice.al.GradeTable.NotificationFactory
+import com.ice.ktuice.al.GradeTable.notifications.NotificationFactory
+import com.ice.ktuice.al.GradeTable.notifications.NotificationFactoryImpl
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.Difference
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparator
-import com.ice.ktuice.DAL.repositories.loginRepository.LoginRepository
-import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
-import com.ice.ktuice.al.services.userService.UserService
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.models.YearGradesCollectionModel
 import org.jetbrains.anko.doAsync
@@ -24,6 +21,7 @@ import org.koin.standalone.inject
 class SyncJobService: JobService(), KoinComponent {
     private val yearGradesService: YearGradesService by inject()
     private val yearGradesComparator: YearGradesModelComparator by inject()
+    private val notificationFactory: NotificationFactory by inject()
 
     private var jobParams: JobParameters? = null
 
@@ -34,30 +32,32 @@ class SyncJobService: JobService(), KoinComponent {
             println(it.getStackTraceString())
             jobFinished(jobParams, false)
         },{
-            println("Getting logged in user on the service!")
+            println("Starting comparison async")
             //starts the network request
             val dbYear: YearGradesCollectionModel? = yearGradesService.getYearGradesListFromDB()
             val webYear: YearGradesCollectionModel? = yearGradesService.getYearGradesListFromWeb()
             if(dbYear != null && webYear != null){
-
+                println("Both the models are not null")
                 val totalDifference = mutableListOf<Difference>()
 
-                webYear.forEach {
+                webYear.yearList.forEach {
                     val freshYear = it
                     val previousYear = dbYear.find { it.year.equals(freshYear.year) }
                     if(previousYear != null) {
-                        totalDifference.addAll(yearGradesComparator.compare(previousYear, freshYear))
+                        println("previous year found!")
+                        val newDiff = yearGradesComparator.compare(previousYear, freshYear)
+                        totalDifference.addAll(newDiff)
+                        println("Differences for this year:${newDiff.size}")
                     }
                 }
-
+                println("Differences found:" + totalDifference.size)
                 uiThread {
-                    println("Differences found:" + totalDifference.size)
                     if(totalDifference.isNotEmpty()){
                         println("Differences found:"+totalDifference.size)
                         totalDifference.forEach{
                             println(String.format("\t\t type:%s change:%s", it.field.toString(), it.change.toString()))
                         }
-                        NotificationFactory(applicationContext).pushNotification(generateDifSummary(totalDifference))
+                        notificationFactory.pushNotification(generateDifSummary(totalDifference))
                     }
                     println("Persisting the year list to the database, from the service!")
                     yearGradesService.persistYearGradesModel(webYear)

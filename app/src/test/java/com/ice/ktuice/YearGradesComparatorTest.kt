@@ -1,14 +1,14 @@
 package com.ice.ktuice
 
+import com.ice.ktuice.TestYearGradesCollectionProvider.Companion.addMark
+import com.ice.ktuice.TestYearGradesCollectionProvider.Companion.createDefaultYearGradesCollection
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.Difference
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparator
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparatorImpl
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
-import com.ice.ktuice.al.services.yearGradesService.YearGradesServiceImpl
 import com.ice.ktuice.models.*
 import io.realm.RealmList
-import org.junit.After
-import org.junit.Before
+import junit.framework.Assert.assertTrue
 import org.junit.Test
 import org.koin.dsl.module.Module
 import org.koin.dsl.module.applicationContext
@@ -18,7 +18,6 @@ import org.koin.standalone.inject
 import org.koin.test.KoinTest
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
-import java.time.Year
 
 /**
  * Created by Andrius on 3/13/2018.
@@ -51,9 +50,9 @@ class YearGradesComparatorTest: KoinTest {
         val new = service.getYearGradesListFromWeb()!!
 
         val differences = comparator.compare(db.yearList.last()!!, new.yearList.last()!!);
-
-        assert(differences.isEmpty())
         closeKoin()
+
+        assertTrue(differences.isEmpty())
     }
 
     /**
@@ -61,25 +60,8 @@ class YearGradesComparatorTest: KoinTest {
      */
     @Test
     fun `One new mark added`(){
-        val defaultGradeCollectionWithAddedGrade = createDefaultYearGradesCollection()
-        defaultGradeCollectionWithAddedGrade.yearList.last()!!.semesterList.last()!!.moduleList.last()!!
-                .grades.add(
-                    GradeModel(
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "17",
-                            listOf("8")
-                    )
-                )
+        val defaultGradeCollection= createDefaultYearGradesCollection()
+        val defaultGradeCollectionWithAddedGrade = addMark(defaultGradeCollection)
 
         val serviceMock = mock(YearGradesService::class.java)
         `when`(serviceMock.getYearGradesListFromDB()).thenReturn(createDefaultYearGradesCollection())
@@ -96,14 +78,15 @@ class YearGradesComparatorTest: KoinTest {
         val db = service.getYearGradesListFromDB()!!
         val new = service.getYearGradesListFromWeb()!!
 
-        val differences = comparator.compare(db.yearList.last()!!, new.yearList.last()!!);
+        val differences = comparator.compare(db.yearList.last()!!, new.yearList.last()!!)
 
-        assert(differences.size == 1)
-        assert(differences.find { it.field == Difference.Field.Grade &&
+        closeKoin()
+
+        assertTrue(differences.size == 1)
+        assertTrue(differences.find { it.field == Difference.Field.Grade &&
                                   it.change == Difference.FieldChange.Added &&
                                   it.supplementary!!.javaClass == GradeModel::class.java
                                   } != null)
-        closeKoin()
     }
 
     /**
@@ -131,77 +114,13 @@ class YearGradesComparatorTest: KoinTest {
         val new = service.getYearGradesListFromWeb()!!
 
         val differences = comparator.compare(db.yearList.last()!!, new.yearList.last()!!);
+        closeKoin()
 
-        assert(differences.size == 1)
-        assert(differences.find {
+        assertTrue(differences.size == 1)
+        assertTrue(differences.find {
                 it.field == Difference.Field.Grade &&
                 it.change == Difference.FieldChange.Changed &&
                 it.supplementary!!.javaClass == GradeModel::class.java
         } != null)
-        closeKoin()
-    }
-
-
-    /**
-     * Creates a year collection model with one year and one semester
-     */
-    private fun createDefaultYearGradesCollection(): YearGradesCollectionModel{
-        val moduleList = RealmList<ModuleModel>()
-
-        val semester = "Rudens semestras 2017"
-        val semesterNumber = "2017/1" // not sure about what exactly should be here
-        //but it should not matter much for these tests
-        for(moduleIndex in 0..6){
-            val moduleCode = "PB1821035$moduleIndex"
-            val moduleName = "Kompiuterinė Grafika$moduleIndex"
-
-            val markList = RealmList<GradeModel>()
-            for(markIndex in 0..5){
-                markList.add(
-                        GradeModel(
-                                "",
-                                "",
-                                semester,
-                                moduleCode,
-                                moduleName,
-                                semesterNumber,
-                                " ",
-                                " ",
-                                " ",
-                                "KD",
-                                "1",
-                                "$markIndex",
-                                listOf(
-                                        "$markIndex"
-                                ))
-                )
-            }
-
-            val module = ModuleModel(
-                    semester,
-                    semesterNumber,
-                    moduleCode,
-                    moduleName,
-                    "", // these are blank here, because irrelevant
-                    "",
-                    "",
-                    "",
-                    "",
-                    markList
-            )
-            moduleList.add(module)
-        }
-
-        val semesterModel = SemesterModel(
-                semester,
-                semesterNumber,
-                moduleList
-        )
-        val yearModel = YearGradesModel()
-        yearModel.semesterList.add(semesterModel)
-
-        val collectionModel = YearGradesCollectionModel()
-        collectionModel.yearList.add(yearModel)
-        return collectionModel
     }
 }
