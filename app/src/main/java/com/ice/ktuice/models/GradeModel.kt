@@ -45,7 +45,7 @@ open class GradeModel(
                 var same = true
                 this.marks.forEach {
                         if(!grade.marks.contains(it)){
-                                same = false;
+                                same = false
                         }
                 }
                 return same

@@ -53,7 +53,7 @@ class SyncJobService: JobService(), KoinComponent {
 
 
                 if(totalDifference.isNotEmpty()){
-                    println("Differences found:(ui thread)"+totalDifference.size)
+                    println("Differences found (ui thread): ${totalDifference.size}")
                     totalDifference.forEach{
                         println(String.format("\t\t type:%s change:%s", it.field.toString(), it.change.toString()))
                     }

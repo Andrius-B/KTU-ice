@@ -78,4 +78,33 @@ class SyncJobServiceNotificationTest: KoinTest{
 
         verify(notificationFactoryMock, times(1)).pushNotification(ArgumentMatchers.anyString())
     }
+
+    @Test
+    fun `Mark changed notification`(){
+        val defaultGradeCollectionWithChangedGrade= TestYearGradesCollectionProvider.createDefaultYearGradesCollection()
+        defaultGradeCollectionWithChangedGrade.yearList.last()!!.semesterList.last()!!.moduleList.last()!!
+                .grades.last()!!.marks.add("10")
+
+
+        val yearGradesServiceMock = mock(YearGradesService::class.java)
+        `when`(yearGradesServiceMock.getYearGradesListFromDB()).thenReturn(TestYearGradesCollectionProvider.createDefaultYearGradesCollection())
+        `when`(yearGradesServiceMock.getYearGradesListFromWeb()).thenReturn(defaultGradeCollectionWithChangedGrade)
+
+        val notificationFactoryMock = Mockito.mock(NotificationFactory::class.java)
+
+        val module: Module = applicationContext {
+            provide { yearGradesServiceMock as YearGradesService }
+            provide { YearGradesModelComparatorImpl() as YearGradesModelComparator }
+            provide { notificationFactoryMock as NotificationFactory }
+        }
+        startKoin(listOf(module))
+
+        val service = SyncJobService()
+        service.onStartJob(null)
+        sleep(500) // wait for the service to finish
+        //(this is because, the comparison and fetching of the grade tables happens in a background thread)
+        closeKoin()
+
+        verify(notificationFactoryMock, times(1)).pushNotification(ArgumentMatchers.anyString())
+    }
 }

@@ -34,8 +34,8 @@ class YearGradesModelComparatorImpl: YearGradesModelComparator {
                             Difference(Difference.Field.Grade, Difference.FieldChange.Added, it)
                     )
                 }else{
-                    val oldGrade = prevList.find{ it.isOnSameDate(newGrade) }!!
-                    if(!newGrade.gradesEqual(oldGrade)){
+                    val oldGrade = prevList.find{ it.isOnSameDate(newGrade) && newGrade.gradesEqual(it) }
+                    if(oldGrade == null){
                         /**
                          * Case where there was a mark, and it now is changed
                          */
