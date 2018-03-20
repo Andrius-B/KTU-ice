@@ -47,7 +47,7 @@ class FragmentGrades: Fragment(), KoinComponent {
             logout()
             return@onViewCreated
         }else{
-            println("Student code is:"+requestedStudentId)
+            println("Student code is:$requestedStudentId")
         }
         val loginModel = loginRepository.getByStudCode(requestedStudentId)
         if(loginModel == null){

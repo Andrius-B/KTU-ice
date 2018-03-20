@@ -5,13 +5,11 @@ import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelCom
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparatorImpl
 import com.ice.ktuice.al.SyncJobService
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
-import junit.framework.Assert.assertTrue
 import org.junit.Test
 import org.koin.dsl.module.Module
 import org.koin.dsl.module.applicationContext
 import org.koin.standalone.StandAloneContext.closeKoin
 import org.koin.standalone.StandAloneContext.startKoin
-import org.koin.standalone.inject
 import org.koin.test.KoinTest
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
@@ -51,6 +49,9 @@ class SyncJobServiceNotificationTest: KoinTest{
         verify(notificationFactoryMock, times(0)).pushNotification(ArgumentMatchers.anyString())
     }
 
+    /**
+     * In case a mark is added, we should push a notification
+     */
     @Test
     fun `Mark added notification`(){
         val defaultGradeCollection= TestYearGradesCollectionProvider.createDefaultYearGradesCollection()
@@ -68,23 +69,13 @@ class SyncJobServiceNotificationTest: KoinTest{
             provide { notificationFactoryMock as NotificationFactory }
         }
         startKoin(listOf(module))
-        val yearService by inject<YearGradesService>()
-        val comparator by inject<YearGradesModelComparator>()
-
-        val db = yearService.getYearGradesListFromDB()!!
-        val new = yearService.getYearGradesListFromWeb()!!
-
-        // TODO remove this part, its to simulate what happens in the service
-        val differences = comparator.compare(db.yearList.last()!!, new.yearList.last()!!)
-        println("Differences in test:${differences.size}")
-
 
         val service = SyncJobService()
         service.onStartJob(null)
-        sleep(500) // wait for the service to finish
+        sleep(1000) // wait for the service to finish
+        //(this is because, the comparison and fetching of the grade tables happens in a background thread)
         closeKoin()
 
-        assertTrue(differences.size == 1)
         verify(notificationFactoryMock, times(1)).pushNotification(ArgumentMatchers.anyString())
     }
 }

@@ -22,25 +22,8 @@ open class ModuleModel(
         var misc: String = "",
         var p1: String? = "", // aka p1
         var p2: String? = "", // aka p2
-        gradesList: List<GradeModel> = listOf()
+        var grades: RealmList<GradeModel> = RealmList()
 ):RealmObject() {
-
-    private var _grades: RealmList<GradeModel> = RealmList()
-    var grades: MutableList<GradeModel>
-        get(){
-            val list = mutableListOf<GradeModel>()
-            _grades.forEach{ list.add(it) }
-            return list
-        }
-        set(value){
-            _grades = RealmList()
-            value.forEach { _grades.add(it) }
-        }
-    init{
-        gradesList.forEach {
-            _grades.add(it)
-        }
-    }
 
     constructor(element: Element): this(
             semester = getSemester(element),
@@ -52,7 +35,7 @@ open class ModuleModel(
             misc = getMisc(element),
             p1 = getP1(element),
             p2 = getP2(element),
-            gradesList = RealmList()
+            grades = RealmList()
     )
 
     //since the model information is embedded into the mark model, this constructor makes sense.
@@ -66,7 +49,7 @@ open class ModuleModel(
             misc = "",
             p1 = null,
             p2 = null,
-            gradesList = RealmList(gradeModel)
+            grades = RealmList(gradeModel)
     )
 
     /**

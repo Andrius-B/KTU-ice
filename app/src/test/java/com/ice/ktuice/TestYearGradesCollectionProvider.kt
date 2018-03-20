@@ -72,24 +72,22 @@ class TestYearGradesCollectionProvider {
         }
 
         fun addMark(yearGradesCollectionModel: YearGradesCollectionModel): YearGradesCollectionModel {
-            yearGradesCollectionModel.yearList.last()!!.semesterList.last()!!.moduleList.last()!!
-                    .grades.add(
-                    GradeModel(
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "17",
-                            listOf("8")
-                    )
+            val newGrade = GradeModel(
+                    "TEST TEST TEST",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "17",
+                    listOf("8")
             )
+            yearGradesCollectionModel.yearList.last()!!.semesterList.last()!!.moduleList.last()!!.grades.add(newGrade)
             return yearGradesCollectionModel
         }
     }

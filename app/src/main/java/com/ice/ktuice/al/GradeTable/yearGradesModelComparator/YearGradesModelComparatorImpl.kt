@@ -15,32 +15,40 @@ class YearGradesModelComparatorImpl: YearGradesModelComparator {
 
         if(!sameYear)throw IllegalArgumentException("Can not compare YearGradesModels of different years!")
 
-        (semesterCountDifference until 0)
-                .map {
-                    if (it > 0) Difference.FieldChange.Added
-                    else Difference.FieldChange.Removed
-                }
-                .forEach { diff.add(Difference(Difference.Field.Semester, it)) }
+        println(String.format("The years are the same:%s", sameYear))
+        println("Semester count difference $semesterCountDifference")
+        println("Mark count difference $markCountDifference")
 
-        (markCountDifference until 0)
-                .map {
-                    if(it >0) Difference.FieldChange.Added
-                    else Difference.FieldChange.Removed
+
+        val newList = new.convertToGradeList()
+        val prevList = previous.convertToGradeList()
+
+            newList.forEach{
+                val newGrade = it
+
+                if(prevList.find{it.isOnSameDate(newGrade)} == null){
+                    /**
+                     * Case where there was no grade on the same date before this latest update
+                     */
+                    diff.add(
+                            Difference(Difference.Field.Grade, Difference.FieldChange.Added, it)
+                    )
+                }else{
+                    val oldGrade = prevList.find{ it.isOnSameDate(newGrade) }!!
+                    if(!newGrade.gradesEqual(oldGrade)){
+                        /**
+                         * Case where there was a mark, and it now is changed
+                         */
+                        diff.add(Difference(Difference.Field.Grade, Difference.FieldChange.Changed, newGrade))
+                    }
                 }
-                .forEach { diff.add(Difference(Difference.Field.Grade, it)) }
+            }
 
         return diff
     }
 
     private fun getMarkCount(model: YearGradesModel): Int {
-        var markCount = 0
-        model.semesterList.forEach {
-            it.moduleList.forEach {
-                it.grades.forEach {
-                    markCount += it.marks.size
-                }
-            }
-        }
-        return markCount
+        return model.convertToGradeList().size
     }
+
 }

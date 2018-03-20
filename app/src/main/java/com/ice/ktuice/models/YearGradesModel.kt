@@ -36,7 +36,7 @@ open class YearGradesModel(
          */
         private var yearStr: String = year.year
 
-    /**
+        /**
          * Concatenate relevant content of the table to a string and then hash it
          */
         override fun hashCode(): Int {
@@ -61,4 +61,15 @@ open class YearGradesModel(
                 return contentString.hashCode()
         }
 
+        fun convertToGradeList(): List<GradeModel>{
+            val list = mutableListOf<GradeModel>()
+            this.semesterList.forEach {
+                it.moduleList.forEach{
+                    it.grades.forEach{
+                        list.add(it)
+                    }
+                }
+            }
+            return list
+        }
 }

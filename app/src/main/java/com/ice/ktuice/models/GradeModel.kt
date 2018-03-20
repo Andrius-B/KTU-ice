@@ -36,4 +36,18 @@ open class GradeModel(
                 }
                 return empty
         }
+
+        fun isOnSameDate(grade: GradeModel): Boolean {
+                return week == grade.week
+        }
+
+        fun gradesEqual(grade: GradeModel): Boolean {
+                var same = true
+                this.marks.forEach {
+                        if(!grade.marks.contains(it)){
+                                same = false;
+                        }
+                }
+                return same
+        }
 }

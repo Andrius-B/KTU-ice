@@ -96,7 +96,7 @@ class YearGradesComparatorTest: KoinTest {
     fun `Mark changed`(){
         val defaultGradeCollectionWithChangedGrade= createDefaultYearGradesCollection()
         defaultGradeCollectionWithChangedGrade.yearList.last()!!.semesterList.last()!!.moduleList.last()!!
-                .grades.last().marks.add("10")
+                .grades.last()!!.marks.add("10")
 
         val serviceMock = mock(YearGradesService::class.java)
         `when`(serviceMock.getYearGradesListFromDB()).thenReturn(createDefaultYearGradesCollection())

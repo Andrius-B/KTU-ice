@@ -50,18 +50,18 @@ class SyncJobService: JobService(), KoinComponent {
                         println("Differences for this year:${newDiff.size}")
                     }
                 }
-                println("Differences found:" + totalDifference.size)
-                uiThread {
-                    if(totalDifference.isNotEmpty()){
-                        println("Differences found:"+totalDifference.size)
-                        totalDifference.forEach{
-                            println(String.format("\t\t type:%s change:%s", it.field.toString(), it.change.toString()))
-                        }
-                        notificationFactory.pushNotification(generateDifSummary(totalDifference))
+
+
+                if(totalDifference.isNotEmpty()){
+                    println("Differences found:(ui thread)"+totalDifference.size)
+                    totalDifference.forEach{
+                        println(String.format("\t\t type:%s change:%s", it.field.toString(), it.change.toString()))
                     }
-                    println("Persisting the year list to the database, from the service!")
-                    yearGradesService.persistYearGradesModel(webYear)
+                    println("Pushing notification!")
+                    notificationFactory.pushNotification(generateDifSummary(totalDifference))
                 }
+                println("Persisting the year list to the database, from the service!")
+                yearGradesService.persistYearGradesModel(webYear)
                 println("service finished without errors!")
                 jobFinished(jobParams, false)
             }
