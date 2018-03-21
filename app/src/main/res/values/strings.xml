@@ -31,4 +31,10 @@
     <string name="loading">Loading..</string>
     <string name="expand_calendar_button_description">Expand calendar button</string>
     <string name="goto_today_btn">Today</string>
+
+    <!--Strings for generating notification content-->
+    <string name="notification_new_mark_found">New mark: %s</string>
+    <string name="notification_new_marks_found">Multiple new marks!</string>
+    <string name="notification_mark_updated">Mark updated!</string>
+    <string name="notification_grade_table_changed">Grade table changed!</string>
 </resources>
