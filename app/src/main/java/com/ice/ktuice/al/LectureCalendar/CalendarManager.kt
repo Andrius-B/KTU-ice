@@ -59,7 +59,16 @@ class CalendarManager() : KoinComponent {
             val freshCalendar = getCalendarEventsModelFromWeb(context)
             uiThread {
                 calendarRepository.createOrUpdate(freshCalendar)
-                subject.onNext(freshCalendar)
+                try {
+                    /**
+                     * The subject does not guarantee that a listener is present
+                     * and thus if the activity is disposed of,
+                     * an exception is thrown here
+                     */
+                    subject.onNext(freshCalendar)
+                }catch (e: Exception){
+                    println(e.getStackTraceString())
+                }
             }
         })
         return subject

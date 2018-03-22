@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bitmap xmlns:android="http://schemas.android.com/apk/res/android"
-    android:src="@drawable/login_background_image_hd"
+    android:src="@drawable/login_background_image_480p"
     android:dither="true"
     android:antialias="false"
     android:mipMap="true"

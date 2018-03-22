@@ -13,7 +13,8 @@
         android:adjustViewBounds="true"
         android:contentDescription="@string/login_image_description"
         android:scaleType="centerCrop"
-        android:src="@drawable/login_background_drawable" />
+        android:src="@drawable/login_background_drawable"
+         />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/linearLayout"

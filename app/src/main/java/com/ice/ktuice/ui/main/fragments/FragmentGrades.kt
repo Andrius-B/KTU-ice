@@ -17,6 +17,7 @@ import com.ice.ktuice.R
 import com.ice.ktuice.al.SyncJobService
 import com.ice.ktuice.ui.login.LoginActivity
 import kotlinx.android.synthetic.main.fragment_grades.*
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.runOnUiThread
 import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
@@ -41,43 +42,44 @@ class FragmentGrades: Fragment(), KoinComponent {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        scheduleJob()
-        val requestedStudentId = preferenceRepository.getValue(R.string.logged_in_user_code)
-        if(requestedStudentId.isBlank()){
-            println("StudentCode not found, quitting!")
-            logout()
-            return@onViewCreated
-        }else{
-            println("Student code is:$requestedStudentId")
-        }
-        val loginModel = loginRepository.getByStudCode(requestedStudentId)
-        if(loginModel == null){
-            println("Login model is null!")
-            logout()
-            return@onViewCreated
-        }
-        println("login model created!")
-        info_semesters_found.text = loginModel.studentSemesters.size.toString()
-        info_student_code.text = loginModel.studentId
-        info_student_name.text = loginModel.studentName
-
-        logout_btn.setOnClickListener{
-            activity?.runOnUiThread {
+        doAsync {
+            scheduleJob()
+            val requestedStudentId = preferenceRepository.getValue(R.string.logged_in_user_code)
+            if(requestedStudentId.isBlank()){
+                println("StudentCode not found, quitting!")
+                logout()
+            }else{
+                println("Student code is:$requestedStudentId")
+            }
+            val loginModel = loginRepository.getByStudCode(requestedStudentId)
+            if(loginModel == null){
+                println("Login model is null!")
                 logout()
             }
-        }
+            println("login model created!")
+            loginModel!!
+            info_semesters_found.text = loginModel.studentSemesters.size.toString()
+            info_student_code.text = loginModel.studentId
+            info_student_name.text = loginModel.studentName
 
-        test_button.setOnClickListener{
-            println("job scheduling test button tap!")
-            scheduleJob()
+            logout_btn.setOnClickListener{
+                activity?.runOnUiThread {
+                    logout()
+                }
+            }
+
+            test_button.setOnClickListener{
+                println("job scheduling test button tap!")
+                scheduleJob()
+            }
         }
     }
 
     private fun logout(){
-        preferenceRepository.setValue(R.string.shared_preference_file_key, "") // clear out the logged in user code from prefrences
         this.activity?.runOnUiThread{
+                preferenceRepository.setValue(R.string.logged_in_user_code, "") // clear out the logged in user code from prefrences
                 val intent = Intent(this.activity, LoginActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
                 this.activity?.finish()
             }
@@ -94,40 +96,5 @@ class FragmentGrades: Fragment(), KoinComponent {
         }
         jobScheduler?.schedule(builder.build())
     }
-
-
-// TODO implement icons AVD in the tab layouts (this code left here for inspiration)
-//    private fun prepareDrawerButtons(){
-//        val buttonList = mutableListOf<Pair<TextView, Int>>()
-//        buttonList.add(Pair(marks_button, R.drawable.avd_table_to_square))
-//        buttonList.add(Pair(student_info_button, R.drawable.avd_account_to_square))
-//        buttonList.forEach{
-//            println("Registered click listener for textview with text:"+it.first.text)
-//            val drawable = AnimatedVectorDrawableCompat.create(applicationContext, it.second)!!
-//            it.first.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null)
-//            it.first.invalidate()
-//            println("drawables set!")
-//            drawable.registerAnimationCallback(DrawableAnimationCallback(applicationContext, it.first, it.second))
-//            it.first.setOnClickListener {
-//                println("item click!")
-//                drawable.start()
-//            }
-//        }
-//    }
-//
-//    @RequiresApi(Build.VERSION_CODES.M)
-//    private class DrawableAnimationCallback(val context: Context, val textView: TextView, val resource: Int): Animatable2Compat.AnimationCallback() {
-//
-//        override fun onAnimationEnd(drawable: Drawable?) {
-//            //super.onAnimationEnd(drawable)
-//            val newDrawable = AnimatedVectorDrawableCompat.create(context, resource)!!
-//            newDrawable.registerAnimationCallback(this)
-//            textView.setCompoundDrawablesWithIntrinsicBounds(null, newDrawable, null, null)
-//            textView.setOnClickListener {
-//                println("item click!")
-//                newDrawable.start()
-//            }
-//        }
-//    }
 
 }
