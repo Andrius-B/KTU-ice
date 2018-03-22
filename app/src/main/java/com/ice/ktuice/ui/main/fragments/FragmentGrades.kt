@@ -15,6 +15,7 @@ import com.ice.ktuice.DAL.repositories.loginRepository.LoginRepository
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
 import com.ice.ktuice.al.SyncJobService
+import com.ice.ktuice.ui.login.LoginActivity
 import kotlinx.android.synthetic.main.fragment_grades.*
 import org.jetbrains.anko.runOnUiThread
 import org.koin.android.ext.android.inject
@@ -73,8 +74,13 @@ class FragmentGrades: Fragment(), KoinComponent {
     }
 
     private fun logout(){
-        this.activity?.finish()
         preferenceRepository.setValue(R.string.shared_preference_file_key, "") // clear out the logged in user code from prefrences
+        this.activity?.runOnUiThread{
+                val intent = Intent(this.activity, LoginActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                this.activity?.finish()
+            }
     }
 
     private fun scheduleJob(){

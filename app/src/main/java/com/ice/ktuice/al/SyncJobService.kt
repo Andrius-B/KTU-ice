@@ -21,13 +21,6 @@ import org.koin.standalone.inject
  * A job service to be used for polling the KTU AIS about whether there are any new grades
  */
 class SyncJobService: JobService(), KoinComponent {
-    /**
-     * the R.string.notification_new_mark_found is a formated string with a placeholder for a string (which should contain a mark, that was found)
-     */
-    private val newMarkString = applicationContext.getString(R.string.notification_new_mark_found)
-    private val newMarksString = applicationContext.getString(R.string.notification_new_marks_found)
-    private val markChangedString = applicationContext.getString(R.string.notification_mark_updated)
-    private val gradeTableChanged = applicationContext.getString(R.string.notification_grade_table_changed)
 
     private val yearGradesService: YearGradesService by inject()
     private val yearGradesComparator: YearGradesModelComparator by inject()
@@ -80,6 +73,14 @@ class SyncJobService: JobService(), KoinComponent {
     }
 
     private fun generateDifSummary(diff: List<Difference>): String{
+        /**
+         * the R.string.notification_new_mark_found is a formated string with a placeholder for a string (which should contain a mark, that was found)
+         */
+        val newMarkString = this.getString(R.string.notification_new_mark_found)
+        val newMarksString = this.getString(R.string.notification_new_marks_found)
+        val markChangedString = this.getString(R.string.notification_mark_updated)
+        val gradeTableChanged = this.getString(R.string.notification_grade_table_changed)
+
         var notificationContentString = ""
         var lastDifferentMark: GradeModel? = null
         var marksAdded = 0
