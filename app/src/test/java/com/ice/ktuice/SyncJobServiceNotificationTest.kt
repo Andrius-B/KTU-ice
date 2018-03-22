@@ -3,7 +3,8 @@ package com.ice.ktuice
 import com.ice.ktuice.al.GradeTable.notifications.NotificationFactory
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparator
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparatorImpl
-import com.ice.ktuice.al.SyncJobService
+import com.ice.ktuice.al.notifications.NotificationSummaryGenerator
+import com.ice.ktuice.al.notifications.SyncJobService
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import org.junit.Test
 import org.koin.dsl.module.Module
@@ -33,12 +34,15 @@ class SyncJobServiceNotificationTest: KoinTest{
         Mockito.`when`(yearGradesServiceMock.getYearGradesListFromDB()).thenReturn(TestYearGradesCollectionProvider.createDefaultYearGradesCollection())
         Mockito.`when`(yearGradesServiceMock.getYearGradesListFromWeb()).thenReturn(TestYearGradesCollectionProvider.createDefaultYearGradesCollection())
 
+        val notificationSummaryGenerator = Mockito.mock(NotificationSummaryGenerator::class.java)
+        Mockito.`when`(notificationSummaryGenerator.generateSummaryFromDifferences(ArgumentMatchers.anyList())).thenReturn("Test")
         val notificationFactoryMock = Mockito.mock(NotificationFactory::class.java)
 
         val module: Module = applicationContext {
             provide { yearGradesServiceMock as YearGradesService }
             provide { YearGradesModelComparatorImpl() as YearGradesModelComparator }
             provide { notificationFactoryMock as NotificationFactory }
+            provide { notificationSummaryGenerator as NotificationSummaryGenerator }
         }
         startKoin(listOf(module))
         val service = SyncJobService()
@@ -61,12 +65,16 @@ class SyncJobServiceNotificationTest: KoinTest{
         `when`(yearGradesServiceMock.getYearGradesListFromDB()).thenReturn(TestYearGradesCollectionProvider.createDefaultYearGradesCollection())
         `when`(yearGradesServiceMock.getYearGradesListFromWeb()).thenReturn(defaultGradeCollectionWithAddedGrade)
 
+        val notificationSummaryGenerator = Mockito.mock(NotificationSummaryGenerator::class.java)
+        Mockito.`when`(notificationSummaryGenerator.generateSummaryFromDifferences(ArgumentMatchers.anyList())).thenReturn("Test")
+
         val notificationFactoryMock = Mockito.mock(NotificationFactory::class.java)
 
         val module: Module = applicationContext {
             provide { yearGradesServiceMock as YearGradesService }
             provide { YearGradesModelComparatorImpl() as YearGradesModelComparator }
             provide { notificationFactoryMock as NotificationFactory }
+            provide { notificationSummaryGenerator as NotificationSummaryGenerator }
         }
         startKoin(listOf(module))
 
@@ -90,18 +98,22 @@ class SyncJobServiceNotificationTest: KoinTest{
         `when`(yearGradesServiceMock.getYearGradesListFromDB()).thenReturn(TestYearGradesCollectionProvider.createDefaultYearGradesCollection())
         `when`(yearGradesServiceMock.getYearGradesListFromWeb()).thenReturn(defaultGradeCollectionWithChangedGrade)
 
+        val notificationSummaryGenerator = Mockito.mock(NotificationSummaryGenerator::class.java)
+        Mockito.`when`(notificationSummaryGenerator.generateSummaryFromDifferences(ArgumentMatchers.anyList())).thenReturn("Test")
+
         val notificationFactoryMock = Mockito.mock(NotificationFactory::class.java)
 
         val module: Module = applicationContext {
             provide { yearGradesServiceMock as YearGradesService }
             provide { YearGradesModelComparatorImpl() as YearGradesModelComparator }
             provide { notificationFactoryMock as NotificationFactory }
+            provide { notificationSummaryGenerator as NotificationSummaryGenerator }
         }
         startKoin(listOf(module))
 
         val service = SyncJobService()
         service.onStartJob(null)
-        sleep(500) // wait for the service to finish
+        sleep(1000) // wait for the service to finish
         //(this is because, the comparison and fetching of the grade tables happens in a background thread)
         closeKoin()
 

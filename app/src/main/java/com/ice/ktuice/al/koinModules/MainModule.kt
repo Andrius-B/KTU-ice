@@ -7,6 +7,8 @@ import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.SharedPreferenceRepositoryImpl
 import com.ice.ktuice.al.GradeTable.notifications.NotificationFactory
 import com.ice.ktuice.al.GradeTable.notifications.NotificationFactoryImpl
+import com.ice.ktuice.al.notifications.NotificationSummaryGenerator
+import com.ice.ktuice.al.notifications.NotificationSummaryGeneratorImpl
 import com.ice.ktuice.al.services.userService.UserService
 import com.ice.ktuice.al.services.userService.UserServiceImpl
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
@@ -24,4 +26,5 @@ val mainModule: Module = applicationContext {
     provide { YearGradesServiceImpl() as YearGradesService }
     provide { UserServiceImpl() as UserService }
     provide { NotificationFactoryImpl(this.androidApplication()) as NotificationFactory }
+    provide { NotificationSummaryGeneratorImpl(this.androidApplication()) as NotificationSummaryGenerator }
 }

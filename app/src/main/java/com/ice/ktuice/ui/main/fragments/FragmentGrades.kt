@@ -10,15 +10,13 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import com.ice.ktuice.DAL.repositories.loginRepository.LoginRepository
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
-import com.ice.ktuice.al.SyncJobService
+import com.ice.ktuice.al.notifications.SyncJobService
 import com.ice.ktuice.ui.login.LoginActivity
 import kotlinx.android.synthetic.main.fragment_grades.*
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.runOnUiThread
 import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
 
