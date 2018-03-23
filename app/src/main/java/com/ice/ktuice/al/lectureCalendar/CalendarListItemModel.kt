@@ -1,7 +1,6 @@
-package com.ice.ktuice.al.LectureCalendar
+package com.ice.ktuice.al.lectureCalendar
 
 import android.content.Context
-import android.util.EventLog
 import com.ice.ktuice.models.lectureCalendarModels.CalendarEvent
 
 /**

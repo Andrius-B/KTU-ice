@@ -35,5 +35,4 @@ class YearGradesModelComparatorTestImpl: YearGradesModelComparator{
         diff.add(Difference(Difference.Field.Grade, Difference.FieldChange.Added, testGrade))
         return diff
     }
-
 }

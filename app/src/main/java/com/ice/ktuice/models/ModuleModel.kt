@@ -8,6 +8,7 @@ import org.jsoup.nodes.Element
 
 /**
  * Created by simonas on 9/16/17.
+ * Data class and parsing help for the module information
  */
 
 @RealmClass

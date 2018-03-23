@@ -2,12 +2,10 @@ package com.ice.ktuice.al.notifications
 
 import android.app.job.JobParameters
 import android.app.job.JobService
-import com.ice.ktuice.R
 import com.ice.ktuice.al.GradeTable.notifications.NotificationFactory
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.Difference
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparator
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
-import com.ice.ktuice.models.GradeModel
 import com.ice.ktuice.models.YearGradesCollectionModel
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.getStackTraceString
@@ -28,7 +26,6 @@ class SyncJobService: JobService(), KoinComponent {
     private var jobParams: JobParameters? = null
 
     override fun onStartJob(params: JobParameters?): Boolean {
-        println("onStartJob testing out the jobScheduler API")
         jobParams = params
         doAsync({
             println(it.getStackTraceString())
@@ -39,37 +36,32 @@ class SyncJobService: JobService(), KoinComponent {
             val dbYear: YearGradesCollectionModel? = yearGradesService.getYearGradesListFromDB()
             val webYear: YearGradesCollectionModel? = yearGradesService.getYearGradesListFromWeb()
             if(dbYear != null && webYear != null){
-                println("Both the models are not null")
                 val totalDifference = mutableListOf<Difference>()
 
                 webYear.yearList.forEach {
                     val freshYear = it
                     val previousYear = dbYear.find { it.year.equals(freshYear.year) }
                     if(previousYear != null) {
-                        println("previous year found!")
                         val newDiff = yearGradesComparator.compare(previousYear, freshYear)
                         totalDifference.addAll(newDiff)
-                        println("Differences for this year:${newDiff.size}")
                     }
                 }
 
 
                 if(totalDifference.isNotEmpty()){
-                    println("Differences found (ui thread): ${totalDifference.size}")
+                    println("Differences found: ${totalDifference.size}")
                     totalDifference.forEach{
                         println(String.format("\t\t type:%s change:%s", it.field.toString(), it.change.toString()))
                     }
                     try {
                         val message = notificationSummaryGenerator.generateSummaryFromDifferences(totalDifference)
-                        println("Pushing notification!")
                         notificationFactory.pushNotification(message)
                         println("Notification pushed!")
                     }catch (e: Exception){
                         println(e.getStackTraceString())
-                        println("Notifiaction push failed!")
+                        println("Notification push failed!")
                     }
                 }
-                println("Persisting the year list to the database, from the service!")
                 yearGradesService.persistYearGradesModel(webYear)
                 println("service finished without errors!")
                 jobFinished(jobParams, false)
@@ -79,7 +71,6 @@ class SyncJobService: JobService(), KoinComponent {
     }
 
     override fun onStopJob(params: JobParameters?): Boolean {
-        println("onStopJob testing out the jobScheduler API")
         return false
     }
 

@@ -10,6 +10,7 @@ import java.util.*
 
 /**
  * Created by Andrius on 2/23/2018.
+ * Class to store information about an event (mostly lectures here)
  */
 open class CalendarEvent: RealmObject(){
     open var summary: String = ""
@@ -27,8 +28,8 @@ open class CalendarEvent: RealmObject(){
     @Ignore
     private val dateFormat = DateFormat.getTimeInstance()
 
-    fun getStartTimeString() = dateFormat.format(dateStart)
-    fun getEndTimeString() = dateFormat.format(dateEnd)
+    fun getStartTimeString() = dateFormat.format(dateStart)!!
+    fun getEndTimeString() = dateFormat.format(dateEnd)!!
 
     /**
      * Most of the time, location consists of multiple definitions separated by a semicolon,

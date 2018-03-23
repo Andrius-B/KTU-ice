@@ -22,6 +22,8 @@ import org.koin.standalone.KoinComponent
 
 /**
  * Created by Andrius on 2/24/2018.
+ * The main fragment of the application:
+ * displays a Grade Table component and lets the student log out
  */
 class FragmentGrades: Fragment(), KoinComponent {
 
@@ -34,8 +36,7 @@ class FragmentGrades: Fragment(), KoinComponent {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val view = inflater.inflate(R.layout.fragment_grades, container, false)
-        return view
+        return inflater.inflate(R.layout.fragment_grades, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

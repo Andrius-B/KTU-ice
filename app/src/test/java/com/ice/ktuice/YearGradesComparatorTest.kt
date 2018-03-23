@@ -6,8 +6,8 @@ import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.Difference
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparator
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparatorImpl
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
-import com.ice.ktuice.models.*
-import io.realm.RealmList
+import com.ice.ktuice.models.GradeModel
+import com.ice.ktuice.models.YearGradesCollectionModel
 import junit.framework.Assert.assertTrue
 import org.junit.Test
 import org.koin.dsl.module.Module
@@ -49,7 +49,7 @@ class YearGradesComparatorTest: KoinTest {
         val db = service.getYearGradesListFromDB()!!
         val new = service.getYearGradesListFromWeb()!!
 
-        val differences = comparator.compare(db.yearList.last()!!, new.yearList.last()!!);
+        val differences = comparator.compare(db.yearList.last()!!, new.yearList.last()!!)
         closeKoin()
 
         assertTrue(differences.isEmpty())
@@ -113,7 +113,7 @@ class YearGradesComparatorTest: KoinTest {
         val db = service.getYearGradesListFromDB()!!
         val new = service.getYearGradesListFromWeb()!!
 
-        val differences = comparator.compare(db.yearList.last()!!, new.yearList.last()!!);
+        val differences = comparator.compare(db.yearList.last()!!, new.yearList.last()!!)
         closeKoin()
 
         assertTrue(differences.size == 1)

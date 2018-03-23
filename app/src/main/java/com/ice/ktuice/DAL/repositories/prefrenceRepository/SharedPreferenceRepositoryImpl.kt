@@ -1,5 +1,6 @@
 package com.ice.ktuice.DAL.repositories.prefrenceRepository
 
+import android.annotation.SuppressLint
 import android.content.Context
 import com.ice.ktuice.R
 
@@ -13,12 +14,13 @@ class SharedPreferenceRepositoryImpl(private val context: Context): PreferenceRe
         return sharedPref.getString(key, "")
     }
 
+    @SuppressLint("CommitPrefEdits")
     override fun setValue(key: String, value: String) {
         val sharedPref = context.getSharedPreferences(
                 context.getString(R.string.shared_preference_file_key), Context.MODE_PRIVATE)
         with(sharedPref.edit()){
             putString(key, value)
-            commit()
+            commit()// the commit is right here fam
         }
     }
 

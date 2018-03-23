@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
              */
             userService.getLoginForCurrentUser()
             setContentView(R.layout.activity_main)
-            main_activity_view_pager.adapter = FragmentAdapter(this.supportFragmentManager)
+            main_activity_view_pager.adapter = FragmentAdapter(this.supportFragmentManager, this)
         }catch (e: NullPointerException){
             launchLoginActivity()
         }

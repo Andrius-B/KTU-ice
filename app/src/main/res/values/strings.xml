@@ -39,4 +39,8 @@
     <string name="notification_grade_table_changed">Grade table changed!</string>
     <string name="refreshing">Refreshing..</string>
     <string name="refresh_btn">Refresh</string>
+
+
+    <string name="tab_name_grades">Grades</string>
+    <string name="tab_name_timetable">Time Table</string>
 </resources>

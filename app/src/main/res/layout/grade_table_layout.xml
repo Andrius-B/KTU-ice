@@ -9,6 +9,14 @@
     android:baselineAligned="true"
     android:minWidth="100dp">
 
+    <!--Dummy element to prevent auto-focus-->
+    <LinearLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        tools:ignore="UselessLeaf" />
+
     <Spinner
         android:id="@+id/grade_table_semester_spinner"
         android:layout_width="0dp"

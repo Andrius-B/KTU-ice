@@ -17,11 +17,12 @@ class NoScrollViewPager(context: Context, attributeSet: AttributeSet): ViewPager
         return isPagingEnabled && super.onTouchEvent(ev)
     }
 
+    override fun performClick(): Boolean {
+        return isPagingEnabled &&super.performClick()
+    }
+
     override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
         return isPagingEnabled && super.onInterceptTouchEvent(ev)
     }
 
-    fun setPagingEnabled(value: Boolean){
-            isPagingEnabled = value
-    }
 }

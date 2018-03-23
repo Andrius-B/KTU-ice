@@ -32,12 +32,8 @@ open class YearGradesModel(
                 get() = _year!!
 
         /**
-         * Realm does not support distinct objects
-         */
-        private var yearStr: String = year.year
-
-        /**
          * Concatenate relevant content of the table to a string and then hash it
+         * Equality comparison should be performed with the comparator
          */
         override fun hashCode(): Int {
                 var contentString = studCode+year.year+year.id

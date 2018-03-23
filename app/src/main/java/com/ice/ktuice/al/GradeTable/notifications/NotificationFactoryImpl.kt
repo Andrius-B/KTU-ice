@@ -4,19 +4,19 @@ import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
-import android.content.Intent
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
 import com.ice.ktuice.R
-import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.Difference
 import com.ice.ktuice.ui.main.MainActivity
 import org.jetbrains.anko.runOnUiThread
 
 
 /**
  * Created by Andrius on 2/20/2018.
+ * Default notification pushing
  */
 class NotificationFactoryImpl(val context: Context): NotificationFactory{
     companion object {

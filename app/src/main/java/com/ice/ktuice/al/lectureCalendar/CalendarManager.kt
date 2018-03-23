@@ -1,45 +1,34 @@
-package com.ice.ktuice.al.LectureCalendar
+package com.ice.ktuice.al.lectureCalendar
 
-import android.content.Context
-import android.graphics.Color
-import com.alamkanak.weekview.WeekViewEvent
-import com.ice.ktuice.DAL.repositories.calendarRepository.CalendarRepository
 import com.ice.ktuice.DAL.repositories.calendarRepository.CalendarRepositoryImpl
-import com.ice.ktuice.models.LoginModel
-import com.ice.ktuice.models.lectureCalendarModels.CalendarEvent
 import com.ice.ktuice.models.lectureCalendarModels.CalendarModel
 import com.ice.ktuice.scraperService.handlers.CalendarHandler
-import com.ice.ktuice.al.LectureCalendar.CalendarListItemModel.ItemType.*
 import com.ice.ktuice.al.services.userService.UserService
-import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
 import io.reactivex.subjects.Subject
-import io.realm.Realm
-import io.realm.RealmChangeListener
-import io.realm.RealmModel
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.getStackTraceString
 import org.jetbrains.anko.uiThread
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
-import java.text.DateFormat
 import java.util.*
 
 
 /**
  * Created by Andrius on 2/26/2018.
+ * The main logic behind the calendar view
  */
-class CalendarManager() : KoinComponent {
+class CalendarManager: KoinComponent {
     private val calendarRepository = CalendarRepositoryImpl()
     private val userService: UserService by inject()
 
-    fun getCalendarEventsModelFromWeb(context: Context): CalendarModel{
+    private fun getCalendarEventsModelFromWeb(): CalendarModel{
         val login = userService.getLoginForCurrentUser()!!
         val calendar = CalendarHandler.getCalendar(login)
         return calendar
     }
 
-    fun getCalendarModel(context: Context): Subject<CalendarModel>{
+    fun getCalendarModel(): Subject<CalendarModel>{
         val subject: ReplaySubject<CalendarModel> = ReplaySubject.create(2)
         val login = userService.getLoginForCurrentUser()!!
         var calendar = calendarRepository.getByStudCode(login.studentId)
@@ -56,7 +45,7 @@ class CalendarManager() : KoinComponent {
             println(it.getStackTraceString())
         },
         {
-            val freshCalendar = getCalendarEventsModelFromWeb(context)
+            val freshCalendar = getCalendarEventsModelFromWeb()
             uiThread {
                 calendarRepository.createOrUpdate(freshCalendar)
                 try {

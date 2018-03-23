@@ -9,7 +9,7 @@
     <color name="colorBackground">#FFFF</color>
     
     <color name="loginButtonRipple">#1f00e5ff</color>
-    <color name="loginButtonFocused">#a000e5ff</color>
+    <!--<color name="loginButtonFocused">#a000e5ff</color>-->
 
     <!--Calendar category coloring-->
     <color name="transparent">#00000000</color>

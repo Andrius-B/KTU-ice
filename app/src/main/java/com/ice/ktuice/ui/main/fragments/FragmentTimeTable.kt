@@ -7,17 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import com.alamkanak.weekview.WeekViewEvent
 import com.ice.ktuice.R
+import com.ice.ktuice.al.lectureCalendar.CalendarManager
 import com.ice.ktuice.models.lectureCalendarModels.CalendarModel
-import com.ice.ktuice.al.services.userService.UserService
-import kotlinx.android.synthetic.main.fragment_timetable.*
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
-import com.ice.ktuice.al.LectureCalendar.CalendarManager
 import io.realm.Realm
 import io.realm.RealmChangeListener
+import kotlinx.android.synthetic.main.fragment_timetable.*
+import org.koin.standalone.KoinComponent
 
 /**
  * Created by Andrius on 2/24/2018.
+ * Displays a calendar of the upcoming events
  */
 class FragmentTimeTable: Fragment(), KoinComponent {
 
@@ -26,8 +25,7 @@ class FragmentTimeTable: Fragment(), KoinComponent {
     private val events = mutableListOf<WeekViewEvent>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val view = inflater.inflate(R.layout.fragment_timetable, container, false)
-        return view
+        return inflater.inflate(R.layout.fragment_timetable, container, false)
     }
 
     private var initialLoadChangeListener: RealmChangeListener<Realm>? = null
@@ -57,7 +55,7 @@ class FragmentTimeTable: Fragment(), KoinComponent {
         /**
          * Display all the upcoming events
          */
-        val calendarSubject = calendarManager.getCalendarModel(this.activity!!)
+        val calendarSubject = calendarManager.getCalendarModel()
         calendarSubject.subscribe{
             updateWeekViewToCalendar(it)
         }

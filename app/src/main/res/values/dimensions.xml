@@ -6,9 +6,9 @@
 
     <dimen name="grade_table_details_title_text_size">24sp</dimen>
 
-    <dimen name="calendar_event_item_color_stroke_width">3dp</dimen>
-    <dimen name="calendar_event_item_corner_radius">8dp</dimen>
+    <!--<dimen name="calendar_event_item_color_stroke_width">3dp</dimen>-->
+    <!--<dimen name="calendar_event_item_corner_radius">8dp</dimen>-->
     <dimen name="calendar_event_text_offset_from_header">12dp</dimen>
-    <dimen name="calendar_expand_button_size">72dp</dimen>
-    <dimen name="calendar_elevation">11dp</dimen>
+    <!--<dimen name="calendar_expand_button_size">72dp</dimen>-->
+    <!--<dimen name="calendar_elevation">11dp</dimen>-->
 </resources>

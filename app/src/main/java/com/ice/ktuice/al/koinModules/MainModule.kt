@@ -1,12 +1,11 @@
 package com.ice.ktuice.al.koinModules
 
-import android.app.Notification
-import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparator
-import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparatorImpl
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.SharedPreferenceRepositoryImpl
 import com.ice.ktuice.al.GradeTable.notifications.NotificationFactory
 import com.ice.ktuice.al.GradeTable.notifications.NotificationFactoryImpl
+import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparator
+import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparatorImpl
 import com.ice.ktuice.al.notifications.NotificationSummaryGenerator
 import com.ice.ktuice.al.notifications.NotificationSummaryGeneratorImpl
 import com.ice.ktuice.al.services.userService.UserService
@@ -19,6 +18,7 @@ import org.koin.dsl.module.applicationContext
 
 /**
  * Created by Andrius on 1/31/2018.
+ * All the main dependencies are declared here
  */
 val mainModule: Module = applicationContext {
     provide { SharedPreferenceRepositoryImpl(this.androidApplication()) as PreferenceRepository }

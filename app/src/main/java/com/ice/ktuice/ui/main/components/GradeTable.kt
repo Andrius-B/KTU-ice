@@ -6,10 +6,10 @@ import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.ice.ktuice.R
 import com.ice.ktuice.al.GradeTable.GradeTableManager
 import com.ice.ktuice.al.GradeTable.gradeTableModels.GradeTableModel
 import com.ice.ktuice.al.GradeTable.gradeTableModels.SemesterAdapterItem
-import com.ice.ktuice.R
 import com.ice.ktuice.al.services.userService.UserService
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.models.YearGradesCollectionModel
@@ -44,8 +44,6 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
 
     init {
         inflate(context, R.layout.grade_table_layout, this)
-
-        val login = userService.getLoginForCurrentUser()!!
         val gradesSubject  = yearGradesService.getYearGradesList()
         gradesSubject.subscribe{
             context.runOnUiThread {

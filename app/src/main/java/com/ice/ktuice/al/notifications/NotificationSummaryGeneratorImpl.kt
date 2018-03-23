@@ -13,7 +13,7 @@ class NotificationSummaryGeneratorImpl(val context: Context): NotificationSummar
 
     override fun generateSummaryFromDifferences(differenceList: List<Difference>): String {
         /**
-         * the R.string.notification_new_mark_found is a formated string with a placeholder for a string (which should contain a mark, that was found)
+         * the R.string.notification_new_mark_found is a formatted string with a placeholder for a string (which should contain a mark, that was found)
          */
         val newMarkString = context.getString(R.string.notification_new_mark_found)
         val newMarksString = context.getString(R.string.notification_new_marks_found)
@@ -34,15 +34,15 @@ class NotificationSummaryGeneratorImpl(val context: Context): NotificationSummar
             }
         }
 
-        if(marksAdded == 1){
-            notificationContentString = String.format(newMarkString, lastDifferentMark?.marks?.last() ?: "")
-        }else if(marksAdded > 1){
-            notificationContentString = newMarksString
-        }else if(marksChanged > 0){
-            notificationContentString = markChangedString
-        }else{
-            notificationContentString = gradeTableChanged
-        }
+        notificationContentString = if(marksAdded == 1){
+                                        String.format(newMarkString, lastDifferentMark?.marks?.last() ?: "")
+                                    }else if(marksAdded > 1){
+                                        newMarksString
+                                    }else if(marksChanged > 0){
+                                        markChangedString
+                                    }else{
+                                        gradeTableChanged
+                                    }
 
         return notificationContentString
     }

@@ -1,17 +1,12 @@
 package com.ice.ktuice.al.services.yearGradesService
 
 import com.ice.ktuice.DAL.repositories.gradeResponseRepository.YearGradesRepository
-import com.ice.ktuice.DAL.repositories.loginRepository.LoginRepository
-import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.al.services.userService.UserService
-import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.models.YearGradesCollectionModel
-import com.ice.ktuice.models.YearGradesModel
 import com.ice.ktuice.scraperService.ScraperService
 import com.ice.ktuice.scraperService.exceptions.AuthenticationException
 import io.reactivex.subjects.ReplaySubject
 import io.reactivex.subjects.Subject
-import io.realm.RealmResults
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.koin.standalone.KoinComponent
