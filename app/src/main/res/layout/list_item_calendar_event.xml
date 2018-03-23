@@ -11,12 +11,12 @@
         android:id="@+id/event_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="11:00"/>
+        android:text=""/>
     <TextView
         android:id="@+id/event_header_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Feb 1, Mon"
+        android:text=""
         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
     <TableLayout
         android:layout_width="match_parent"
@@ -51,5 +51,5 @@
         android:id="@+id/event_end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="12:00"/>
+        android:text=""/>
 </LinearLayout>

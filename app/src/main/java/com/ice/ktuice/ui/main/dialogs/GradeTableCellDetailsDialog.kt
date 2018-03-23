@@ -10,13 +10,14 @@ import kotlinx.android.synthetic.main.dialog_mark_cell_details.*
 
 /**
  * Created by Andrius on 2/9/2018.
+ * TODO adapter for grade models and  enable on click
  */
 class GradeTableCellDetailsDialog(ctx: Context): Dialog(ctx) {
     var CellModel:GradeTableCellModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(layoutInflater.inflate(R.layout.dialog_mark_cell_details, null))
+        setContentView(R.layout.dialog_mark_cell_details)
     }
 
     override fun onStart() {

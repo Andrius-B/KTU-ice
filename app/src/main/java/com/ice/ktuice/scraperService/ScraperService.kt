@@ -1,7 +1,7 @@
 package com.ice.ktuice.scraperService
 
 import com.ice.ktuice.scraperService.handlers.DataHandler
-import com.ice.ktuice.scraper.handlers.LoginHandler
+import com.ice.ktuice.scraperService.handlers.LoginHandler
 import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.models.YearGradesModel
 import com.ice.ktuice.models.YearModel

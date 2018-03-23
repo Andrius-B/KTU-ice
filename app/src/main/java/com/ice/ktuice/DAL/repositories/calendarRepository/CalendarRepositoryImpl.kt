@@ -2,7 +2,6 @@ package com.ice.ktuice.DAL.repositories.calendarRepository
 
 import com.ice.ktuice.models.lectureCalendarModels.CalendarModel
 import io.realm.Realm
-import io.realm.RealmChangeListener
 import io.realm.RealmModel
 
 

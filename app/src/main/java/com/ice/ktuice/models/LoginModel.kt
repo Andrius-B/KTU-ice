@@ -27,8 +27,7 @@ open class LoginModel(
         }
 
         /**
-         * Utility function to change types:
-         * @param rlCookies - cookie list from realm
+         * Utility function to get the cookies as a map for use in request
          * @return map of <String, String> pairs as per standard
          */
         fun getCookieMap():Map<String, String>{

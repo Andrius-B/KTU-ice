@@ -1,10 +1,8 @@
 package com.ice.ktuice.models
 
 import io.realm.RealmList
-import io.realm.RealmModel
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
-import io.realm.annotations.RealmClass
 import java.util.*
 
 /**
@@ -58,7 +56,7 @@ open class YearGradesCollectionModel(): RealmObject(){
         return yearList.isEmpty()
     }
 
-    fun forEach(action: (YearGradesModel) -> Unit): Unit {
+    fun forEach(action: (YearGradesModel) -> Unit) {
         yearList.forEach(action)
     }
 

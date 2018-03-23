@@ -1,35 +1,39 @@
 package com.ice.ktuice.ui.main
 
-import android.content.ComponentName
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.ice.ktuice.al.SyncJobService
-import com.ice.ktuice.DAL.repositories.loginRepository.LoginRepository
-import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
+import com.ice.ktuice.al.services.userService.UserService
+import com.ice.ktuice.ui.adapters.FragmentAdapter
+import com.ice.ktuice.ui.login.LoginActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
-import android.app.job.JobInfo
-import android.app.job.JobScheduler
-import android.content.Context
-import android.content.Intent
-import android.support.graphics.drawable.Animatable2Compat
-import android.graphics.drawable.Drawable
-import android.os.Build
-import android.support.annotation.RequiresApi
-import android.support.graphics.drawable.AnimatedVectorDrawableCompat
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v7.app.ActionBar
-import android.widget.TextView
-import com.alamkanak.weekview.MonthLoader
-import com.alamkanak.weekview.WeekViewEvent
-import com.ice.ktuice.ui.adapters.FragmentAdapter
 
 
 class MainActivity : AppCompatActivity() {
+    val userService: UserService by inject()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        main_activity_view_pager.adapter = FragmentAdapter(this.supportFragmentManager)
+        try{
+            /**
+             * If the user is not yet logged in,
+             * this will throw a null reference exception
+             */
+            userService.getLoginForCurrentUser()
+            setContentView(R.layout.activity_main)
+            main_activity_view_pager.adapter = FragmentAdapter(this.supportFragmentManager, this)
+        }catch (e: NullPointerException){
+            launchLoginActivity()
+        }
+    }
+
+    private fun launchLoginActivity(){
+        runOnUiThread{
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            this.finish()
+        }
     }
 }

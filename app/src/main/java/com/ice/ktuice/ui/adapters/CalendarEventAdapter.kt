@@ -10,8 +10,8 @@ import android.widget.BaseAdapter
 import android.widget.TableRow
 import android.widget.TextView
 import com.ice.ktuice.R
-import com.ice.ktuice.al.LectureCalendar.CalendarListItemModel
-import com.ice.ktuice.al.LectureCalendar.CalendarListItemModel.ItemType.*
+import com.ice.ktuice.al.lectureCalendar.CalendarListItemModel
+import com.ice.ktuice.al.lectureCalendar.CalendarListItemModel.ItemType.*
 import java.lang.Math.abs
 import java.util.*
 

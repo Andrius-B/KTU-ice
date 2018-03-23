@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,8 +9,16 @@
     android:baselineAligned="true"
     android:minWidth="100dp">
 
+    <!--Dummy element to prevent auto-focus-->
+    <LinearLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        tools:ignore="UselessLeaf" />
+
     <Spinner
-        android:id="@+id/grade_table_semmester_spinner"
+        android:id="@+id/grade_table_semester_spinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -23,21 +32,22 @@
         android:id="@+id/grade_table_grade_scroll_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         android:minHeight="50dp"
-        app:layout_constraintBottom_toBottomOf="@+id/grade_table_headers"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/grade_table_headers">
+        app:layout_constraintTop_toBottomOf="@id/grade_table_semester_spinner">
 
         <LinearLayout
             android:id="@+id/grade_table_grade_scroll_view_content"
-            android:paddingStart="16dp"
-            android:paddingEnd="24dp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingEnd="24dp"
+            android:paddingStart="16dp">
 
             <TableLayout
                 android:id="@+id/grade_table_table_layout"
@@ -46,18 +56,21 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-
     <LinearLayout
-        android:id="@+id/grade_table_headers"
+        android:id="@+id/updating_progress"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:minHeight="50dp"
-        android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/grade_table_semmester_spinner"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:visibility="gone"
+        android:animateLayoutChanges="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/loading_overlay"
         android:layout_width="match_parent"

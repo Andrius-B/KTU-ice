@@ -1,4 +1,4 @@
-package com.ice.ktuice.scraper.handlers
+package com.ice.ktuice.scraperService.handlers
 
 import com.ice.ktuice.scraperService.RetroClient
 

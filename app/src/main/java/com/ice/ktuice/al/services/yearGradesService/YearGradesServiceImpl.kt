@@ -1,17 +1,12 @@
 package com.ice.ktuice.al.services.yearGradesService
 
 import com.ice.ktuice.DAL.repositories.gradeResponseRepository.YearGradesRepository
-import com.ice.ktuice.DAL.repositories.loginRepository.LoginRepository
-import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.al.services.userService.UserService
-import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.models.YearGradesCollectionModel
-import com.ice.ktuice.models.YearGradesModel
 import com.ice.ktuice.scraperService.ScraperService
 import com.ice.ktuice.scraperService.exceptions.AuthenticationException
 import io.reactivex.subjects.ReplaySubject
 import io.reactivex.subjects.Subject
-import io.realm.RealmResults
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.koin.standalone.KoinComponent
@@ -28,7 +23,7 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent {
     /**
      * This variable keeps the current state of the service
      */
-    private val currentSubject: Subject<YearGradesCollectionModel>? = null
+    private val currentSubject: Subject<YearGradesCollectionModel> = ReplaySubject.create(2)
 
 
     /**
@@ -36,17 +31,16 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent {
      * later returns a new yearGradesCollection from the web
      */
     override fun getYearGradesList(): Subject<YearGradesCollectionModel> {
-        val subject: ReplaySubject<YearGradesCollectionModel> = ReplaySubject.create(2)
         val dbGrades = getYearGradesListFromDB()
-        subject.onNext(dbGrades)
+        currentSubject.onNext(dbGrades)
         doAsync {
             val webGrades = getYearGradesListFromWeb()
             uiThread {
                 persistYearGradesModel(webGrades)
-                subject.onNext(webGrades)
+                currentSubject.onNext(webGrades)
             }
         }
-        return subject
+        return currentSubject
     }
 
     /**
@@ -60,6 +54,9 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent {
 
     override fun getYearGradesListFromWeb(): YearGradesCollectionModel {
         val login = userService.getLoginForCurrentUser()!!
+        val currentGrades = getYearGradesListFromDB()
+        yearGradesRepository.setUpdating(currentGrades, true)
+        currentSubject.onNext(currentGrades)
         val marks = YearGradesCollectionModel(login.studentId)
         try {
             login.studentSemesters.forEach {
@@ -86,7 +83,7 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent {
 
     override fun persistYearGradesModel(model: YearGradesCollectionModel){
         yearGradesRepository.createOrUpdate(model)
-        currentSubject?.onNext(model)
+        currentSubject.onNext(model)
     }
 
 }

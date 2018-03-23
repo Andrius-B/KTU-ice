@@ -4,6 +4,7 @@ import com.ice.ktuice.models.LoginModel
 
 /**
  * Created by Andrius on 1/30/2018.
+ * used for storing logins on the device
  */
 interface LoginRepository {
     fun getByStudCode(code: String): LoginModel?

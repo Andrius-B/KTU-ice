@@ -74,8 +74,8 @@ class DataHandler {
             return moduleList
         }
 
-        private fun getModuleMarkList(loginModel: LoginModel, moduleModel: ModuleModel): MutableList<GradeModel> {
-            val markList = mutableListOf<GradeModel>()
+        private fun getModuleMarkList(loginModel: LoginModel, moduleModel: ModuleModel): RealmList<GradeModel> {
+            val markList = RealmList<GradeModel>()
             val url = "https://uais.cr.ktu.lt/ktuis/STUD_SS2.infivert"
             val request = Jsoup.connect(url)
                     .cookies(loginModel.getCookieMap())

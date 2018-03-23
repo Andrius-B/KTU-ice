@@ -32,18 +32,13 @@ class GradeTableManager: KoinComponent {
     fun constructGradeTableModel(yearGradesList: YearGradesCollectionModel): GradeTableModel?{
         try{
             val table = GradeTableFactory.buildGradeTableFromYearGradesModel(yearGradesList)
-            println("Printing the grade table!")
-            println("Table:" + table.toString())
-            println("Seen weeks:" + table.getWeekListString())
             table.printRowCounts()
             return table
         }catch (it: Exception){
             when(it.javaClass){
                 AuthenticationException::class.java -> {
                     try {
-                        println("refreshing login cookies!")
-                        val newLoginModel = userService.refreshLoginCookies()!!
-                        println("login cookies refreshed, should initialize grade table")
+                        //recursive auth trying
                         return constructGradeTableModel(yearGradesList)
                     }catch (e: Exception){
                         println(e.getStackTraceString())

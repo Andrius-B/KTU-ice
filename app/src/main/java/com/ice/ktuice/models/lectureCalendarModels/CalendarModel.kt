@@ -6,6 +6,7 @@ import io.realm.annotations.PrimaryKey
 
 /**
  * Created by Andrius on 2/23/2018.
+ * Dataclass to store the event information
  */
 open class CalendarModel: RealmObject() {
     @PrimaryKey

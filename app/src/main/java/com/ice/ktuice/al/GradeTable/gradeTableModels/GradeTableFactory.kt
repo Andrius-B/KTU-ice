@@ -1,8 +1,6 @@
 package com.ice.ktuice.al.GradeTable.gradeTableModels
 
 import com.ice.ktuice.models.YearGradesCollectionModel
-import com.ice.ktuice.models.responses.GradeResponseModel
-import com.ice.ktuice.models.YearGradesModel
 
 /**
  * Created by Andrius on 1/28/2018.
@@ -11,15 +9,6 @@ import com.ice.ktuice.models.YearGradesModel
  */
 class GradeTableFactory {
     companion object {
-        fun buildGradeTableFromMarkResponse(markResponse: GradeResponseModel): GradeTableModel{
-            val table = GradeTableModel()
-            markResponse.forEach {
-                if(!it.isEmpty()) {
-                    table.addMark(it)
-                }
-            }
-            return table
-        }
         fun buildGradeTableFromYearGradesModel(yearGradesList: YearGradesCollectionModel): GradeTableModel {
             val table = GradeTableModel()
             yearGradesList.forEach {

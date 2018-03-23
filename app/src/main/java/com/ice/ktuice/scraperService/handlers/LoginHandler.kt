@@ -1,8 +1,8 @@
-package com.ice.ktuice.scraper.handlers
+package com.ice.ktuice.scraperService.handlers
 
 import com.ice.ktuice.models.LoginModel
-import com.ice.ktuice.models.responses.LoginResponse
 import com.ice.ktuice.models.YearModel
+import com.ice.ktuice.models.responses.LoginResponse
 import io.realm.RealmList
 import org.jsoup.Connection
 import org.jsoup.Jsoup
@@ -15,8 +15,7 @@ class LoginHandler: BaseHandler() {
         if (postLogin.cookies != null) {
             val agreeLogin = getAgree(postLogin)
             val postContinue = postContinue(agreeLogin)
-            val loginResponse = getInfo(postContinue, username, password)
-            return loginResponse
+            return getInfo(postContinue, username, password)
         }
         // if there are no cookies returned from postLogin,
         // assume not authorized!

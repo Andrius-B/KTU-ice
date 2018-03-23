@@ -6,6 +6,7 @@ import com.ice.ktuice.models.YearModel
 
 /**
  * Created by Andrius on 2/11/2018.
+ * Stores the data of a semester (modules and some other supplementary names)
  */
 class GradeTableSemesterModel(val semester: String, val semester_number:String, val yearModel: YearModel) {
     private val rowMap: HashMap<String, GradeTableRowModel> = HashMap()
