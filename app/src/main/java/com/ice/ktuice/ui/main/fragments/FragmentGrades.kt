@@ -86,7 +86,7 @@ class FragmentGrades: Fragment(), KoinComponent {
     private fun scheduleJob(){
         val serviceComponent = ComponentName(this.activity, SyncJobService::class.java)
         val builder = JobInfo.Builder(0, serviceComponent)
-        builder.setMinimumLatency(1000*5)
+        builder.setMinimumLatency(0)
         val jobScheduler = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             this.activity?.applicationContext?.getSystemService(JobScheduler::class.java)
         } else {

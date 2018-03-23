@@ -30,4 +30,14 @@ class YearGradesRepositoryImpl: YearGradesRepository {
         }
     }
 
+    override fun setUpdating(yearGradesModel: YearGradesCollectionModel, isUpdating: Boolean) {
+        val realm = Realm.getDefaultInstance()
+        realm.use {
+            realm.beginTransaction()
+            yearGradesModel.isUpdating = isUpdating
+            realm.commitTransaction()
+            realm.close()
+        }
+    }
+
 }

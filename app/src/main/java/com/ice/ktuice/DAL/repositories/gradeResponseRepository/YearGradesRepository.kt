@@ -12,4 +12,6 @@ interface YearGradesRepository {
     fun getByStudCode(studCode: String): YearGradesCollectionModel?
 
     fun createOrUpdate(yearGradesModel: YearGradesCollectionModel)
+
+    fun setUpdating(yearGradesModel: YearGradesCollectionModel, isUpdating: Boolean)
 }

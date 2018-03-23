@@ -9,7 +9,7 @@
 
     <string name="info_student_code">Student code</string>
     <string name="info_student_name">Name</string>
-    <string name="info_semesters_found">Semester count</string>
+    <string name="info_years_found">Years found</string>
     <string name="logout_text">Log out</string>
 
     <string name="grade_table_week_header">Week</string>
@@ -37,4 +37,6 @@
     <string name="notification_new_marks_found">Multiple new marks!</string>
     <string name="notification_mark_updated">Mark updated!</string>
     <string name="notification_grade_table_changed">Grade table changed!</string>
+    <string name="refreshing">Refreshing..</string>
+    <string name="refresh_btn">Refresh</string>
 </resources>

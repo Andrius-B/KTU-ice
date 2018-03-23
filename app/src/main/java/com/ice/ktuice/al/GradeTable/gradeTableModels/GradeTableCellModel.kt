@@ -12,7 +12,7 @@ class GradeTableCellModel(val gradeModels:MutableList<GradeModel>, val weekModel
         val markSeparator = ", "
         var text = ""
         gradeModels.forEachIndexed{ index, mark ->
-            text += mark.marks.firstOrNull() ?: ""
+            text += mark.marks.lastOrNull() ?: ""
             if(index < gradeModels.size - 1){
                 text += markSeparator
             }
