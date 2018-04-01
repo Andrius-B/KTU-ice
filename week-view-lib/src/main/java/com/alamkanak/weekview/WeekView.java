@@ -190,6 +190,13 @@ public class WeekView extends View {
 
         @Override
         public boolean onDown(MotionEvent e) {
+            //goToNearestOrigin();
+            stopScrolling();
+            return true;
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent ev){
             goToNearestOrigin();
             return true;
         }
@@ -267,8 +274,10 @@ public class WeekView extends View {
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            //return true;
             if (mIsZooming)
                 return true;
+
 
             if ((mCurrentFlingDirection == Direction.LEFT && !mHorizontalFlingEnabled) ||
                     (mCurrentFlingDirection == Direction.RIGHT && !mHorizontalFlingEnabled) ||
@@ -381,7 +390,9 @@ public class WeekView extends View {
 
         // Scrolling initialization.
         mGestureDetector = new GestureDetectorCompat(mContext, mGestureListener);
+        mGestureDetector.setIsLongpressEnabled(false);
         mScroller = new OverScroller(mContext, new FastOutLinearInInterpolator());
+
 
         mMinimumFlingVelocity = ViewConfiguration.get(mContext).getScaledMinimumFlingVelocity();
         mScaledTouchSlop = ViewConfiguration.get(mContext).getScaledTouchSlop();
@@ -2403,6 +2414,8 @@ public class WeekView extends View {
         mScaleDetector.onTouchEvent(event);
         boolean val = mGestureDetector.onTouchEvent(event);
 
+
+
         // Check after call of mGestureDetector, so mCurrentFlingDirection and mCurrentScrollDirection are set.
         if (event.getAction() == MotionEvent.ACTION_UP && !mIsZooming && mCurrentFlingDirection == Direction.NONE) {
             if (mCurrentScrollDirection == Direction.RIGHT || mCurrentScrollDirection == Direction.LEFT) {
@@ -2412,6 +2425,13 @@ public class WeekView extends View {
         }
 
         return val;
+    }
+
+    private void stopScrolling(){
+        // Stop current animation.
+        mScroller.forceFinished(true);
+        // Reset scrolling and fling direction.
+        mCurrentScrollDirection = mCurrentFlingDirection = Direction.NONE;
     }
 
     private void goToNearestOrigin() {
