@@ -4,7 +4,7 @@ import com.ice.ktuice.DAL.repositories.gradeResponseRepository.YearGradesReposit
 import com.ice.ktuice.al.services.userService.UserService
 import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.scraperService.ScraperService
-import com.ice.ktuice.scraperService.exceptions.AuthenticationException
+import com.ice.ktuice.scraperService.ktuScraperService.exceptions.AuthenticationException
 import io.reactivex.subjects.ReplaySubject
 import io.reactivex.subjects.Subject
 import org.jetbrains.anko.doAsync
@@ -20,6 +20,7 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent {
 
     private val yearGradesRepository: YearGradesRepository by inject()
     private val userService: UserService by inject()
+    private val scraperService: ScraperService by inject()
     /**
      * This variable keeps the current state of the service
      */
@@ -60,7 +61,7 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent {
         val marks = YearGradesCollectionModel(login.studentId)
         try {
             login.studentSemesters.forEach {
-                marks.add(ScraperService.getGrades(login, it))
+                marks.add(scraperService.getGrades(login, it))
             }
         }catch (e : AuthenticationException){
             userService.refreshLoginCookies()

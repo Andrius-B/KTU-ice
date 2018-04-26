@@ -12,6 +12,8 @@ import com.ice.ktuice.al.services.userService.UserService
 import com.ice.ktuice.al.services.userService.UserServiceImpl
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.al.services.yearGradesService.YearGradesServiceImpl
+import com.ice.ktuice.scraperService.ktuScraperService.KTUScraperService
+import com.ice.ktuice.scraperService.ScraperService
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module.Module
 import org.koin.dsl.module.applicationContext
@@ -27,4 +29,5 @@ val mainModule: Module = applicationContext {
     provide { UserServiceImpl() as UserService }
     provide { NotificationFactoryImpl(this.androidApplication()) as NotificationFactory }
     provide { NotificationSummaryGeneratorImpl(this.androidApplication()) as NotificationSummaryGenerator }
+    provide { KTUScraperService() as ScraperService }
 }

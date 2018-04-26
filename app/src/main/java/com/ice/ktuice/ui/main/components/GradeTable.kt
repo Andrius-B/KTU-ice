@@ -92,12 +92,18 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
         }
         val changedSemesterSpinnerItems = tableManager.constructSemesterAdapterSpinnerItemList(grades)
         val changedTableModel = tableManager.constructGradeTableModel(grades)
-        val selectedSemesterSpinnerItem = grade_table_semester_spinner.adapter.getItem(grade_table_semester_spinner.selectedItemPosition) as SemesterAdapterItem
+
+        setUpSemesterSpinner(changedSemesterSpinnerItems)
+        try {
+            val selectedSemesterSpinnerItem = grade_table_semester_spinner.adapter.getItem(grade_table_semester_spinner.selectedItemPosition) as SemesterAdapterItem
+            grade_table_semester_spinner.setSelection(changedSemesterSpinnerItems.indexOfFirst { it.semesterNumber.equals(selectedSemesterSpinnerItem.semesterNumber) })
+        }catch(exception: IndexOutOfBoundsException){
+            println("The current spinner selection is invalid!")
+        }
 
         setUpSemesterSpinner(changedSemesterSpinnerItems)
         tableModel = changedTableModel
         //The set selection updates the grade table view
-        grade_table_semester_spinner.setSelection(changedSemesterSpinnerItems.indexOfFirst { it.semesterNumber.equals(selectedSemesterSpinnerItem.semesterNumber) })
     }
 
     /**

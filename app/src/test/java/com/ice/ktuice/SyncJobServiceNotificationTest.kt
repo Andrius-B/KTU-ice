@@ -31,8 +31,8 @@ class SyncJobServiceNotificationTest: KoinTest{
     fun `No notification`(){
         //mocking the year grades service to return the same default result for both of the
         val yearGradesServiceMock = Mockito.mock(YearGradesService::class.java)
-        Mockito.`when`(yearGradesServiceMock.getYearGradesListFromDB()).thenReturn(TestYearGradesCollectionProvider.createDefaultYearGradesCollection())
-        Mockito.`when`(yearGradesServiceMock.getYearGradesListFromWeb()).thenReturn(TestYearGradesCollectionProvider.createDefaultYearGradesCollection())
+        Mockito.`when`(yearGradesServiceMock.getYearGradesListFromDB()).thenReturn(YearGradesCollectionProviderTest.createDefaultYearGradesCollection())
+        Mockito.`when`(yearGradesServiceMock.getYearGradesListFromWeb()).thenReturn(YearGradesCollectionProviderTest.createDefaultYearGradesCollection())
 
         val notificationSummaryGenerator = Mockito.mock(NotificationSummaryGenerator::class.java)
         Mockito.`when`(notificationSummaryGenerator.generateSummaryFromDifferences(ArgumentMatchers.anyList())).thenReturn("Test")
@@ -58,11 +58,11 @@ class SyncJobServiceNotificationTest: KoinTest{
      */
     @Test
     fun `Mark added notification`(){
-        val defaultGradeCollection= TestYearGradesCollectionProvider.createDefaultYearGradesCollection()
-        val defaultGradeCollectionWithAddedGrade = TestYearGradesCollectionProvider.addMark(defaultGradeCollection)
+        val defaultGradeCollection= YearGradesCollectionProviderTest.createDefaultYearGradesCollection()
+        val defaultGradeCollectionWithAddedGrade = YearGradesCollectionProviderTest.addMark(defaultGradeCollection)
 
         val yearGradesServiceMock = mock(YearGradesService::class.java)
-        `when`(yearGradesServiceMock.getYearGradesListFromDB()).thenReturn(TestYearGradesCollectionProvider.createDefaultYearGradesCollection())
+        `when`(yearGradesServiceMock.getYearGradesListFromDB()).thenReturn(YearGradesCollectionProviderTest.createDefaultYearGradesCollection())
         `when`(yearGradesServiceMock.getYearGradesListFromWeb()).thenReturn(defaultGradeCollectionWithAddedGrade)
 
         val notificationSummaryGenerator = Mockito.mock(NotificationSummaryGenerator::class.java)
@@ -89,13 +89,13 @@ class SyncJobServiceNotificationTest: KoinTest{
 
     @Test
     fun `Mark changed notification`(){
-        val defaultGradeCollectionWithChangedGrade= TestYearGradesCollectionProvider.createDefaultYearGradesCollection()
+        val defaultGradeCollectionWithChangedGrade= YearGradesCollectionProviderTest.createDefaultYearGradesCollection()
         defaultGradeCollectionWithChangedGrade.yearList.last()!!.semesterList.last()!!.moduleList.last()!!
                 .grades.last()!!.marks.add("10")
 
 
         val yearGradesServiceMock = mock(YearGradesService::class.java)
-        `when`(yearGradesServiceMock.getYearGradesListFromDB()).thenReturn(TestYearGradesCollectionProvider.createDefaultYearGradesCollection())
+        `when`(yearGradesServiceMock.getYearGradesListFromDB()).thenReturn(YearGradesCollectionProviderTest.createDefaultYearGradesCollection())
         `when`(yearGradesServiceMock.getYearGradesListFromWeb()).thenReturn(defaultGradeCollectionWithChangedGrade)
 
         val notificationSummaryGenerator = Mockito.mock(NotificationSummaryGenerator::class.java)
@@ -126,15 +126,15 @@ class SyncJobServiceNotificationTest: KoinTest{
         /**
          * Even with multiple changes to the grade table, there should only be a single notification
          */
-        var defaultGradeCollectionWithChangedGrade= TestYearGradesCollectionProvider.createDefaultYearGradesCollection()
+        var defaultGradeCollectionWithChangedGrade= YearGradesCollectionProviderTest.createDefaultYearGradesCollection()
         defaultGradeCollectionWithChangedGrade.yearList.last()!!.semesterList.last()!!.moduleList.last()!!
                 .grades.last()!!.marks.add("10")
-        defaultGradeCollectionWithChangedGrade = TestYearGradesCollectionProvider.addMark(defaultGradeCollectionWithChangedGrade)
-        defaultGradeCollectionWithChangedGrade = TestYearGradesCollectionProvider.addMark(defaultGradeCollectionWithChangedGrade)
+        defaultGradeCollectionWithChangedGrade = YearGradesCollectionProviderTest.addMark(defaultGradeCollectionWithChangedGrade)
+        defaultGradeCollectionWithChangedGrade = YearGradesCollectionProviderTest.addMark(defaultGradeCollectionWithChangedGrade)
 
 
         val yearGradesServiceMock = mock(YearGradesService::class.java)
-        `when`(yearGradesServiceMock.getYearGradesListFromDB()).thenReturn(TestYearGradesCollectionProvider.createDefaultYearGradesCollection())
+        `when`(yearGradesServiceMock.getYearGradesListFromDB()).thenReturn(YearGradesCollectionProviderTest.createDefaultYearGradesCollection())
         `when`(yearGradesServiceMock.getYearGradesListFromWeb()).thenReturn(defaultGradeCollectionWithChangedGrade)
 
         val notificationSummaryGenerator = Mockito.mock(NotificationSummaryGenerator::class.java)
