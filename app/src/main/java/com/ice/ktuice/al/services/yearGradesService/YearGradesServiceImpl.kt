@@ -1,6 +1,6 @@
 package com.ice.ktuice.al.services.yearGradesService
 
-import com.ice.ktuice.DAL.repositories.gradeResponseRepository.YearGradesRepository
+import com.ice.ktuice.repositories.gradeResponseRepository.YearGradesRepository
 import com.ice.ktuice.al.services.userService.UserService
 import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.scraperService.ScraperService
@@ -20,6 +20,7 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent {
 
     private val yearGradesRepository: YearGradesRepository by inject()
     private val userService: UserService by inject()
+    private val scraperService: ScraperService by inject()
     /**
      * This variable keeps the current state of the service
      */
@@ -32,11 +33,13 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent {
      */
     override fun getYearGradesList(): Subject<YearGradesCollectionModel> {
         val dbGrades = getYearGradesListFromDB()
+        yearGradesRepository.setUpdating(dbGrades, true)
         currentSubject.onNext(dbGrades)
         doAsync {
             val webGrades = getYearGradesListFromWeb()
             uiThread {
                 persistYearGradesModel(webGrades)
+                yearGradesRepository.setUpdating(webGrades, false)
                 currentSubject.onNext(webGrades)
             }
         }
@@ -57,14 +60,16 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent {
         val currentGrades = getYearGradesListFromDB()
         yearGradesRepository.setUpdating(currentGrades, true)
         currentSubject.onNext(currentGrades)
-        val marks = YearGradesCollectionModel(login.studentId)
+        val marks: YearGradesCollectionModel
         try {
-            login.studentSemesters.forEach {
-                marks.add(ScraperService.getGrades(login, it))
-            }
+            marks = scraperService.getAllGrades(login)
+            marks.isUpdating = false
+            currentSubject.onNext(marks)
         }catch (e : AuthenticationException){
             userService.refreshLoginCookies()
             return getYearGradesListFromWeb()
+        }catch (e: Exception){
+            throw e
         }
         return marks
     }

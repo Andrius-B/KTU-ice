@@ -1,5 +1,6 @@
 package com.ice.ktuice.al.GradeTable.yearGradesModelComparator
 
+import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.models.YearGradesModel
 
 /**
@@ -7,4 +8,6 @@ import com.ice.ktuice.models.YearGradesModel
  */
 interface YearGradesModelComparator {
     fun compare(previous: YearGradesModel, new:YearGradesModel): List<Difference>
+
+    fun compare(previuos: YearGradesCollectionModel, new: YearGradesCollectionModel): List<Difference>
 }

@@ -1,0 +1,23 @@
+apply plugin: 'com.android.library'
+
+repositories {
+    mavenCentral()
+}
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 27
+    }
+}
+
+configurations {
+    javadocDeps
+}
+dependencies {
+    implementation 'com.android.support:appcompat-v7:27.1.0'
+    javadocDeps 'com.android.support:appcompat-v7:27.1.0'
+}

@@ -26,6 +26,7 @@ class LoginActivity: AppCompatActivity() {
 
     private val loginRepository: LoginRepository by inject()
     private val preferenceRepository: PreferenceRepository by inject()
+    private val scraperService: ScraperService by inject()
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
@@ -83,7 +84,7 @@ class LoginActivity: AppCompatActivity() {
                     var loginModel: LoginModel? = null
                     try {
                         setLoadingVisible(true)
-                        val loginResponse = ScraperService.login(username, password)
+                        val loginResponse = scraperService.login(username, password)
                         if(loginResponse.loginModel != null) {
                             setLoadingVisible(false)
                             loginModel = loginResponse.loginModel

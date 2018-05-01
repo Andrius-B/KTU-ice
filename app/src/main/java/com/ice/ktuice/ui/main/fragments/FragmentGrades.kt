@@ -19,6 +19,9 @@ import kotlinx.android.synthetic.main.fragment_grades.*
 import org.jetbrains.anko.doAsync
 import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
+import android.os.PersistableBundle
+
+
 
 /**
  * Created by Andrius on 2/24/2018.
@@ -42,7 +45,7 @@ class FragmentGrades: Fragment(), KoinComponent {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         doAsync {
-            scheduleJob()
+            scheduleJob(false)
             val requestedStudentId = preferenceRepository.getValue(R.string.logged_in_user_code)
             if(requestedStudentId.isBlank()){
                 println("StudentCode not found, quitting!")
@@ -68,8 +71,9 @@ class FragmentGrades: Fragment(), KoinComponent {
             }
 
             test_button.setOnClickListener{
-                println("job scheduling test button tap!")
-                scheduleJob()
+                //println("job scheduling test button tap!")
+                //scheduleJob(true)
+                //scheduleJob(false)
             }
         }
     }
@@ -84,16 +88,28 @@ class FragmentGrades: Fragment(), KoinComponent {
             }
     }
 
-    private fun scheduleJob(){
+    private fun scheduleJob(instant: Boolean){
         val serviceComponent = ComponentName(this.activity, SyncJobService::class.java)
+        val bundle = PersistableBundle()
+        val notificationFlag = if(instant) 0 else 1
+        println("Notifications enabled: $notificationFlag")
+        bundle.putInt("notificationsEnabled", notificationFlag)
         val builder = JobInfo.Builder(0, serviceComponent)
-        builder.setMinimumLatency(0)
+                             .setExtras(bundle)
+        if(!instant)
+            builder.setPeriodic(1000*60*5)
+        else
+            builder.setMinimumLatency(10)
+
+
         val jobScheduler = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             this.activity?.applicationContext?.getSystemService(JobScheduler::class.java)
         } else {
             TODO("VERSION.SDK_INT < M")
         }
+        jobScheduler?.cancel(0)
         jobScheduler?.schedule(builder.build())
+        println("Should start job!")
     }
 
 }

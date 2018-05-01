@@ -5,6 +5,7 @@ import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
 import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.scraperService.ScraperService
+import io.realm.Realm
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
@@ -14,6 +15,7 @@ import org.koin.standalone.inject
 class UserServiceImpl: UserService, KoinComponent{
     private val preferenceRepository: PreferenceRepository by inject()
     private val loginRepository: LoginRepository by inject()
+    private val scraperService: ScraperService by inject()
 
     override fun getLoginForCurrentUser(): LoginModel {
         val requestedStudentId = preferenceRepository.getValue(R.string.logged_in_user_code)
@@ -36,10 +38,16 @@ class UserServiceImpl: UserService, KoinComponent{
      */
     override fun refreshLoginCookies(): LoginModel? {
         val loginModel = getLoginForCurrentUser()
-        val newLoginModelResponse = ScraperService.login(loginModel.username, loginModel.password)
+        val newLoginModelResponse = scraperService.login(loginModel.username, loginModel.password)
         val newLoginModel = newLoginModelResponse.loginModel
-        loginModel.authCookies.clear()
-        loginModel.authCookies.addAll(newLoginModel?.authCookies!!)
+        val realm = Realm.getDefaultInstance()
+        realm.use{
+            realm.beginTransaction()
+            loginModel.authCookies.clear()
+            loginModel.authCookies.addAll(newLoginModel?.authCookies!!)
+            realm.commitTransaction()
+            realm.close()
+        }
         return newLoginModel
     }
 }
