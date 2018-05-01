@@ -1,4 +1,4 @@
-package com.ice.ktuice.scraperService.ktuScraperService.exceptions
+package com.ice.ktuice.scraperService.exceptions
 
 /**
  * Created by Andrius on 1/31/2018.

@@ -7,7 +7,7 @@ import com.ice.ktuice.al.services.userService.UserService
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.models.YearModel
-import com.ice.ktuice.scraperService.ktuScraperService.exceptions.AuthenticationException
+import com.ice.ktuice.scraperService.exceptions.AuthenticationException
 import org.jetbrains.anko.getStackTraceString
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject

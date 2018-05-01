@@ -5,6 +5,7 @@ import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
 import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.scraperService.ScraperService
+import io.realm.Realm
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
@@ -39,8 +40,14 @@ class UserServiceImpl: UserService, KoinComponent{
         val loginModel = getLoginForCurrentUser()
         val newLoginModelResponse = scraperService.login(loginModel.username, loginModel.password)
         val newLoginModel = newLoginModelResponse.loginModel
-        loginModel.authCookies.clear()
-        loginModel.authCookies.addAll(newLoginModel?.authCookies!!)
+        val realm = Realm.getDefaultInstance()
+        realm.use{
+            realm.beginTransaction()
+            loginModel.authCookies.clear()
+            loginModel.authCookies.addAll(newLoginModel?.authCookies!!)
+            realm.commitTransaction()
+            realm.close()
+        }
         return newLoginModel
     }
 }

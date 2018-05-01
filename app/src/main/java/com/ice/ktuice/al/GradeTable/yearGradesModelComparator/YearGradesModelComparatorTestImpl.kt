@@ -1,6 +1,7 @@
 package com.ice.ktuice.al.GradeTable.yearGradesModelComparator
 
 import com.ice.ktuice.models.GradeModel
+import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.models.YearGradesModel
 
 /**
@@ -8,6 +9,10 @@ import com.ice.ktuice.models.YearGradesModel
  * Used for testing out notifications, always reports a new grade to be added
  */
 class YearGradesModelComparatorTestImpl: YearGradesModelComparator{
+    override fun compare(previuos: YearGradesCollectionModel, new: YearGradesCollectionModel): List<Difference> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun compare(previous: YearGradesModel, new: YearGradesModel): List<Difference>{
         val diff = mutableListOf<Difference>()
 

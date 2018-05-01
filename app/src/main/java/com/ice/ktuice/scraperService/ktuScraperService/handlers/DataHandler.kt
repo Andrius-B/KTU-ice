@@ -3,7 +3,7 @@ package com.ice.ktuice.scraperService.ktuScraperService.handlers
 import com.ice.ktuice.models.*
 import com.ice.ktuice.models.responses.ModuleResponseModel
 import com.ice.ktuice.models.responses.YearGradesResponseModel
-import com.ice.ktuice.scraperService.ktuScraperService.exceptions.AuthenticationException
+import com.ice.ktuice.scraperService.exceptions.AuthenticationException
 import io.realm.RealmList
 import org.jsoup.Connection
 import org.jsoup.Jsoup

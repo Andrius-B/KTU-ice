@@ -29,13 +29,14 @@ class SyncJobService: JobService(), KoinComponent {
         jobParams = params
         doAsync({
             println(it.getStackTraceString())
-            jobFinished(jobParams, false)
+            jobFinished(jobParams, true)
         },{
             println("Starting comparison async")
             //starts the network request
             val dbYear: YearGradesCollectionModel? = yearGradesService.getYearGradesListFromDB()
             val webYear: YearGradesCollectionModel? = yearGradesService.getYearGradesListFromWeb()
-            if(dbYear != null && webYear != null){
+            val notificationsEnabled = params?.extras?.getInt("notificationsEnabled") ?: 1
+            if(dbYear != null && webYear != null && notificationsEnabled > 0){
                 val totalDifference = mutableListOf<Difference>()
 
                 webYear.yearList.forEach {

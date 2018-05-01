@@ -1,23 +1,19 @@
 package com.ice.ktuice
 
-import com.ice.ktuice.al.GradeTable.notifications.NotificationFactory
-import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparator
-import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparatorImpl
-import com.ice.ktuice.al.notifications.NotificationSummaryGenerator
-import com.ice.ktuice.al.services.yearGradesService.YearGradesService
+import com.ice.ktuice.models.Cookie
 import com.ice.ktuice.scraperService.ScraperService
+import com.ice.ktuice.scraperService.exceptions.AuthenticationException
 import com.ice.ktuice.scraperService.ktuScraperService.KTUScraperService
+import org.jetbrains.anko.getStackTraceString
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.koin.dsl.module.Module
 import org.koin.dsl.module.applicationContext
-import org.koin.standalone.StandAloneContext
 import org.koin.standalone.StandAloneContext.closeKoin
 import org.koin.standalone.StandAloneContext.startKoin
 import org.koin.standalone.inject
 import org.koin.test.KoinTest
-import org.mockito.Mockito
 import java.io.File
 
 class KTUScraperTest: KoinTest{
@@ -28,8 +24,8 @@ class KTUScraperTest: KoinTest{
         provide { KTUScraperService() as ScraperService }
     }
 
-    lateinit var username: String
-    lateinit var password: String
+    private lateinit var username: String
+    private lateinit var password: String
 
     /**
      * These tests will only run if there is a file called `ktulogin.local`
@@ -76,10 +72,69 @@ class KTUScraperTest: KoinTest{
         }
     }
 
+    /**
+     * Tests if grades are fetched and prints are fetched
+     */
     @Test
     fun `Test grade fetching`(){
         val loginModel = scraperService.login(username, password).loginModel!!
 
-        val grades = scraperService.getGrades(loginModel, loginModel.studentSemesters[0]!!)
+        try {
+            val grades = scraperService.getAllGrades(loginModel)
+
+            assert(grades.size > 0)
+            assert(grades.studentId == loginModel.studentId)
+            assert(grades.isUpdating == false)
+            assert(!grades.isEmpty())
+            assert(grades.yearList.size > 0)
+            println("Grades read:")
+            for(year in grades.yearList){
+                println("\t${year.year.year} (${year.year.id})")
+                for(semester in year.semesterList){
+                    println("\t\t${semester.semester} (${semester.semester_number})")
+                    for(module in semester.moduleList){
+                        print("\t\t\t${module.module_name} ")
+                        for(grade in module.grades){
+                            for(mark in grade.marks){
+                                print("$mark ,")
+                            }
+                        }
+                        println()
+                    }
+                }
+            }
+
+        }catch (e : AuthenticationException){
+            scraperService.refreshLoginCookies(loginModel)
+            `Test grade fetching`()
+        }catch (e: Exception){
+            println(e.getStackTraceString())
+        }
+    }
+
+    /**
+     * Tests if a request with invalid authentication
+     * throws an exception
+     */
+    @Test
+    fun `Unauthenticated login`(){
+        val loginModel = scraperService.login(username, password).loginModel!!
+        loginModel.authCookies.clear()
+        loginModel.authCookies.addAll(
+                listOf(
+                        /**
+                         * Random cookies of the same length and format to become invalid
+                         */
+                        Cookie("STUDCOOKIE", "759E509D3538D2F9486966714F908BFECC4153325B00897A"),
+                        Cookie("_shibsession_64656661756c7468747470733a2f2f756169732e63722e6b74752e6c742f73686962626f6c657468", "_1269e3f9e1ebeeee3d6d9abccc9e2c62")
+                )
+        )
+        var authExceptionThrown = false
+        try {
+            val grades = scraperService.getAllGrades(loginModel)
+        }catch (e : AuthenticationException){
+            authExceptionThrown = true
+        }
+        assert(authExceptionThrown)
     }
 }

@@ -1,5 +1,6 @@
 package com.ice.ktuice
 
+import android.app.job.JobParameters
 import com.ice.ktuice.al.GradeTable.notifications.NotificationFactory
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparator
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparatorImpl
@@ -123,6 +124,45 @@ class SyncJobServiceNotificationTest: KoinTest{
 
     @Test
     fun `Only one notification`(){
+        /**
+         * Even with multiple changes to the grade table, there should only be a single notification
+         */
+        var defaultGradeCollectionWithChangedGrade= YearGradesCollectionProviderTest.createDefaultYearGradesCollection()
+        defaultGradeCollectionWithChangedGrade.yearList.last()!!.semesterList.last()!!.moduleList.last()!!
+                .grades.last()!!.marks.add("10")
+        defaultGradeCollectionWithChangedGrade = YearGradesCollectionProviderTest.addMark(defaultGradeCollectionWithChangedGrade)
+        defaultGradeCollectionWithChangedGrade = YearGradesCollectionProviderTest.addMark(defaultGradeCollectionWithChangedGrade)
+
+
+        val yearGradesServiceMock = mock(YearGradesService::class.java)
+        `when`(yearGradesServiceMock.getYearGradesListFromDB()).thenReturn(YearGradesCollectionProviderTest.createDefaultYearGradesCollection())
+        `when`(yearGradesServiceMock.getYearGradesListFromWeb()).thenReturn(defaultGradeCollectionWithChangedGrade)
+
+        val notificationSummaryGenerator = Mockito.mock(NotificationSummaryGenerator::class.java)
+        Mockito.`when`(notificationSummaryGenerator.generateSummaryFromDifferences(ArgumentMatchers.anyList())).thenReturn("Test")
+
+        val notificationFactoryMock = Mockito.mock(NotificationFactory::class.java)
+
+        val module: Module = applicationContext {
+            provide { yearGradesServiceMock as YearGradesService }
+            provide { YearGradesModelComparatorImpl() as YearGradesModelComparator }
+            provide { notificationFactoryMock as NotificationFactory }
+            provide { notificationSummaryGenerator as NotificationSummaryGenerator }
+        }
+
+        startKoin(listOf(module))
+
+        val service = SyncJobService()
+        service.onStartJob(null)
+        sleep(1000) // wait for the service to finish
+        //(this is because, the comparison and fetching of the grade tables happens in a background thread)
+        closeKoin()
+
+        verify(notificationFactoryMock, times(1)).pushNotification(ArgumentMatchers.anyString())
+    }
+
+    @Test
+    fun `Notifications disabled`(){
         /**
          * Even with multiple changes to the grade table, there should only be a single notification
          */

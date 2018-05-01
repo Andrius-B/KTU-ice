@@ -1,4 +1,4 @@
-package com.ice.ktuice.DAL.repositories.gradeResponseRepository
+package com.ice.ktuice.repositories.gradeResponseRepository
 
 import com.ice.ktuice.models.YearGradesCollectionModel
 
