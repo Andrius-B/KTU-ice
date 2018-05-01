@@ -2,6 +2,7 @@ package com.ice.ktuice.al.notifications
 
 import android.app.job.JobParameters
 import android.app.job.JobService
+import com.ice.ktuice.R
 import com.ice.ktuice.al.GradeTable.notifications.NotificationFactory
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.Difference
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparator
@@ -35,7 +36,8 @@ class SyncJobService: JobService(), KoinComponent {
             //starts the network request
             val dbYear: YearGradesCollectionModel? = yearGradesService.getYearGradesListFromDB()
             val webYear: YearGradesCollectionModel? = yearGradesService.getYearGradesListFromWeb()
-            val notificationsEnabled = params?.extras?.getInt("notificationsEnabled") ?: 1
+            val notificationsEnabled = params?.extras?.getInt(applicationContext.resources.getString(R.string.notification_enabled_flag)) ?: 1
+            //notifications are enabled if not specified otherwise in the extras!
             if(dbYear != null && webYear != null && notificationsEnabled > 0){
                 val totalDifference = mutableListOf<Difference>()
 
@@ -63,10 +65,11 @@ class SyncJobService: JobService(), KoinComponent {
                         println("Notification push failed!")
                     }
                 }
-                yearGradesService.persistYearGradesModel(webYear)
-                println("service finished without errors!")
-                jobFinished(jobParams, false)
             }
+            webYear!!.isUpdating = false
+            yearGradesService.persistYearGradesModel(webYear)
+            println("service finished without errors!")
+            jobFinished(jobParams, false)
         })
         return true
     }

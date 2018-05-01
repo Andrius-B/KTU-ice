@@ -6,6 +6,7 @@ import com.ice.ktuice.al.GradeTable.notifications.NotificationFactory
 import com.ice.ktuice.al.GradeTable.notifications.NotificationFactoryImpl
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparator
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparatorImpl
+import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparatorTestImpl
 import com.ice.ktuice.al.notifications.NotificationSummaryGenerator
 import com.ice.ktuice.al.notifications.NotificationSummaryGeneratorImpl
 import com.ice.ktuice.al.services.userService.UserService
@@ -24,7 +25,7 @@ import org.koin.dsl.module.applicationContext
  */
 val mainModule: Module = applicationContext {
     provide { SharedPreferenceRepositoryImpl(this.androidApplication()) as PreferenceRepository }
-    provide { YearGradesModelComparatorImpl() as YearGradesModelComparator }
+    provide { YearGradesModelComparator Impl() as YearGradesModelComparator }
     provide { YearGradesServiceImpl() as YearGradesService }
     provide { UserServiceImpl() as UserService }
     provide { NotificationFactoryImpl(this.androidApplication()) as NotificationFactory }

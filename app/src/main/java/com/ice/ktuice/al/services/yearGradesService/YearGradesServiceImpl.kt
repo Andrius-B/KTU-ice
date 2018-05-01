@@ -87,6 +87,7 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent {
 
 
     override fun persistYearGradesModel(model: YearGradesCollectionModel){
+        println("Persisting year grades model")
         yearGradesRepository.createOrUpdate(model)
         currentSubject.onNext(model)
     }

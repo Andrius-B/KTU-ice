@@ -10,7 +10,27 @@ import com.ice.ktuice.models.YearGradesModel
  */
 class YearGradesModelComparatorTestImpl: YearGradesModelComparator{
     override fun compare(previuos: YearGradesCollectionModel, new: YearGradesCollectionModel): List<Difference> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val diff = mutableListOf<Difference>()
+        /**
+         * A grade for testing
+         */
+        val testGrade = GradeModel(
+                "Test",
+                "0",
+                "Pavasario Semestras 2017",
+                "PB1850560",
+                "ASU",
+                "1",
+                "0",
+                "LT",
+                "Vardenis Pavardenis",
+                "1",
+                "KD",
+                "17",
+                listOf("10"))
+
+        diff.add(Difference(Difference.Field.Grade, Difference.FieldChange.Added, testGrade))
+        return diff
     }
 
     override fun compare(previous: YearGradesModel, new: YearGradesModel): List<Difference>{
