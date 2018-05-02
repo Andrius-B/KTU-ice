@@ -8,6 +8,8 @@ import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.models.YearModel
 import com.ice.ktuice.scraperService.exceptions.AuthenticationException
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import org.jetbrains.anko.getStackTraceString
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
@@ -16,7 +18,7 @@ import org.koin.standalone.inject
  * Created by Andrius on 2/15/2018.
  * A helper class to contain the logic of the grade table and supply the models
  */
-class GradeTableManager: KoinComponent {
+class GradeTableManager: KoinComponent, AnkoLogger{
     private val userService: UserService by inject()
     private val yearGradesService: YearGradesService by inject()
 
@@ -32,11 +34,11 @@ class GradeTableManager: KoinComponent {
                         //recursive auth trying
                         return constructGradeTableModel(yearGradesList)
                     }catch (e: Exception){
-                        println(e.getStackTraceString())
+                        info(e.getStackTraceString())
                     }
                 }
             }
-            println(it.getStackTraceString())
+            info(it.getStackTraceString())
         }
         return null
     }

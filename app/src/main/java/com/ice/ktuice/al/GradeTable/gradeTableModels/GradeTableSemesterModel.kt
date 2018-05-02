@@ -3,12 +3,14 @@ package com.ice.ktuice.al.GradeTable.gradeTableModels
 import com.ice.ktuice.models.GradeModel
 import com.ice.ktuice.models.ModuleModel
 import com.ice.ktuice.models.YearModel
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 
 /**
  * Created by Andrius on 2/11/2018.
  * Stores the data of a semester (modules and some other supplementary names)
  */
-class GradeTableSemesterModel(val semester: String, val semester_number:String, val yearModel: YearModel) {
+class GradeTableSemesterModel(val semester: String, val semester_number:String, val yearModel: YearModel): AnkoLogger {
     private val rowMap: HashMap<String, GradeTableRowModel> = HashMap()
     private val weekList = mutableListOf<WeekModel>()
     fun getTotalWeekList(): List<WeekModel>{ // public getter to expose the seen weekModel list
@@ -146,8 +148,8 @@ class GradeTableSemesterModel(val semester: String, val semester_number:String, 
 
     fun printRowCounts(){
         rowMap.forEach{
-            println(String.format("%s : %d", it.value.moduleModel.module_name, it.value.size))
-            println("Week model count:"+weekList.size)
+            info(String.format("%s : %d", it.value.moduleModel.module_name, it.value.size))
+            info("Week model count:"+weekList.size)
         }
     }
 

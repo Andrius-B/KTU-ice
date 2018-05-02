@@ -25,7 +25,7 @@ import org.koin.dsl.module.applicationContext
  */
 val mainModule: Module = applicationContext {
     provide { SharedPreferenceRepositoryImpl(this.androidApplication()) as PreferenceRepository }
-    provide { YearGradesModelComparator Impl() as YearGradesModelComparator }
+    provide { YearGradesModelComparatorImpl() as YearGradesModelComparator }
     provide { YearGradesServiceImpl() as YearGradesService }
     provide { UserServiceImpl() as UserService }
     provide { NotificationFactoryImpl(this.androidApplication()) as NotificationFactory }

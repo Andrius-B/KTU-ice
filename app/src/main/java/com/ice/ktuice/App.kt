@@ -12,7 +12,6 @@ import org.koin.android.ext.android.startKoin
  */
 class App: Application() {
 
-
     override fun onCreate() {
         super.onCreate()
         RealmConfig.init(this) // initialize the db

@@ -61,14 +61,14 @@ class KTUScraperTest: KoinTest{
         assert(!loginModel.getCookieMap().isEmpty())
         assert(loginModel.studentSemesters.size > 0)
 
-        println("Semesters:")
+        info("Semesters:")
         for(semester in loginModel.studentSemesters){
-            println("${semester.id}, ${semester.year}")
+            info("${semester.id}, ${semester.year}")
         }
 
-        println("Cookies fetched:")
+        info("Cookies fetched:")
         for(item in loginModel.authCookies){
-            println("${item.key} => ${item.content}")
+            info("${item.key} => ${item.content}")
         }
     }
 
@@ -87,11 +87,11 @@ class KTUScraperTest: KoinTest{
             assert(grades.isUpdating == false)
             assert(!grades.isEmpty())
             assert(grades.yearList.size > 0)
-            println("Grades read:")
+            info("Grades read:")
             for(year in grades.yearList){
-                println("\t${year.year.year} (${year.year.id})")
+                info("\t${year.year.year} (${year.year.id})")
                 for(semester in year.semesterList){
-                    println("\t\t${semester.semester} (${semester.semester_number})")
+                    info("\t\t${semester.semester} (${semester.semester_number})")
                     for(module in semester.moduleList){
                         print("\t\t\t${module.module_name} ")
                         for(grade in module.grades){
@@ -99,7 +99,7 @@ class KTUScraperTest: KoinTest{
                                 print("$mark ,")
                             }
                         }
-                        println()
+                        info()
                     }
                 }
             }
@@ -108,7 +108,7 @@ class KTUScraperTest: KoinTest{
             scraperService.refreshLoginCookies(loginModel)
             `Test grade fetching`()
         }catch (e: Exception){
-            println(e.getStackTraceString())
+            info(e.getStackTraceString())
         }
     }
 

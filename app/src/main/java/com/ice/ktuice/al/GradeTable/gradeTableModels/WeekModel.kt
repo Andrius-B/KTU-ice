@@ -1,5 +1,7 @@
 package com.ice.ktuice.al.GradeTable.gradeTableModels
 
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import org.jetbrains.anko.getStackTraceString
 
 /**
@@ -24,7 +26,7 @@ class WeekModel(val week:String){
         return result
     }
 
-    companion object {
+    companion object: AnkoLogger{
         /**
          * Takes in a string representation of a week and converts it to an exact (Double) value.
          * Examples:
@@ -42,7 +44,7 @@ class WeekModel(val week:String){
                     retVal += elem.toFloat()
                     partCounter++
                 }catch (e: NumberFormatException){
-                    println(e.getStackTraceString())
+                    info(e.getStackTraceString())
                 }
             }
             if(partCounter == 0) return 0f

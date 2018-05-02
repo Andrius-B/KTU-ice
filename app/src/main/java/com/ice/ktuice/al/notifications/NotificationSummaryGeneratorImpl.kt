@@ -20,7 +20,7 @@ class NotificationSummaryGeneratorImpl(val context: Context): NotificationSummar
         val markChangedString = context.getString(R.string.notification_mark_updated)
         val gradeTableChanged = context.getString(R.string.notification_grade_table_changed)
 
-        var notificationContentString = ""
+        var notificationContentString: String
         var lastDifferentMark: GradeModel? = null
         var marksAdded = 0
         var marksChanged = 0

@@ -5,20 +5,22 @@ import com.ice.ktuice.models.responses.ModuleResponseModel
 import com.ice.ktuice.models.responses.YearGradesResponseModel
 import com.ice.ktuice.scraperService.exceptions.AuthenticationException
 import io.realm.RealmList
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.util.*
 
 class DataHandler {
-    companion object {
+    companion object: AnkoLogger{
         fun getGrades(loginModel: LoginModel, planYear: YearModel)
                 = getGrades(loginModel, planYear.year, planYear.id)
 
         private fun getGrades(loginModel: LoginModel, planYear: String, yearId: String): YearGradesResponseModel {
-            println("Getting grades @DataHandler!")
+            info("Getting grades @DataHandler!")
             val moduleResponse = getModules(loginModel, planYear, yearId)
-            println("Modules found:"+moduleResponse.size)
+            info("Modules found:"+moduleResponse.size)
             val yearGrades = YearGradesModel(YearModel(yearId, planYear), loginModel = loginModel)
             moduleResponse.forEach { moduleModel ->
                 /*

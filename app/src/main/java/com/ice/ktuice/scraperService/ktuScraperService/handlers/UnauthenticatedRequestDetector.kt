@@ -11,7 +11,7 @@ class UnauthenticatedRequestDetector {
         private val unauthorizedRequestPostAction = "/ktuis/stp_prisijungimas"
 
         fun isResponseAuthError(doc: Document): Boolean{
-            //println(doc.body())
+            //info(doc.body())
             //val title = doc.select("title").firstOrNull()
             val button = doc.select("input").firstOrNull()
             val form = doc.select("form").firstOrNull()
@@ -21,7 +21,7 @@ class UnauthenticatedRequestDetector {
             val formActionMatch = form?.attr("action").equals(unauthorizedRequestPostAction)
 
             val isAuthenticated = buttonValMatch || formActionMatch || !lengthValid
-            //println("Authenticated: $isAuthenticated")
+            //info("Authenticated: $isAuthenticated")
             return isAuthenticated
         }
     }

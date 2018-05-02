@@ -12,10 +12,11 @@ import com.ice.ktuice.scraperService.ScraperService
 import com.ice.ktuice.scraperService.exceptions.AuthenticationException
 import com.ice.ktuice.scraperService.exceptions.ParsingException
 import com.ice.ktuice.scraperService.exceptions.ServerErrorException
-import com.ice.ktuice.scraperService.ktuScraperService.handlers.UnauthenticatedRequestDetector
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 
 
-class  KTUScraperService: ScraperService {
+class  KTUScraperService: ScraperService, AnkoLogger{
 
     override fun login(username: String, password: String)
             = LoginHandler().getAuthCookies(username, password)
@@ -32,7 +33,7 @@ class  KTUScraperService: ScraperService {
             response = YearGradesResponseModel(-100, YearGradesModel(yearModel))
         }
 
-        println("Grades response code(@Scraper service):"+response.statusCode)
+        info("Grades response code(@Scraper service):"+response.statusCode)
         if(response.statusCode >= 500){
             throw ServerErrorException("Server error, something went wrong!")
         }else if(response.statusCode <= -100){

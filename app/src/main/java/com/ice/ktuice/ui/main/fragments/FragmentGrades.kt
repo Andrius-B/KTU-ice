@@ -20,7 +20,8 @@ import org.jetbrains.anko.doAsync
 import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
 import android.os.PersistableBundle
-
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 
 
 /**
@@ -28,14 +29,14 @@ import android.os.PersistableBundle
  * The main fragment of the application:
  * displays a Grade Table component and lets the student log out
  */
-class FragmentGrades: Fragment(), KoinComponent {
+class FragmentGrades: Fragment(), KoinComponent, AnkoLogger {
 
     private val loginRepository: LoginRepository by inject()
     private val preferenceRepository: PreferenceRepository by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        println("Creating Grades fragment!")
+        info("Creating Grades fragment!")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -47,17 +48,17 @@ class FragmentGrades: Fragment(), KoinComponent {
         doAsync {
             val requestedStudentId = preferenceRepository.getValue(R.string.logged_in_user_code)
             if(requestedStudentId.isBlank()){
-                //println("StudentCode not found, quitting!")
+                //info("StudentCode not found, quitting!")
                 logout()
             }else{
-                //println("Student code is:$requestedStudentId")
+                //info("Student code is:$requestedStudentId")
             }
             val loginModel = loginRepository.getByStudCode(requestedStudentId)
             if(loginModel == null){
-                println("Login model is null!")
+                info("Login model is null!")
                 logout()
             }
-            //println("login model created!")
+            //info("login model created!")
             loginModel!!
             info_semesters_found.text = loginModel.studentSemesters.size.toString()
             info_student_code.text = loginModel.studentId
@@ -70,7 +71,7 @@ class FragmentGrades: Fragment(), KoinComponent {
             }
 
             test_button.setOnClickListener{
-                //println("job scheduling test button tap!")
+                //info("job scheduling test button tap!")
                 scheduleJob(true)
                 //scheduleJob(false)
             }

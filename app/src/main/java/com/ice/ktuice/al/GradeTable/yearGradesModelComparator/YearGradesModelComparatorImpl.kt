@@ -2,11 +2,13 @@ package com.ice.ktuice.al.GradeTable.yearGradesModelComparator
 
 import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.models.YearGradesModel
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 
 /**
  * Created by Andrius on 2/20/2018.
  */
-class YearGradesModelComparatorImpl: YearGradesModelComparator {
+class YearGradesModelComparatorImpl: YearGradesModelComparator, AnkoLogger {
 
     override fun compare(previous: YearGradesModel, new:YearGradesModel): List<Difference>{
         val diff = mutableListOf<Difference>()
@@ -17,9 +19,9 @@ class YearGradesModelComparatorImpl: YearGradesModelComparator {
 
         if(!sameYear)throw IllegalArgumentException("Can not compare YearGradesModels of different years!")
 
-        println(String.format("The years are the same:%s", sameYear))
-        println("Semester count difference $semesterCountDifference")
-        println("Mark count difference $markCountDifference")
+        info(String.format("The years are the same:%s", sameYear))
+        info("Semester count difference $semesterCountDifference")
+        info("Mark count difference $markCountDifference")
 
 
         val newList = new.convertToGradeList()

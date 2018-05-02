@@ -12,13 +12,15 @@ import com.ice.ktuice.models.lectureCalendarModels.CalendarModel
 import io.realm.Realm
 import io.realm.RealmChangeListener
 import kotlinx.android.synthetic.main.fragment_timetable.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import org.koin.standalone.KoinComponent
 
 /**
  * Created by Andrius on 2/24/2018.
  * Displays a calendar of the upcoming events
  */
-class FragmentTimeTable: Fragment(), KoinComponent {
+class FragmentTimeTable: Fragment(), KoinComponent, AnkoLogger{
 
     private val calendarManager = CalendarManager()
 
@@ -34,19 +36,19 @@ class FragmentTimeTable: Fragment(), KoinComponent {
         super.onViewCreated(view, savedInstanceState)
 
         // Set an action when any event is clicked.
-        week_view.setOnEventClickListener{event, eventRect ->  println("Click on event!")}
+        week_view.setOnEventClickListener{ _, _ ->  info("Click on event!")}
 
         // The week view has infinite scrolling horizontally. We have to provide the events of a
         // month every time the month changes on the week view.
         week_view.setMonthChangeListener { newYear, newMonth ->
             run{
-                println("set date set:$newYear $newMonth")
+                info("set date set:$newYear $newMonth")
             }
             events
         }
 
         // Set long press listener for events.
-        week_view.setEventLongPressListener{event, eventRect ->  println("Long click on event!")}
+        week_view.setEventLongPressListener{event, eventRect ->  info("Long click on event!")}
 
         //this is what the developers of the lib use, but i think its a little non responsive if scrolling slowly
         week_view.xScrollingSpeed = -1 * (Math.log(2.5) / Math.log(1.0 / (1 + week_view.numberOfVisibleDays))).toFloat()
@@ -66,7 +68,7 @@ class FragmentTimeTable: Fragment(), KoinComponent {
 
 
     private fun updateWeekViewToCalendar(calendar: CalendarModel){
-        println("Updating the calendar view!")
+        info("Updating the calendar view!")
         val eventList = weekViewEventsFromCalendar(calendar)
         events.clear()
         events.addAll(eventList)

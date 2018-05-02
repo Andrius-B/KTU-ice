@@ -7,6 +7,8 @@ import com.ice.ktuice.scraperService.ScraperService
 import com.ice.ktuice.scraperService.exceptions.AuthenticationException
 import io.reactivex.subjects.ReplaySubject
 import io.reactivex.subjects.Subject
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.koin.standalone.KoinComponent
@@ -16,7 +18,7 @@ import org.koin.standalone.inject
  * Created by Andrius on 2/24/2018.
  * Access point for getting year grades from both the web and the database
  */
-class YearGradesServiceImpl: YearGradesService, KoinComponent {
+class YearGradesServiceImpl: YearGradesService, KoinComponent, AnkoLogger {
 
     private val yearGradesRepository: YearGradesRepository by inject()
     private val userService: UserService by inject()
@@ -87,7 +89,7 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent {
 
 
     override fun persistYearGradesModel(model: YearGradesCollectionModel){
-        println("Persisting year grades model")
+        info("Persisting year grades model")
         yearGradesRepository.createOrUpdate(model)
         currentSubject.onNext(model)
     }
