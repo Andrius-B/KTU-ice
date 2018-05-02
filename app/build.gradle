@@ -14,8 +14,8 @@ android {
         applicationId "com.ice.ktuice"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -24,48 +24,40 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    compile 'org.jetbrains.anko:anko-common:0.9'
-    implementation 'com.android.support:appcompat-v7:27.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-
-
-    compile 'com.android.support:cardview-v7:27.1.0'
-    compile 'com.android.support:recyclerview-v7:27.1.0'
-
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'org.jetbrains.anko:anko-common:0.9'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'com.android.support:cardview-v7:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
-    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.2'
-
+    implementation 'com.google.code.gson:gson:2.8.2'
     // Koin for Android
-    compile 'org.koin:koin-android:0.8.1'
-
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'org.koin:koin-android:0.8.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     // jsoup HTML parser library @ https://jsoup.org/
-    compile 'org.jsoup:jsoup:1.11.2'
-    compile 'net.sf.biweekly:biweekly:0.6.1'
-    compile 'com.android.support:design:27.1.0'
-    compile 'com.github.quivr:android-week-view:2.2.2'
-
+    implementation 'org.jsoup:jsoup:1.11.2'
+    implementation 'net.sf.biweekly:biweekly:0.6.1'
+    implementation 'com.android.support:design:27.1.1'
     //rxJava for submitting the models to views
-    compile 'io.reactivex.rxjava2:rxkotlin:2.2.0'
-
-
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     // Koin testing tools
-    testCompile 'org.koin:koin-test:0.8.1'
-    testCompile "org.mockito:mockito-core:2.16.0"
-
-    androidTestCompile 'org.mockito:mockito-android:2.8.9'
-    androidTestCompile ('com.nhaarman:mockito-kotlin:1.4.0', {
+    testImplementation 'org.koin:koin-test:0.8.1'
+    testImplementation 'org.mockito:mockito-core:2.16.0'
+    androidTestImplementation 'org.mockito:mockito-android:2.8.9'
+    androidTestImplementation('com.nhaarman:mockito-kotlin:1.4.0', {
         exclude group: 'org.jetbrains.kotlin'
         exclude group: 'org.mockito'
     })
+    implementation project(':week-view-lib')
 }

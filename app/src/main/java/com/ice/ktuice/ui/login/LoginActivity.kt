@@ -11,10 +11,7 @@ import com.ice.ktuice.ui.main.MainActivity
 import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.scraperService.ScraperService
 import kotlinx.android.synthetic.main.activity_login.*
-import org.jetbrains.anko.activityUiThreadWithContext
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.doAsyncResult
-import org.jetbrains.anko.getStackTraceString
+import org.jetbrains.anko.*
 import org.koin.android.ext.android.inject
 import java.util.concurrent.Future
 
@@ -22,19 +19,20 @@ import java.util.concurrent.Future
  * Created by Andrius on 1/24/2018.
  * TODO refactor the login system to a more robust system
  */
-class LoginActivity: AppCompatActivity() {
+class LoginActivity: AppCompatActivity(), AnkoLogger {
 
     private val loginRepository: LoginRepository by inject()
     private val preferenceRepository: PreferenceRepository by inject()
+    private val scraperService: ScraperService by inject()
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
-        println("Creating login activity!")
+        info("Creating login activity!")
         val loggedInUserCode = preferenceRepository.getValue(R.string.logged_in_user_code)
         if(loggedInUserCode.isNotBlank()){
             val login = loginRepository.getByStudCode(loggedInUserCode)
             if(login!= null){
-                println("Launching with logged in user code:"+login.studentId)
+                info("Launching with logged in user code:"+login.studentId)
                 launchMainActivity()
             }
         }
@@ -54,7 +52,7 @@ class LoginActivity: AppCompatActivity() {
                     activityUiThreadWithContext {
                         saveLoginToRealm(loginModel)
                         preferenceRepository.setValue(R.string.logged_in_user_code, loginModel.studentId)
-                        println("login saved to database, launching main activity!")
+                        info("login saved to database, launching main activity!")
                         launchMainActivity()
                     }
                 }
@@ -72,8 +70,8 @@ class LoginActivity: AppCompatActivity() {
     private fun loginRequest(username:String, password:String): Future<LoginModel?>{
         return doAsyncResult(
                 {
-                    println(it)
-                    println(it.getStackTraceString())
+                    info(it)
+                    info(it.getStackTraceString())
                     runOnUiThread{
                         setErrorDisplay(it.toString(), true)
                         setLoadingVisible(false)
@@ -83,16 +81,16 @@ class LoginActivity: AppCompatActivity() {
                     var loginModel: LoginModel? = null
                     try {
                         setLoadingVisible(true)
-                        val loginResponse = ScraperService.login(username, password)
+                        val loginResponse = scraperService.login(username, password)
                         if(loginResponse.loginModel != null) {
                             setLoadingVisible(false)
                             loginModel = loginResponse.loginModel
-                            println("Login successful! " + loginModel.studentName)
+                            info("Login successful! " + loginModel.studentName)
                         }
                     }catch (e: Exception){
-                        println("Exception while making the login requests!:"+e)
+                        info("Exception while making the login requests!:"+e)
                         setErrorDisplay(e.toString(), true)
-                        println(e.getStackTraceString())
+                        info(e.getStackTraceString())
                         setLoadingVisible(false)
                     }
                     return@doAsyncResult loginModel

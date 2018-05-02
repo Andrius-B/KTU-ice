@@ -2,13 +2,11 @@ package com.ice.ktuice.al.lectureCalendar
 
 import com.ice.ktuice.DAL.repositories.calendarRepository.CalendarRepositoryImpl
 import com.ice.ktuice.models.lectureCalendarModels.CalendarModel
-import com.ice.ktuice.scraperService.handlers.CalendarHandler
+import com.ice.ktuice.scraperService.ktuScraperService.handlers.CalendarHandler
 import com.ice.ktuice.al.services.userService.UserService
 import io.reactivex.subjects.ReplaySubject
 import io.reactivex.subjects.Subject
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.getStackTraceString
-import org.jetbrains.anko.uiThread
+import org.jetbrains.anko.*
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import java.util.*
@@ -18,7 +16,7 @@ import java.util.*
  * Created by Andrius on 2/26/2018.
  * The main logic behind the calendar view
  */
-class CalendarManager: KoinComponent {
+class CalendarManager: KoinComponent, AnkoLogger {
     private val calendarRepository = CalendarRepositoryImpl()
     private val userService: UserService by inject()
 
@@ -42,7 +40,7 @@ class CalendarManager: KoinComponent {
 
         doAsync (
         {
-            println(it.getStackTraceString())
+            info(it.getStackTraceString())
         },
         {
             val freshCalendar = getCalendarEventsModelFromWeb()
@@ -56,7 +54,7 @@ class CalendarManager: KoinComponent {
                      */
                     subject.onNext(freshCalendar)
                 }catch (e: Exception){
-                    println(e.getStackTraceString())
+                    info(e.getStackTraceString())
                 }
             }
         })

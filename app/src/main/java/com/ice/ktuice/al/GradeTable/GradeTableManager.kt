@@ -3,20 +3,13 @@ package com.ice.ktuice.al.GradeTable
 import com.ice.ktuice.al.GradeTable.gradeTableModels.GradeTableFactory
 import com.ice.ktuice.al.GradeTable.gradeTableModels.GradeTableModel
 import com.ice.ktuice.al.GradeTable.gradeTableModels.SemesterAdapterItem
-import com.ice.ktuice.DAL.repositories.gradeResponseRepository.YearGradesRepository
-import com.ice.ktuice.DAL.repositories.loginRepository.LoginRepository
-import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
-import com.ice.ktuice.R
 import com.ice.ktuice.al.services.userService.UserService
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
-import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.models.YearGradesCollectionModel
-import com.ice.ktuice.models.YearGradesModel
 import com.ice.ktuice.models.YearModel
 import com.ice.ktuice.scraperService.exceptions.AuthenticationException
-import com.ice.ktuice.scraperService.ScraperService
-import io.realm.RealmList
-import io.realm.RealmResults
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import org.jetbrains.anko.getStackTraceString
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
@@ -25,7 +18,7 @@ import org.koin.standalone.inject
  * Created by Andrius on 2/15/2018.
  * A helper class to contain the logic of the grade table and supply the models
  */
-class GradeTableManager: KoinComponent {
+class GradeTableManager: KoinComponent, AnkoLogger{
     private val userService: UserService by inject()
     private val yearGradesService: YearGradesService by inject()
 
@@ -41,11 +34,11 @@ class GradeTableManager: KoinComponent {
                         //recursive auth trying
                         return constructGradeTableModel(yearGradesList)
                     }catch (e: Exception){
-                        println(e.getStackTraceString())
+                        info(e.getStackTraceString())
                     }
                 }
             }
-            println(it.getStackTraceString())
+            info(it.getStackTraceString())
         }
         return null
     }

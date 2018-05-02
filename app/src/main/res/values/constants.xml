@@ -2,4 +2,7 @@
 <resources>
     <string name="shared_preference_file_key">com.ice.ktuice.shared_preference_file_key</string>
     <string name="logged_in_user_code">com.ice.ktuice.logged_in_user_code</string>
+    <string name="currently_selected_semester_id">com.ice.ktu.currently_selected_semester_id</string>
+    <string name="currently_selected_tab_id">com.ice.ktu.currently_selected_tab_id</string>
+    <string name="notification_enabled_flag">com.ice.ktu.notification_enabled_flag</string>
 </resources>

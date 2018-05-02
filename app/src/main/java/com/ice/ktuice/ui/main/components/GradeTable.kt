@@ -6,17 +6,19 @@ import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
 import com.ice.ktuice.al.GradeTable.GradeTableManager
 import com.ice.ktuice.al.GradeTable.gradeTableModels.GradeTableModel
 import com.ice.ktuice.al.GradeTable.gradeTableModels.SemesterAdapterItem
+import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparator
 import com.ice.ktuice.al.services.userService.UserService
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.ui.adapters.SemesterSpinnerAdapter
 import com.ice.ktuice.ui.main.dialogs.GradeTableCellDetailsDialog
 import kotlinx.android.synthetic.main.grade_table_layout.view.*
-import org.jetbrains.anko.runOnUiThread
+import org.jetbrains.anko.*
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
@@ -26,9 +28,10 @@ import org.koin.standalone.inject
  * and then the grades in a table, that correspond to the selected semester.
  * TODO move all the application logic to GradeTableManager
  */
-class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), KoinComponent {
-    private val userService: UserService by inject()
+class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), KoinComponent, AnkoLogger {
     private val yearGradesService: YearGradesService by inject()
+    private val comparator: YearGradesModelComparator by inject()
+    private val preferenceRepository: PreferenceRepository by inject()
 
     private var tableCellDetailsDialog: GradeTableCellDetailsDialog? = null
     private var tableModel: GradeTableModel? = null
@@ -39,6 +42,7 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
 
 
     private val tableManager = GradeTableManager()
+    private var currentGrades: YearGradesCollectionModel? = null
     constructor(c: Context): this(c, null)
 
 
@@ -47,10 +51,11 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
         val gradesSubject  = yearGradesService.getYearGradesList()
         gradesSubject.subscribe{
             context.runOnUiThread {
-                val gradeTable = yearGradesService.getYearGradesListFromDB()!!
                 /**
                  * This is the handler that updates a view, thus it has to run on the ui thread.
                  */
+                info("Observing a grade table!")
+                val gradeTable = yearGradesService.getYearGradesListFromDB()!!
                 if(gradeTable.isEmpty()){
                     /*
                         On the initial load, the returned value is just a placeholder,
@@ -59,7 +64,6 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
                      */
                     isLoadingOverlayShown = true
                 }else{
-                    println("Updating grade table view!")
                     updateGradeTable(gradeTable)
                 }
             }
@@ -68,7 +72,6 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
 
     private fun updateGradeTable(grades: YearGradesCollectionModel){
         if(grades.yearList.size == 0){
-
             return@updateGradeTable
         }
         /**
@@ -76,14 +79,18 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
          */
         isLoadingOverlayShown = false
 
+        info("Observed grade table is updating: ${grades.isUpdating}")
         if(grades.isUpdating){
             updating_progress.visibility = View.VISIBLE
-            return@updateGradeTable //don't want to flash the table if not required
-            // here we only want to inform the user that the table is updating
         }else{
             updating_progress.visibility = View.GONE
         }
-
+        if(currentGrades != null && comparator.compare(currentGrades!!, grades).isEmpty()) {
+            /**If there are no changes to the data,
+             * Updating the view is pointless, so shortcircuit this
+             */
+            return@updateGradeTable
+        }
         if(grade_table_semester_spinner.adapter == null){
             //construct table spinner on initial widget construction
             val semesterSpinnerItems = tableManager.constructSemesterAdapterSpinnerItemList(grades)
@@ -92,12 +99,20 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
         }
         val changedSemesterSpinnerItems = tableManager.constructSemesterAdapterSpinnerItemList(grades)
         val changedTableModel = tableManager.constructGradeTableModel(grades)
-        val selectedSemesterSpinnerItem = grade_table_semester_spinner.adapter.getItem(grade_table_semester_spinner.selectedItemPosition) as SemesterAdapterItem
 
         setUpSemesterSpinner(changedSemesterSpinnerItems)
+        try {
+            val preferredSemesterStr = preferenceRepository.getValue(R.string.currently_selected_semester_id)
+            info("Selecting the semester to be :$preferredSemesterStr")
+            grade_table_semester_spinner.setSelection(changedSemesterSpinnerItems.indexOfFirst { it.semester.equals(preferredSemesterStr) })
+        }catch(exception: IndexOutOfBoundsException){
+            info("The current spinner selection is invalid!")
+        }
+
         tableModel = changedTableModel
+
+        currentGrades = grades
         //The set selection updates the grade table view
-        grade_table_semester_spinner.setSelection(changedSemesterSpinnerItems.indexOfFirst { it.semesterNumber.equals(selectedSemesterSpinnerItem.semesterNumber) })
     }
 
     /**
@@ -178,7 +193,8 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
 
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 val item = adapter.getItem(p2)
-                println("Creating view for spinner item")
+                preferenceRepository.setValue(R.string.currently_selected_semester_id, item.semester)
+                info("Creating view for spinner item")
                 createViewForModel(tableModel!!, item)
             }
 

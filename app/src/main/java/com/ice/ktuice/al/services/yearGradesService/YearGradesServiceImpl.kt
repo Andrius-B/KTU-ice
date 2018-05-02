@@ -1,12 +1,14 @@
 package com.ice.ktuice.al.services.yearGradesService
 
-import com.ice.ktuice.DAL.repositories.gradeResponseRepository.YearGradesRepository
+import com.ice.ktuice.repositories.gradeResponseRepository.YearGradesRepository
 import com.ice.ktuice.al.services.userService.UserService
 import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.scraperService.ScraperService
 import com.ice.ktuice.scraperService.exceptions.AuthenticationException
 import io.reactivex.subjects.ReplaySubject
 import io.reactivex.subjects.Subject
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.koin.standalone.KoinComponent
@@ -16,10 +18,11 @@ import org.koin.standalone.inject
  * Created by Andrius on 2/24/2018.
  * Access point for getting year grades from both the web and the database
  */
-class YearGradesServiceImpl: YearGradesService, KoinComponent {
+class YearGradesServiceImpl: YearGradesService, KoinComponent, AnkoLogger {
 
     private val yearGradesRepository: YearGradesRepository by inject()
     private val userService: UserService by inject()
+    private val scraperService: ScraperService by inject()
     /**
      * This variable keeps the current state of the service
      */
@@ -32,11 +35,13 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent {
      */
     override fun getYearGradesList(): Subject<YearGradesCollectionModel> {
         val dbGrades = getYearGradesListFromDB()
+        yearGradesRepository.setUpdating(dbGrades, true)
         currentSubject.onNext(dbGrades)
         doAsync {
             val webGrades = getYearGradesListFromWeb()
             uiThread {
                 persistYearGradesModel(webGrades)
+                yearGradesRepository.setUpdating(webGrades, false)
                 currentSubject.onNext(webGrades)
             }
         }
@@ -57,14 +62,16 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent {
         val currentGrades = getYearGradesListFromDB()
         yearGradesRepository.setUpdating(currentGrades, true)
         currentSubject.onNext(currentGrades)
-        val marks = YearGradesCollectionModel(login.studentId)
+        val marks: YearGradesCollectionModel
         try {
-            login.studentSemesters.forEach {
-                marks.add(ScraperService.getGrades(login, it))
-            }
+            marks = scraperService.getAllGrades(login)
+            marks.isUpdating = false
+            currentSubject.onNext(marks)
         }catch (e : AuthenticationException){
             userService.refreshLoginCookies()
             return getYearGradesListFromWeb()
+        }catch (e: Exception){
+            throw e
         }
         return marks
     }
@@ -82,6 +89,7 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent {
 
 
     override fun persistYearGradesModel(model: YearGradesCollectionModel){
+        info("Persisting year grades model")
         yearGradesRepository.createOrUpdate(model)
         currentSubject.onNext(model)
     }

@@ -11,6 +11,8 @@ import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
 import com.ice.ktuice.R
 import com.ice.ktuice.ui.main.MainActivity
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import org.jetbrains.anko.runOnUiThread
 
 
@@ -18,7 +20,7 @@ import org.jetbrains.anko.runOnUiThread
  * Created by Andrius on 2/20/2018.
  * Default notification pushing
  */
-class NotificationFactoryImpl(val context: Context): NotificationFactory{
+class NotificationFactoryImpl(val context: Context): NotificationFactory, AnkoLogger{
     companion object {
 
         private var _notificationTrack = 416
@@ -33,7 +35,7 @@ class NotificationFactoryImpl(val context: Context): NotificationFactory{
 
     override fun pushNotification(message: String){
         context.runOnUiThread {
-            println("pushing notification!")
+            info("pushing notification!")
             // The id of the channel.
             val CHANNEL_ID = "test_notification_channel"
             val mBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
@@ -65,12 +67,12 @@ class NotificationFactoryImpl(val context: Context): NotificationFactory{
             // number to NotificationManager.cancel().
             val notif = mBuilder.build()
             //TODO fix led lights
-            notif.defaults = 0
-            notif.ledARGB = Color.CYAN
-            notif.ledOnMS = 300
-            notif.ledOffMS = 100
+//            notif.defaults = 0
+//            notif.ledARGB = Color.CYAN
+//            notif.ledOnMS = 300
+//            notif.ledOffMS = 100
             mNotificationManager.notify(newNotificationID, notif)
-            println("Notification pushed!")
+            info("Notification pushed!")
         }
     }
 
