@@ -56,20 +56,6 @@ class FragmentGrades: Fragment(), KoinComponent, AnkoLogger {
         gradeTableView = GradeTable(this.activity!!)
         grade_table_view_container.addView(gradeTableView)
 
-//            val requestedStudentId = preferenceRepository.getValue(R.string.logged_in_user_code)
-//            if(requestedStudentId.isBlank()){
-//                //info("StudentCode not found, quitting!")
-//                logout()
-//            }else{
-//                //info("Student code is:$requestedStudentId")
-//            }
-//            val loginModel = loginRepository.getByStudCode(requestedStudentId)
-//            if(loginModel == null){
-//                info("Login model is null!")
-//                logout()
-//            }
-        //info("login model created!")
-
         viewModel.grades.observe(this, Observer {
             if(it != null) {
                 this.activity?.runOnUiThread {
