@@ -1,10 +1,9 @@
 package com.ice.ktuice
 
 import com.ice.ktuice.models.Cookie
-import com.ice.ktuice.scraperService.ScraperService
-import com.ice.ktuice.scraperService.exceptions.AuthenticationException
-import com.ice.ktuice.scraperService.ktuScraperService.KTUScraperService
-import org.jetbrains.anko.AnkoLogger
+import com.ice.ktuice.al.services.scraperService.ScraperService
+import com.ice.ktuice.al.services.scraperService.exceptions.AuthenticationException
+import com.ice.ktuice.al.services.scraperService.ktuScraperService.KTUScraperService
 import org.jetbrains.anko.getStackTraceString
 import org.junit.After
 import org.junit.Before

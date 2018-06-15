@@ -2,6 +2,7 @@ package com.ice.ktuice.ui.main.fragments
 
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
+import android.arch.lifecycle.Observer
 import android.content.ComponentName
 import android.content.Intent
 import android.os.Build
@@ -20,8 +21,13 @@ import org.jetbrains.anko.doAsync
 import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
 import android.os.PersistableBundle
+import android.support.constraint.ConstraintLayout
+import com.ice.ktuice.al.services.yearGradesService.YearGradesService
+import com.ice.ktuice.ui.main.components.GradeTable
+import com.ice.ktuice.viewModels.gradesFragment.GradesFragmentViewModel
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
+import org.jetbrains.anko.runOnUiThread
 
 
 /**
@@ -30,39 +36,64 @@ import org.jetbrains.anko.info
  * displays a Grade Table component and lets the student log out
  */
 class FragmentGrades: Fragment(), KoinComponent, AnkoLogger {
-
-    private val loginRepository: LoginRepository by inject()
-    private val preferenceRepository: PreferenceRepository by inject()
-
+    private val yearGradesService: YearGradesService by inject()
+    private val viewModel: GradesFragmentViewModel by inject()
+    private lateinit var gradeTableView: GradeTable
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         info("Creating Grades fragment!")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.fragment_grades, container, false)
+        val view = inflater.inflate(R.layout.fragment_grades, container, false)
+
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        gradeTableView = GradeTable(this.activity!!)
+        grade_table_view_container.addView(gradeTableView)
+
+//            val requestedStudentId = preferenceRepository.getValue(R.string.logged_in_user_code)
+//            if(requestedStudentId.isBlank()){
+//                //info("StudentCode not found, quitting!")
+//                logout()
+//            }else{
+//                //info("Student code is:$requestedStudentId")
+//            }
+//            val loginModel = loginRepository.getByStudCode(requestedStudentId)
+//            if(loginModel == null){
+//                info("Login model is null!")
+//                logout()
+//            }
+        //info("login model created!")
+
+        viewModel.grades.observe(this, Observer {
+            if(it != null) {
+                this.activity?.runOnUiThread {
+                    // TODO reduce the view-model to only contain a key, or add PDO's
+                    // realm can not pass objects between threads..
+                    // so we refetch the grades here
+                    val grades = yearGradesService.getYearGradesListFromDB()
+                    if(grades != null) {
+                        gradeTableView.updateGradeTable(grades)
+                    }
+                }
+            }
+        })
+
+        viewModel.loginModel.observe(this, Observer {  loginModel->
+            this.activity?.runOnUiThread {
+                loginModel!!
+                info_semesters_found.text = loginModel.studentSemesters.size.toString()
+                info_student_code.text = loginModel.studentId
+                info_student_name.text = loginModel.studentName
+            }
+        })
+
         doAsync {
-            val requestedStudentId = preferenceRepository.getValue(R.string.logged_in_user_code)
-            if(requestedStudentId.isBlank()){
-                //info("StudentCode not found, quitting!")
-                logout()
-            }else{
-                //info("Student code is:$requestedStudentId")
-            }
-            val loginModel = loginRepository.getByStudCode(requestedStudentId)
-            if(loginModel == null){
-                info("Login model is null!")
-                logout()
-            }
-            //info("login model created!")
-            loginModel!!
-            info_semesters_found.text = loginModel.studentSemesters.size.toString()
-            info_student_code.text = loginModel.studentId
-            info_student_name.text = loginModel.studentName
 
             logout_btn.setOnClickListener{
                 activity?.runOnUiThread {
@@ -85,13 +116,7 @@ class FragmentGrades: Fragment(), KoinComponent, AnkoLogger {
     }
 
     private fun logout(){
-        this.activity?.runOnUiThread{
-                preferenceRepository.setValue(R.string.logged_in_user_code, "") // clear out the logged in user code from prefrences
-                val intent = Intent(this.activity, LoginActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-                this.activity?.finish()
-            }
+        viewModel.logoutCurrentUser(this.activity)
     }
 
     private fun scheduleJob(instant: Boolean){

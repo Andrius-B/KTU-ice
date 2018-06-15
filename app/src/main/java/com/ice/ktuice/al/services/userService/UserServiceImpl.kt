@@ -4,7 +4,7 @@ import com.ice.ktuice.DAL.repositories.loginRepository.LoginRepository
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
 import com.ice.ktuice.models.LoginModel
-import com.ice.ktuice.scraperService.ScraperService
+import com.ice.ktuice.al.services.scraperService.ScraperService
 import io.realm.Realm
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
