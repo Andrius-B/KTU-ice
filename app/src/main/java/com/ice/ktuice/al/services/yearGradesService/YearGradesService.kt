@@ -18,7 +18,7 @@ interface YearGradesService {
     /**
      * This function returns a cached subject of the past observed versions!
      */
-    fun getYearGradesListSubject(): Subject<YearGradesCollectionModel>?
+    fun getYearGradesListCachedSubject(): Subject<YearGradesCollectionModel>?
 
     /**
      * Queries the database on the current device to get the local version of the calendar

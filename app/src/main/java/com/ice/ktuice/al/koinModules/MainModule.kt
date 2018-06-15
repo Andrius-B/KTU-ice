@@ -6,15 +6,15 @@ import com.ice.ktuice.al.GradeTable.notifications.NotificationFactory
 import com.ice.ktuice.al.GradeTable.notifications.NotificationFactoryImpl
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparator
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparatorImpl
-import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparatorTestImpl
 import com.ice.ktuice.al.notifications.NotificationSummaryGenerator
 import com.ice.ktuice.al.notifications.NotificationSummaryGeneratorImpl
 import com.ice.ktuice.al.services.userService.UserService
 import com.ice.ktuice.al.services.userService.UserServiceImpl
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.al.services.yearGradesService.YearGradesServiceImpl
-import com.ice.ktuice.scraperService.ktuScraperService.KTUScraperService
-import com.ice.ktuice.scraperService.ScraperService
+import com.ice.ktuice.al.services.scraperService.ktuScraperService.KTUScraperService
+import com.ice.ktuice.al.services.scraperService.ScraperService
+import com.ice.ktuice.viewModels.gradesFragment.GradesFragmentViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module.Module
 import org.koin.dsl.module.applicationContext
@@ -30,5 +30,6 @@ val mainModule: Module = applicationContext {
     provide { UserServiceImpl() as UserService }
     provide { NotificationFactoryImpl(this.androidApplication()) as NotificationFactory }
     provide { NotificationSummaryGeneratorImpl(this.androidApplication()) as NotificationSummaryGenerator }
+    provide(isSingleton = true) { GradesFragmentViewModel()}
     provide { KTUScraperService() as ScraperService }
 }

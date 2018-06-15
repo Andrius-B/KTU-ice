@@ -1,0 +1,63 @@
+package com.ice.ktuice.viewModels.gradesFragment
+
+import android.app.Activity
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.ViewModel
+import android.content.Intent
+import android.support.v4.content.ContextCompat.startActivity
+import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
+import com.ice.ktuice.R
+import com.ice.ktuice.al.services.userService.UserService
+import com.ice.ktuice.al.services.yearGradesService.YearGradesService
+import com.ice.ktuice.models.LoginModel
+import com.ice.ktuice.models.YearGradesCollectionModel
+import com.ice.ktuice.ui.login.LoginActivity
+import org.koin.standalone.KoinComponent
+import org.koin.standalone.inject
+
+/**
+ * View model contains the data needed to show the
+ * FragmentGrades and some additional fields to improve
+ * user experience
+ */
+class GradesFragmentViewModel: ViewModel(), KoinComponent{
+    private val userService: UserService by inject()
+    private val yearGradesService: YearGradesService by inject()
+    private val preferenceRepository:PreferenceRepository by inject()
+
+    /**
+     * Private mutable versions with the m* prefix and public
+     * implicit cast to immutable live data.
+     */
+    private val mLoginModel = MutableLiveData<LoginModel>()
+    val loginModel: LiveData<LoginModel>
+        get() = mLoginModel
+
+    private val mGrades = MutableLiveData<YearGradesCollectionModel>()
+    val grades: LiveData<YearGradesCollectionModel>
+        get() = mGrades
+
+    val selectedYear = MutableLiveData<String>()
+    val selectedSemesterNumber = MutableLiveData<String>()
+
+    init {
+        val loginModelValue = userService.getLoginForCurrentUser()!!
+        mLoginModel.postValue(loginModelValue)
+
+        val yearGrades = yearGradesService.getYearGradesList()
+        yearGrades.subscribe{
+            mGrades.postValue(it)
+        }
+    }
+
+    fun logoutCurrentUser(activity: Activity?){
+        activity?.runOnUiThread{
+            preferenceRepository.setValue(R.string.logged_in_user_code, "") // clear out the logged in user code from prefrences
+            val intent = Intent(activity, LoginActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(activity, intent, null)
+            activity.finish()
+        }
+    }
+}

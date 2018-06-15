@@ -1,10 +1,10 @@
 package com.ice.ktuice.al.services.yearGradesService
 
-import com.ice.ktuice.repositories.gradeResponseRepository.YearGradesRepository
+import com.ice.ktuice.repositories.yearGradesResponseRepository.YearGradesRepository
 import com.ice.ktuice.al.services.userService.UserService
 import com.ice.ktuice.models.YearGradesCollectionModel
-import com.ice.ktuice.scraperService.ScraperService
-import com.ice.ktuice.scraperService.exceptions.AuthenticationException
+import com.ice.ktuice.al.services.scraperService.ScraperService
+import com.ice.ktuice.al.services.scraperService.exceptions.AuthenticationException
 import io.reactivex.subjects.ReplaySubject
 import io.reactivex.subjects.Subject
 import org.jetbrains.anko.AnkoLogger
@@ -52,7 +52,7 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent, AnkoLogger {
      * This function returns an observable state without starting any actual queries
      * or network requests
      */
-    override fun getYearGradesListSubject(): Subject<YearGradesCollectionModel>? {
+    override fun getYearGradesListCachedSubject(): Subject<YearGradesCollectionModel>? {
         return currentSubject
     }
 

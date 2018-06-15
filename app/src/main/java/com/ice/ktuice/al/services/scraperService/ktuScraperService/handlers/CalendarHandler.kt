@@ -1,4 +1,4 @@
-package com.ice.ktuice.scraperService.ktuScraperService.handlers
+package com.ice.ktuice.al.services.scraperService.ktuScraperService.handlers
 
 import biweekly.Biweekly
 import biweekly.ICalendar

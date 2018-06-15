@@ -1,5 +1,8 @@
 package com.ice.ktuice.ui.main.components
 
+import android.app.Fragment
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
 import android.content.Context
 import android.util.AttributeSet
 import android.util.TypedValue
@@ -17,7 +20,7 @@ import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.ui.adapters.SemesterSpinnerAdapter
 import com.ice.ktuice.ui.main.dialogs.GradeTableCellDetailsDialog
-import kotlinx.android.synthetic.main.grade_table_layout.view.*
+import kotlinx.android.synthetic.main.grade_table_layout.*;
 import org.jetbrains.anko.*
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
@@ -28,7 +31,11 @@ import org.koin.standalone.inject
  * and then the grades in a table, that correspond to the selected semester.
  * TODO move all the application logic to GradeTableManager
  */
-class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), KoinComponent, AnkoLogger {
+class GradeTable(
+         c: Context,
+         attrs: AttributeSet?
+): LinearLayout(c, attrs), KoinComponent, AnkoLogger {
+
     private val yearGradesService: YearGradesService by inject()
     private val comparator: YearGradesModelComparator by inject()
     private val preferenceRepository: PreferenceRepository by inject()
@@ -41,36 +48,63 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
     private val CELL_TEXT_SIZE = context.resources.getInteger(R.integer.grade_table_cell_text_size).toFloat()
 
 
+    private val updating_progress: LinearLayout
+    private val grade_table_semester_spinner: Spinner
+    private val grade_table_table_layout:TableLayout
+    private val loading_overlay:LinearLayout
+
+
     private val tableManager = GradeTableManager()
     private var currentGrades: YearGradesCollectionModel? = null
-    constructor(c: Context): this(c, null)
+    constructor(c:Context): this(c, null)
 
+    /**
+     * Displays or hides the simple loading overlay, that covers the whole view
+     */
+    private var isLoadingOverlayShown: Boolean
+        get() = loading_overlay.isShown
+        set(value){
+            val newVisibility = if(value)View.VISIBLE
+            else View.GONE
+            loading_overlay.visibility = newVisibility
+        }
 
     init {
         inflate(context, R.layout.grade_table_layout, this)
-        val gradesSubject  = yearGradesService.getYearGradesList()
-        gradesSubject.subscribe{
-            context.runOnUiThread {
-                /**
-                 * This is the handler that updates a view, thus it has to run on the ui thread.
-                 */
-                info("Observing a grade table!")
-                val gradeTable = yearGradesService.getYearGradesListFromDB()!!
-                if(gradeTable.isEmpty()){
-                    /*
-                        On the initial load, the returned value is just a placeholder,
-                        here we subscribe to the whole realm to keep track of the freshly loaded
-                        grade table
-                     */
-                    isLoadingOverlayShown = true
-                }else{
-                    updateGradeTable(gradeTable)
-                }
-            }
-        }
+
+        updating_progress = this.findViewById(R.id.updating_progress)
+        grade_table_semester_spinner = this.findViewById(R.id.grade_table_semester_spinner)
+        grade_table_table_layout = this.findViewById(R.id.grade_table_table_layout)
+        loading_overlay = this.findViewById(R.id.loading_overlay)
+
+        isLoadingOverlayShown = true
+//        gradesData.observe(parentFragment.activity, Observer {
+//
+//        })
+
+//        val gradesSubject  = yearGradesService.getYearGradesList()
+//        gradesSubject.subscribe{
+//            context.runOnUiThread {
+//                /**
+//                 * This is the handler that updates a view, thus it has to run on the ui thread.
+//                 */
+//                info("Observing a grade table!")
+//                val gradeTable = yearGradesService.getYearGradesListFromDB()!!
+//                if(gradeTable.isEmpty()){
+//                    /*
+//                        On the initial load, the returned value is just a placeholder,
+//                        here we subscribe to the whole realm to keep track of the freshly loaded
+//                        grade table
+//                     */
+//                    isLoadingOverlayShown = true
+//                }else{
+//                    updateGradeTable(gradeTable)
+//                }
+//            }
+//        }
     }
 
-    private fun updateGradeTable(grades: YearGradesCollectionModel){
+    fun updateGradeTable(grades: YearGradesCollectionModel){
         if(grades.yearList.size == 0){
             return@updateGradeTable
         }
@@ -171,10 +205,10 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
                 val cellModel = it.getByWeekModel(weekModel)
                 markCellText.text = cellModel?.getDisplayString() // default is empty cell
                 markCellText.setOnClickListener{
-                    markCellText.post({
+                    markCellText.post {
                         tableCellDetailsDialog?.CellModel = cellModel
                         tableCellDetailsDialog?.show()
-                    })
+                    }
                 }
                 tableRow.addView(markCellText)
             }
@@ -201,14 +235,4 @@ class GradeTable(c: Context, attrs: AttributeSet?): LinearLayout(c, attrs), Koin
         }
     }
 
-    /**
-     * Displays or hides the simple loading overlay, that covers the whole view
-     */
-    private var isLoadingOverlayShown: Boolean
-        get() = loading_overlay.isShown
-        set(value){
-            val newVisibility = if(value)View.VISIBLE
-                                    else View.GONE
-            loading_overlay.visibility = newVisibility
-        }
 }
