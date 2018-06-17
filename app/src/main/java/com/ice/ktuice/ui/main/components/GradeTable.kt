@@ -104,8 +104,11 @@ class GradeTable(
 //        }
     }
 
-    fun updateGradeTable(grades: YearGradesCollectionModel){
+    fun updateGradeTable(grades: YearGradesCollectionModel,
+                         preferredSemesterNumberStr:String?,
+                         preferredYearNumberStr: String?){
         if(grades.yearList.size == 0){
+            isLoadingOverlayShown = true
             return@updateGradeTable
         }
         /**
@@ -135,12 +138,18 @@ class GradeTable(
         val changedTableModel = tableManager.constructGradeTableModel(grades)
 
         setUpSemesterSpinner(changedSemesterSpinnerItems)
-        try {
-            val preferredSemesterStr = preferenceRepository.getValue(R.string.currently_selected_semester_id)
-            info("Selecting the semester to be :$preferredSemesterStr")
-            grade_table_semester_spinner.setSelection(changedSemesterSpinnerItems.indexOfFirst { it.semester.equals(preferredSemesterStr) })
-        }catch(exception: IndexOutOfBoundsException){
-            info("The current spinner selection is invalid!")
+        if(preferredSemesterNumberStr != null &&
+           preferredSemesterNumberStr.isNotEmpty() &&
+           preferredYearNumberStr !=null &&
+           preferredYearNumberStr.isNotEmpty()) {
+            try {
+                grade_table_semester_spinner.setSelection(changedSemesterSpinnerItems.indexOfFirst {
+                    it.semester.equals(preferredSemesterNumberStr) &&
+                            it.year.year.equals(preferredYearNumberStr)
+                })
+            } catch (exception: IndexOutOfBoundsException) {
+                info("The current spinner selection is invalid!")
+            }
         }
 
         tableModel = changedTableModel
@@ -228,6 +237,7 @@ class GradeTable(
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 val item = adapter.getItem(p2)
                 preferenceRepository.setValue(R.string.currently_selected_semester_id, item.semester)
+                preferenceRepository.setValue(R.string.currently_selected_year_id, item.year.year)
                 info("Creating view for spinner item")
                 createViewForModel(tableModel!!, item)
             }

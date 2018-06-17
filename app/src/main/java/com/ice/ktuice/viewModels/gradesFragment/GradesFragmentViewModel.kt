@@ -42,6 +42,12 @@ class GradesFragmentViewModel: ViewModel(), KoinComponent{
     val selectedSemesterNumber = MutableLiveData<String>()
 
     init {
+        val selectedSemesterNumberVal = preferenceRepository.getValue(R.string.currently_selected_semester_id)
+        selectedSemesterNumber.postValue(selectedSemesterNumberVal)
+
+        val selectedYearStrVal = preferenceRepository.getValue(R.string.currently_selected_year_id)
+        selectedYear.postValue(selectedYearStrVal)
+
         val loginModelValue = userService.getLoginForCurrentUser()!!
         mLoginModel.postValue(loginModelValue)
 

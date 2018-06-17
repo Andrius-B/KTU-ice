@@ -61,10 +61,10 @@ class FragmentGrades: Fragment(), KoinComponent, AnkoLogger {
                 this.activity?.runOnUiThread {
                     // TODO reduce the view-model to only contain a key, or add PDO's
                     // realm can not pass objects between threads..
-                    // so we refetch the grades here
+                    // so we re-fetch the grades here
                     val grades = yearGradesService.getYearGradesListFromDB()
                     if(grades != null) {
-                        gradeTableView.updateGradeTable(grades)
+                        gradeTableView.updateGradeTable(grades, viewModel.selectedSemesterNumber.value, viewModel.selectedYear.value)
                     }
                 }
             }
