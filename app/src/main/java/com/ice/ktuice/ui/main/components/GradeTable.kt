@@ -104,9 +104,13 @@ class GradeTable(
 //        }
     }
 
+<<<<<<< HEAD
     fun updateGradeTable(grades: YearGradesCollectionModel,
                          preferredSemesterNumberStr:String?,
                          preferredYearNumberStr: String?){
+=======
+    fun updateGradeTable(grades: YearGradesCollectionModel){
+>>>>>>> 184d4a327517d4b75b2a96a14a660a6fd6be31c8
         if(grades.yearList.size == 0){
             isLoadingOverlayShown = true
             return@updateGradeTable
