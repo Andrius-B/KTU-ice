@@ -78,39 +78,11 @@ class GradeTable(
         loading_overlay = this.findViewById(R.id.loading_overlay)
 
         isLoadingOverlayShown = true
-//        gradesData.observe(parentFragment.activity, Observer {
-//
-//        })
-
-//        val gradesSubject  = yearGradesService.getYearGradesList()
-//        gradesSubject.subscribe{
-//            context.runOnUiThread {
-//                /**
-//                 * This is the handler that updates a view, thus it has to run on the ui thread.
-//                 */
-//                info("Observing a grade table!")
-//                val gradeTable = yearGradesService.getYearGradesListFromDB()!!
-//                if(gradeTable.isEmpty()){
-//                    /*
-//                        On the initial load, the returned value is just a placeholder,
-//                        here we subscribe to the whole realm to keep track of the freshly loaded
-//                        grade table
-//                     */
-//                    isLoadingOverlayShown = true
-//                }else{
-//                    updateGradeTable(gradeTable)
-//                }
-//            }
-//        }
     }
 
-<<<<<<< HEAD
     fun updateGradeTable(grades: YearGradesCollectionModel,
                          preferredSemesterNumberStr:String?,
                          preferredYearNumberStr: String?){
-=======
-    fun updateGradeTable(grades: YearGradesCollectionModel){
->>>>>>> 184d4a327517d4b75b2a96a14a660a6fd6be31c8
         if(grades.yearList.size == 0){
             isLoadingOverlayShown = true
             return@updateGradeTable
