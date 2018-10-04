@@ -10,9 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <android.support.design.widget.TabLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/tab_layout_main"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"/>
+            android:layout_width="match_parent"
+            app:tabIndicatorColor="?colorAccent"/>
     </com.ice.ktuice.ui.main.components.NoScrollViewPager>
 </LinearLayout>
 

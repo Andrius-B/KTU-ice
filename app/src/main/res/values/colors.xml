@@ -11,6 +11,11 @@
     <color name="loginButtonRipple">#1f00e5ff</color>
     <!--<color name="loginButtonFocused">#a000e5ff</color>-->
 
+    <color name="colorDarkPrimary">#5e626d</color>
+    <color name="colorDarkPrimaryDark">#262a36</color>
+    <color name="colorDarkPrimaryLight">#b0b1ab</color>
+    <color name="colorDarkAccent">#8b6d51</color>
+
     <!--Calendar category coloring-->
     <color name="transparent">#00000000</color>
     <color name="event_red_category">#dd2c00</color>

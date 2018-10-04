@@ -67,10 +67,12 @@ class FragmentTimeTable: Fragment(), KoinComponent, AnkoLogger{
 
     private fun updateWeekViewToCalendar(calendar: CalendarModel){
         info("Updating the calendar view!")
-        val eventList = weekViewEventsFromCalendar(calendar)
-        events.clear()
-        events.addAll(eventList)
-        week_view.notifyDatasetChanged()
+        if(this.activity != null){
+            val eventList = weekViewEventsFromCalendar(calendar)
+            events.clear()
+            events.addAll(eventList)
+            week_view.notifyDatasetChanged()
+        }
     }
 
     private fun weekViewEventsFromCalendar(calendar: CalendarModel): List<WeekViewEvent>{
