@@ -30,8 +30,6 @@ class FragmentTimeTable: Fragment(), KoinComponent, AnkoLogger{
         return inflater.inflate(R.layout.fragment_timetable, container, false)
     }
 
-    private var initialLoadChangeListener: RealmChangeListener<Realm>? = null
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -48,7 +46,7 @@ class FragmentTimeTable: Fragment(), KoinComponent, AnkoLogger{
         }
 
         // Set long press listener for events.
-        week_view.setEventLongPressListener{event, eventRect ->  info("Long click on event!")}
+        week_view.setEventLongPressListener{ _, _ ->  info("Long click on event!")}
 
         //this is what the developers of the lib use, but i think its a little non responsive if scrolling slowly
         week_view.xScrollingSpeed = -1 * (Math.log(2.5) / Math.log(1.0 / (1 + week_view.numberOfVisibleDays))).toFloat()

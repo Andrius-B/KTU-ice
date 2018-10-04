@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
 import com.ice.ktuice.ui.main.fragments.FragmentGrades
+import com.ice.ktuice.ui.main.fragments.FragmentSettings
 import com.ice.ktuice.ui.main.fragments.FragmentTimeTable
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
@@ -20,9 +21,14 @@ class FragmentAdapter(fm: FragmentManager, context: Context): FragmentStatePager
     private val preferenceRepository: PreferenceRepository by inject()
 
     override fun getItem(position: Int): Fragment {
-        return if(position == 0) FragmentGrades()
-               else FragmentTimeTable()
-
+        if(position == 0){
+          return FragmentGrades()
+        }
+        else if(position == 1){
+          return FragmentTimeTable()
+        }else {
+          return  FragmentSettings()
+        }
     }
 
     override fun setPrimaryItem(container: ViewGroup, position: Int, `object`: Any) {
@@ -30,9 +36,9 @@ class FragmentAdapter(fm: FragmentManager, context: Context): FragmentStatePager
         super.setPrimaryItem(container, position, `object`)
     }
 
-    override fun getCount() = 2
+    override fun getCount() = 3
 
-    private val titles = arrayListOf(context.getString(R.string.tab_name_grades), context.getString(R.string.tab_name_timetable))
+    private val titles = arrayListOf(context.getString(R.string.tab_name_grades), context.getString(R.string.tab_name_timetable), context.getString(R.string.tab_name_settings))
     override fun getPageTitle(position: Int) = titles[position]
 
 }
