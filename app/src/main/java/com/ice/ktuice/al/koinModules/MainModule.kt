@@ -14,6 +14,8 @@ import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.al.services.yearGradesService.YearGradesServiceImpl
 import com.ice.ktuice.al.services.scraperService.ktuScraperService.KTUScraperService
 import com.ice.ktuice.al.services.scraperService.ScraperService
+import com.ice.ktuice.al.settings.AppSettings
+import com.ice.ktuice.al.settings.AppSettingsPreferencesImpl
 import com.ice.ktuice.viewModels.gradesFragment.GradesFragmentViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module.Module
@@ -32,4 +34,5 @@ val mainModule: Module = applicationContext {
     provide { NotificationSummaryGeneratorImpl(this.androidApplication()) as NotificationSummaryGenerator }
     provide(isSingleton = true) { GradesFragmentViewModel()}
     provide { KTUScraperService() as ScraperService }
+    provide { AppSettingsPreferencesImpl(this.androidApplication()) as AppSettings }
 }
