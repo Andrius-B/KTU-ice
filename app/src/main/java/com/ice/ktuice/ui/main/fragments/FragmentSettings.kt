@@ -1,5 +1,6 @@
 package com.ice.ktuice.ui.main.fragments
 
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatDelegate
@@ -65,7 +66,18 @@ class FragmentSettings: Fragment(), KoinComponent, AnkoLogger{
                      * of the theme, so the actual theme selection happens in the main activity: after onCreate, but before SetContentView.
                      */
                     currentThemePos = position
-                    activity!!.recreate()
+                    val intent = activity!!.intent
+                    activity!!.finish()
+                    activity!!.startActivity(intent)
+//                    activity!!.recreate()
+                    // Check if we're running on Android 5.0 or higher
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        activity!!.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+                        println("Animations Overridden!")
+                    } else {
+
+                    }
+
                 }
             }
         }
