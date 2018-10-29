@@ -1,34 +1,49 @@
 <resources>
-
     <!-- Base application theme. -->
     <style name="iceTheme" parent="Theme.AppCompat.Light.NoActionBar">
-    <!--<style name="iceTheme" parent="Theme.AppCompat.DayNight.NoActionBar">-->
+
         <item name="android:windowBackground">@drawable/background</item>
 
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <!--<item name="colorPrimary">@color/colorDarkPrimary</item>-->
-        <!--<item name="colorPrimaryDark">@color/colorDarkPrimaryDark</item>-->
-        <!--<item name="colorAccent">@color/colorDarkAccent</item>-->
-        <item name="android:windowActivityTransitions">true</item>
+
+        <item name="color_event_red_category">@color/event_red_category_light</item>
+        <item name="color_event_green_category">@color/event_green_category_light</item>
+        <item name="color_event_blue_category">@color/event_blue_category_light</item>
+
+        <item name="android:windowActivityTransitions">false</item>
+        <item name="grade_cell_background_ref">@drawable/grade_cell_background_light</item>
+        <item name="colorCardBackground">@color/card_background_light</item>
+        <item name="color_event_text">@color/event_text_light</item>
     </style>
 
     <style name="iceLoginTheme" parent="iceTheme">
         <item name="android:background">@drawable/splash</item>
     </style>
 
-    <style name="mainActivityCardStyle">
+    <style name="mainActivityCardStyle" >
         <item name="android:layout_margin">8dp</item>
         <item name="android:padding">16dp</item>
+        <item name="cardBackgroundColor">?attr/colorCardBackground</item>
     </style>
 
     <style name="darkIceTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!--<item name="android:windowBackground">@drawable/background</item>-->
 
+        <item name="android:windowBackground">@drawable/background_dark</item>
+
         <item name="colorPrimary">@color/colorDarkPrimary</item>
         <item name="colorPrimaryDark">@color/colorDarkPrimaryDark</item>
         <item name="colorAccent">@color/colorDarkAccent</item>
-        <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowActivityTransitions">false</item>
+
+        <item name="color_event_red_category">@color/event_red_category_dark</item>
+        <item name="color_event_green_category">@color/event_green_category_dark</item>
+        <item name="color_event_blue_category">@color/event_blue_category_dark</item>
+
+        <item name="grade_cell_background_ref">@drawable/grade_cell_background_dark</item>
+        <item name="colorCardBackground">@color/card_background_dark</item>
+        <item name="color_event_text">@color/event_text_dark</item>
     </style>
 </resources>

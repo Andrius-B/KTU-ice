@@ -18,7 +18,7 @@ class CalendarListItemModel(private var ce: CalendarEvent? = null){
     var type= ItemType.Event
     var text = ""
 
-    enum class ItemType { Event, Header, Break, Dummy }
+    enum class ItemType { Event, Header, Dummy }
 
     /**
      * Realm currently does not support polymorphism, so this just references the original object.
