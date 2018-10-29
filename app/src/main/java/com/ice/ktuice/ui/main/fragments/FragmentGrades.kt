@@ -106,7 +106,7 @@ class FragmentGrades: Fragment(), KoinComponent, AnkoLogger {
     }
 
     private fun scheduleJob(instant: Boolean){
-        val serviceComponent = ComponentName(this.activity, SyncJobService::class.java)
+        val serviceComponent = ComponentName(this.activity!!, SyncJobService::class.java)
         val bundle = PersistableBundle()
         val notificationFlag = if(instant) 0 else 1
         bundle.putInt(context!!.resources.getString(R.string.notification_enabled_flag), notificationFlag)

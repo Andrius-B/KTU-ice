@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="colorPrimary" format="reference|color" />
+    <attr name="colorPrimaryDark" format="reference|color" />
+    <attr name="colorAccent" format="reference|color" />
+    <attr name="grade_cell_background_ref" format="reference"/>
+    <attr name="colorCardBackground" format="reference|color"/>
+    <attr name="color_event_red_category" format="reference|color"/>
+    <attr name="color_event_green_category" format="reference|color"/>
+    <attr name="color_event_blue_category" format="reference|color"/>
+    <attr name="color_event_text" format="reference|color"/>
+</resources>

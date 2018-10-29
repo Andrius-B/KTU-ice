@@ -75,7 +75,7 @@
         android:id="@+id/loading_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorBackground"
+        android:background="?attr/colorCardBackground"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
