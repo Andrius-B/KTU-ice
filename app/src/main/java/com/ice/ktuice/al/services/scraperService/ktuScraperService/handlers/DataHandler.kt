@@ -144,16 +144,20 @@ class DataHandler {
 
         private fun getMarkWeekList(element: Element): MutableList<String> {
             val rowList = element.select("tr")
+            info("Getting mark week list:")
+            rowList[0].children().forEach{
+                info(it)
+            }
             return mutableListOf<String>().apply {
                 val headerWeekRow = rowList[0].children()
                         /*
                         Ignore the first 4 values, because in this row they are:
                         Number, Group, Name and "Week" respectively
 
-                        Also ignore the last two children, because they are Suggested and final
-                        marks, which are not needed in this table.
+                        Also ignore the last three children, because they are Suggested, final
+                        marks and the absence listings which are not needed in this table.
                          */
-                        .subList(4, rowList[0].children().size - 1)
+                        .subList(4, rowList[0].children().size - 2)
                 headerWeekRow.forEach { cell ->
                     add(cell.text())
                 }

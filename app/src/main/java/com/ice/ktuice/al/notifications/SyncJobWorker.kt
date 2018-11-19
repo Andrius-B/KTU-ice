@@ -28,44 +28,11 @@ class SyncJobWorker(private val context : Context, private val params : WorkerPa
     private val notificationFactory: NotificationFactory by inject()
     private val notificationSummaryGenerator:NotificationSummaryGenerator by inject()
 
+    private val syncJob = SyncJob();
+
     override fun doWork(): Result {
-        info("Starting comparison async")
-        //starts the network request
-        val dbYear: YearGradesCollectionModel? = yearGradesService.getYearGradesListFromDB()
-        val webYear: YearGradesCollectionModel? = yearGradesService.getYearGradesListFromWeb()
         val notificationsEnabled = inputData.getInt(applicationContext.resources.getString(R.string.notification_enabled_flag), 1)
-        //notifications are enabled if not specified otherwise in the extras!
-        if(dbYear != null && webYear != null && notificationsEnabled > 0){
-            val totalDifference = mutableListOf<Difference>()
-
-            webYear.yearList.forEach {
-                val freshYear = it
-                val previousYear = dbYear.find { it.year.equals(freshYear.year) }
-                if(previousYear != null) {
-                    val newDiff = yearGradesComparator.compare(previousYear, freshYear)
-                    totalDifference.addAll(newDiff)
-                }
-            }
-
-
-            if(totalDifference.isNotEmpty()){
-                info("Differences found: ${totalDifference.size}")
-                totalDifference.forEach{
-                    info(String.format("\t\t type:%s change:%s", it.field.toString(), it.change.toString()))
-                }
-                try {
-                    val message = notificationSummaryGenerator.generateSummaryFromDifferences(totalDifference)
-                    notificationFactory.pushNotification(message)
-                    info("Notification pushed!")
-                }catch (e: Exception){
-                    info(e.getStackTraceString())
-                    info("Notification push failed!")
-                }
-            }
-        }
-        webYear!!.isUpdating = false
-        yearGradesService.persistYearGradesModel(webYear)
-        info("service finished without errors!")
+        syncJob.sync(notificationsEnabled)
         return  Result.SUCCESS
     }
 }

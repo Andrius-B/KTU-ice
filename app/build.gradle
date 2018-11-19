@@ -26,6 +26,7 @@ android {
     }
     testOptions {
         unitTests.returnDefaultValues = true
+        unitTests.includeAndroidResources = true
     }
 }
 
@@ -68,4 +69,6 @@ dependencies {
 
     // optional - Test helpers
     androidTestImplementation "android.arch.work:work-testing:$work_version"
+
+    testImplementation 'androidx.test:core:1.0.0'
 }

@@ -1,11 +1,20 @@
 package com.ice.ktuice
 
 import android.app.job.JobParameters
+import android.arch.core.executor.DefaultTaskExecutor
+import android.content.Context
+import androidx.test.core.app.ApplicationProvider
+import androidx.work.Data
+import androidx.work.WorkerFactory
+import androidx.work.WorkerParameters
+import androidx.work.impl.utils.SynchronousExecutor
+import androidx.work.impl.utils.taskexecutor.TaskExecutor
 import com.ice.ktuice.al.GradeTable.notifications.NotificationFactory
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparator
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparatorImpl
 import com.ice.ktuice.al.notifications.NotificationSummaryGenerator
-import com.ice.ktuice.al.notifications.SyncJobService
+import com.ice.ktuice.al.notifications.SyncJob
+import com.ice.ktuice.al.notifications.SyncJobWorker
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import org.junit.Test
 import org.koin.dsl.module.Module
@@ -17,12 +26,13 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import org.mockito.Mockito.*
 import java.lang.Thread.sleep
+import java.util.*
+import java.util.concurrent.Executor
 
 /**
  * Created by Andrius on 3/14/2018.
  */
 class SyncJobServiceNotificationTest: KoinTest{
-
     /**
      * Tests the sync job service with a mocked service, for
      * if there are no notifications thrown when both the
@@ -46,8 +56,8 @@ class SyncJobServiceNotificationTest: KoinTest{
             provide { notificationSummaryGenerator as NotificationSummaryGenerator }
         }
         startKoin(listOf(module))
-        val service = SyncJobService()
-        service.onStartJob(null)
+        val syncJob = SyncJob()
+        syncJob.sync(1)
         sleep(500) // wait for the service to finish
         closeKoin()
 
@@ -79,8 +89,9 @@ class SyncJobServiceNotificationTest: KoinTest{
         }
         startKoin(listOf(module))
 
-        val service = SyncJobService()
-        service.onStartJob(null)
+        val syncJob = SyncJob()
+        syncJob.sync(1)
+
         sleep(1000) // wait for the service to finish
         //(this is because, the comparison and fetching of the grade tables happens in a background thread)
         closeKoin()
@@ -113,8 +124,9 @@ class SyncJobServiceNotificationTest: KoinTest{
 
         startKoin(listOf(module))
 
-        val service = SyncJobService()
-        service.onStartJob(null)
+        val syncJob = SyncJob()
+        syncJob.sync(1)
+
         sleep(1000) // wait for the service to finish
         //(this is because, the comparison and fetching of the grade tables happens in a background thread)
         closeKoin()
@@ -152,8 +164,9 @@ class SyncJobServiceNotificationTest: KoinTest{
 
         startKoin(listOf(module))
 
-        val service = SyncJobService()
-        service.onStartJob(null)
+        val syncJob = SyncJob()
+        syncJob.sync(1)
+
         sleep(1000) // wait for the service to finish
         //(this is because, the comparison and fetching of the grade tables happens in a background thread)
         closeKoin()
@@ -191,8 +204,9 @@ class SyncJobServiceNotificationTest: KoinTest{
 
         startKoin(listOf(module))
 
-        val service = SyncJobService()
-        service.onStartJob(null)
+        val syncJob = SyncJob()
+        syncJob.sync(1)
+
         sleep(1000) // wait for the service to finish
         //(this is because, the comparison and fetching of the grade tables happens in a background thread)
         closeKoin()
