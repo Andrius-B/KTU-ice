@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <bitmap
-            android:src="@drawable/background_image_smaller"
+            android:src="@drawable/background_image_480p"
             android:gravity="fill"/>
     </item>
     <item>

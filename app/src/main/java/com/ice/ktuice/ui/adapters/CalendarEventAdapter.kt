@@ -70,21 +70,6 @@ class CalendarEventAdapter(private val context: Context, private val itemModels:
                     val bgDrawable = view.background.mutate()
                     DrawableCompat.setTint(bgDrawable, ContextCompat.getColor(context, R.color.transparent))
                 }
-                Break ->{
-                    //TODO
-                    summaryRow.visibility = View.GONE
-                    locationRow.visibility = View.GONE
-                    startDateText.visibility = View.VISIBLE
-                    endDateText.visibility = View.VISIBLE
-                    headerText.visibility = View.GONE
-
-                    startDateText.text = item.getStartTimeString()
-                    endDateText.text = item.getEndTimeString()
-
-                    view.setBackgroundResource(R.drawable.calendar_event_item_background)
-                    val bgDrawable = view.background.mutate()
-                    DrawableCompat.setTint(bgDrawable, ContextCompat.getColor(context, R.color.event_brake_color))
-                }
                 Dummy ->{
                     //TODO
                     summaryRow.visibility = View.GONE

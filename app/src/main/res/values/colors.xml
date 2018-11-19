@@ -11,13 +11,27 @@
     <color name="loginButtonRipple">#1f00e5ff</color>
     <!--<color name="loginButtonFocused">#a000e5ff</color>-->
 
+    <color name="colorDarkPrimary">#5e626d</color>
+    <color name="colorDarkPrimaryDark">#262a36</color>
+    <color name="colorDarkPrimaryLight">#b0b1ab</color>
+    <color name="colorDarkAccent">#8b6d51</color>
+
     <!--Calendar category coloring-->
     <color name="transparent">#00000000</color>
-    <color name="event_red_category">#dd2c00</color>
-    <color name="event_green_category">#00c853</color>
-    <color name="event_blue_category">#2962ff</color>
-    <color name="event_brake_color">#9e9e9e</color>
+    <color name="event_red_category_light">#dd2c00</color>
+    <color name="event_green_category_light">#00c853</color>
+    <color name="event_blue_category_light">#2962ff</color>
+
+    <color name="event_red_category_dark">#dc891b00</color>
+    <color name="event_green_category_dark">#dc007932</color>
+    <color name="event_blue_category_dark">#dc0f318e</color>
 
     <!--Splash screen and background image tint-->
-    <color name="background_image_tint">#69ffffff</color>
+    <color name="background_image_tint">#88ffffff</color>
+
+    <color name="card_background_dark">#212121</color>
+    <color name="card_background_light">#ffffff</color>
+
+    <color name="event_text_light">#ffffff</color>
+    <color name="event_text_dark">#bdbdbd</color>
 </resources>

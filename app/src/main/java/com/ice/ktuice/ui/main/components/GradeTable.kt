@@ -1,9 +1,8 @@
 package com.ice.ktuice.ui.main.components
 
-import android.app.Fragment
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
+import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
@@ -15,15 +14,18 @@ import com.ice.ktuice.al.GradeTable.GradeTableManager
 import com.ice.ktuice.al.GradeTable.gradeTableModels.GradeTableModel
 import com.ice.ktuice.al.GradeTable.gradeTableModels.SemesterAdapterItem
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparator
-import com.ice.ktuice.al.services.userService.UserService
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.ui.adapters.SemesterSpinnerAdapter
 import com.ice.ktuice.ui.main.dialogs.GradeTableCellDetailsDialog
-import kotlinx.android.synthetic.main.grade_table_layout.*;
-import org.jetbrains.anko.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
+import android.R.attr.data
+import android.content.res.TypedArray
+
+
 
 /**
  * Created by Andrius on 1/29/2018.
@@ -138,9 +140,9 @@ class GradeTable(
      * Main view inflation and recycling in this function:
      * it creates a table view for the specified model and if provided, the selected semester
      */
+    @SuppressLint("ResourceType")
     private fun createViewForModel(gradeTableModel: GradeTableModel, semesterAdapterItem: SemesterAdapterItem? = null){
         grade_table_table_layout.removeAllViews()
-//        grade_table_headers.removeAllViews()
 
         if(semesterAdapterItem != null)gradeTableModel.selectSemester(semesterAdapterItem.semesterNumber)
         val rowModelList = gradeTableModel.getRows()
@@ -156,7 +158,14 @@ class GradeTable(
         val weekTitle = TextView(context)
         weekTitle.setText(R.string.grade_table_week_header)
         weekTitleContainer.setPadding(CELL_PADDING_H,0,0,0)
-        weekTitle.setBackgroundResource(R.drawable.grade_cell_background)
+        val typedValue = TypedValue()
+        context.theme.resolveAttribute(R.attr.grade_cell_background_ref, typedValue, true)
+        val textSizeAttr = intArrayOf(R.attr.grade_cell_background_ref)
+        val indexOfAttrGradeCellBg = 0
+        val a = context.obtainStyledAttributes(typedValue.data, textSizeAttr)
+        val bgDrawable = a.getDrawable(indexOfAttrGradeCellBg)
+        a.recycle()
+        weekTitle.background = bgDrawable
         weekTitleContainer.addView(weekTitle)
         weekTitle.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         weekTableRow.addView(weekTitleContainer)
@@ -167,15 +176,15 @@ class GradeTable(
         weekModelList?.forEach {
             val weekText = TextView(context)
             weekText.text = it.week
-            weekText.setBackgroundResource(R.drawable.grade_cell_background)
+            weekText.background = bgDrawable
             weekTableRow.addView(weekText)
         }
         grade_table_table_layout.addView(weekTableRow, TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
 
 
-        rowModelList?.forEach {
+        rowModelList?.forEach { gradeTableRowModel ->
             val tableRow = TableRow(context)
-            val moduleName = it.moduleModel.module_name
+            val moduleName = gradeTableRowModel.moduleModel.module_name
             val moduleNameText = TextView(context)
             moduleNameText.text = moduleName
             moduleNameText.setPadding(CELL_PADDING_H, CELL_PADDING_V, CELL_PADDING_V, CELL_PADDING_H)
@@ -187,7 +196,7 @@ class GradeTable(
                 val markCellText = TextView(context)
                 markCellText.setPadding(CELL_PADDING_H, CELL_PADDING_V, CELL_PADDING_V, CELL_PADDING_H)
                 markCellText.setTextSize(TypedValue.COMPLEX_UNIT_SP, CELL_TEXT_SIZE)
-                val cellModel = it.getByWeekModel(weekModel)
+                val cellModel = gradeTableRowModel.getByWeekModel(weekModel)
                 markCellText.text = cellModel?.getDisplayString() // default is empty cell
                 markCellText.setOnClickListener{
                     markCellText.post {
