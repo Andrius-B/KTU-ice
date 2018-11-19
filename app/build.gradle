@@ -60,4 +60,12 @@ dependencies {
         exclude group: 'org.mockito'
     })
     implementation project(':week-view-lib')
+
+    // the new WorkManager API
+    def work_version = "1.0.0-alpha11"
+
+    implementation "android.arch.work:work-runtime-ktx:$work_version" // use -ktx for Kotlin
+
+    // optional - Test helpers
+    androidTestImplementation "android.arch.work:work-testing:$work_version"
 }

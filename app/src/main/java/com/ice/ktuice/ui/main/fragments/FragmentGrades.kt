@@ -1,33 +1,27 @@
 package com.ice.ktuice.ui.main.fragments
 
-import android.app.job.JobInfo
-import android.app.job.JobScheduler
 import android.arch.lifecycle.Observer
-import android.content.ComponentName
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.ice.ktuice.DAL.repositories.loginRepository.LoginRepository
-import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.ice.ktuice.R
-import com.ice.ktuice.al.notifications.SyncJobService
-import com.ice.ktuice.ui.login.LoginActivity
-import kotlinx.android.synthetic.main.fragment_grades.*
-import org.jetbrains.anko.doAsync
-import org.koin.android.ext.android.inject
-import org.koin.standalone.KoinComponent
-import android.os.PersistableBundle
-import android.support.constraint.ConstraintLayout
+import com.ice.ktuice.al.notifications.SyncJobWorker
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.ui.main.components.GradeTable
 import com.ice.ktuice.viewModels.gradesFragment.GradesFragmentViewModel
+import kotlinx.android.synthetic.main.fragment_grades.*
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.info
-import org.jetbrains.anko.runOnUiThread
+import org.koin.android.ext.android.inject
+import org.koin.standalone.KoinComponent
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -106,26 +100,19 @@ class FragmentGrades: Fragment(), KoinComponent, AnkoLogger {
     }
 
     private fun scheduleJob(instant: Boolean){
-        val serviceComponent = ComponentName(this.activity, SyncJobService::class.java)
-        val bundle = PersistableBundle()
+        val wm = WorkManager.getInstance()
         val notificationFlag = if(instant) 0 else 1
-        bundle.putInt(context!!.resources.getString(R.string.notification_enabled_flag), notificationFlag)
-        val builder = JobInfo.Builder(0, serviceComponent)
-                             .setExtras(bundle)
-        if(!instant)
-            builder.setPeriodic(1000*60*180)
+        val dataToWorker = Data.Builder().putInt(resources.getString(R.string.notification_enabled_flag), notificationFlag).build()
+
+        if(!instant){
+            val periodicSyncWork = PeriodicWorkRequestBuilder<SyncJobWorker>(3, TimeUnit.HOURS).setInputData(dataToWorker).build()
+            wm.enqueue(periodicSyncWork);
             //TODO move period time to configuration, not inline
-        else
-            builder.setOverrideDeadline(100)
-
-
-        val jobScheduler = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            this.activity?.applicationContext?.getSystemService(JobScheduler::class.java)
-        } else {
-            TODO("VERSION.SDK_INT < M")
         }
-        jobScheduler?.cancel(0)
-        jobScheduler?.schedule(builder.build())
+        else{
+            val oneTimeSync = OneTimeWorkRequestBuilder<SyncJobWorker>().setInputData(dataToWorker).build()
+            wm.enqueue(oneTimeSync)
+        }
     }
 
 }
