@@ -1,7 +1,5 @@
 package com.ice.ktuice.al.notifications
 
-import androidx.work.ListenableWorker
-import com.ice.ktuice.R
 import com.ice.ktuice.al.GradeTable.notifications.NotificationFactory
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.Difference
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparator
