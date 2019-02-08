@@ -1,6 +1,7 @@
 package com.ice.ktuice.al.notifications
 
 import android.content.Context
+import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.ice.ktuice.R
@@ -15,17 +16,16 @@ import org.koin.standalone.inject
  * A job service to be used for polling the KTU AIS about whether there are any new grades
  * Note: I moved all of the work to a separate class (SyncJob), for easier testing.
  */
-class SyncJobWorker(private val context : Context, private val params : WorkerParameters): Worker(context, params), KoinComponent, AnkoLogger {
+class SyncJobWorker(context : Context, params : WorkerParameters): Worker(context, params), KoinComponent, AnkoLogger {
     private val syncJob = SyncJob()
-    private val settings: AppSettings by inject()
     override fun doWork(): Result {
         val notificationsEnabled = inputData.getInt(applicationContext.resources.getString(R.string.notification_enabled_flag), 1)
         try{
             syncJob.sync(notificationsEnabled)
         }catch (nullPtrException: NullPointerException){
             info("Sync task failed..")
-            return Result.FAILURE
+            return ListenableWorker.Result.failure()
         }
-        return  Result.SUCCESS
+        return  ListenableWorker.Result.success()
     }
 }
