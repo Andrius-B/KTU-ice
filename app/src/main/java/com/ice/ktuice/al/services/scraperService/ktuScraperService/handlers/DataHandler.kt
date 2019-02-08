@@ -144,10 +144,6 @@ class DataHandler {
 
         private fun getMarkWeekList(element: Element): MutableList<String> {
             val rowList = element.select("tr")
-            info("Getting mark week list:")
-            rowList[0].children().forEach{
-                info(it)
-            }
             return mutableListOf<String>().apply {
                 val headerWeekRow = rowList[0].children()
                         /*

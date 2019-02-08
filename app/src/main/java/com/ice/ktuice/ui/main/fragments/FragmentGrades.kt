@@ -11,6 +11,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.ice.ktuice.R
+import com.ice.ktuice.al.notifications.SyncJob
 import com.ice.ktuice.al.notifications.SyncJobWorker
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.ui.main.components.GradeTable
@@ -33,6 +34,7 @@ class FragmentGrades: Fragment(), KoinComponent, AnkoLogger {
     private val yearGradesService: YearGradesService by inject()
     private val viewModel: GradesFragmentViewModel by inject()
     private lateinit var gradeTableView: GradeTable
+    private val syncJob = SyncJob()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         info("Creating Grades fragment!")
@@ -105,13 +107,16 @@ class FragmentGrades: Fragment(), KoinComponent, AnkoLogger {
         val dataToWorker = Data.Builder().putInt(resources.getString(R.string.notification_enabled_flag), notificationFlag).build()
 
         if(!instant){
+            info("Queueing periodic sync!")
             val periodicSyncWork = PeriodicWorkRequestBuilder<SyncJobWorker>(3, TimeUnit.HOURS).setInputData(dataToWorker).build()
-            wm.enqueue(periodicSyncWork);
+            wm.enqueue(periodicSyncWork)
             //TODO move period time to configuration, not inline
         }
         else{
-            val oneTimeSync = OneTimeWorkRequestBuilder<SyncJobWorker>().setInputData(dataToWorker).build()
-            wm.enqueue(oneTimeSync)
+            info("Starting one time sync!")
+            doAsync {
+                syncJob.sync(notificationFlag)
+            }
         }
     }
 

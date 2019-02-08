@@ -8,5 +8,5 @@
     <string name="notification_enabled_flag">com.ice.ktu.notification_enabled_flag</string> <!--Used for notifying the syncJobService-->
     <string name="currently_selected_theme_position">com.ice.ktu.selected_theme</string>
     <string name="grade_notifications_enabled">com.ice.ktu.grade_notifications_enabled</string>
-    <string name="lecture_notifications_enabled">com.ice.ktu.lecture_notifications_enabled</string>
+    <string name="networking_enabled_key">com.ice.ktu.networking_enabled</string>
 </resources>

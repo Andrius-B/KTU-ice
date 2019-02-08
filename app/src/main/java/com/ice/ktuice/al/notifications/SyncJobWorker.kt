@@ -4,9 +4,11 @@ import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.ice.ktuice.R
+import com.ice.ktuice.al.settings.AppSettings
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.koin.standalone.KoinComponent
+import org.koin.standalone.inject
 
 /**
  * Created by Andrius on 2/7/2018.
@@ -15,11 +17,11 @@ import org.koin.standalone.KoinComponent
  */
 class SyncJobWorker(private val context : Context, private val params : WorkerParameters): Worker(context, params), KoinComponent, AnkoLogger {
     private val syncJob = SyncJob()
-
+    private val settings: AppSettings by inject()
     override fun doWork(): Result {
         val notificationsEnabled = inputData.getInt(applicationContext.resources.getString(R.string.notification_enabled_flag), 1)
         try{
-        syncJob.sync(notificationsEnabled)
+            syncJob.sync(notificationsEnabled)
         }catch (nullPtrException: NullPointerException){
             info("Sync task failed..")
             return Result.FAILURE

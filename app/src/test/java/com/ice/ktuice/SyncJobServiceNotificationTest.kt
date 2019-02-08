@@ -16,6 +16,8 @@ import com.ice.ktuice.al.notifications.NotificationSummaryGenerator
 import com.ice.ktuice.al.notifications.SyncJob
 import com.ice.ktuice.al.notifications.SyncJobWorker
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
+import com.ice.ktuice.al.settings.AppSettings
+import com.ice.ktuice.al.settings.AppSettingsTestImpl
 import org.junit.Test
 import org.koin.dsl.module.Module
 import org.koin.dsl.module.applicationContext
@@ -54,6 +56,7 @@ class SyncJobServiceNotificationTest: KoinTest{
             provide { YearGradesModelComparatorImpl() as YearGradesModelComparator }
             provide { notificationFactoryMock as NotificationFactory }
             provide { notificationSummaryGenerator as NotificationSummaryGenerator }
+            provide { AppSettingsTestImpl() as AppSettings }
         }
         startKoin(listOf(module))
         val syncJob = SyncJob()
@@ -86,6 +89,7 @@ class SyncJobServiceNotificationTest: KoinTest{
             provide { YearGradesModelComparatorImpl() as YearGradesModelComparator }
             provide { notificationFactoryMock as NotificationFactory }
             provide { notificationSummaryGenerator as NotificationSummaryGenerator }
+            provide { AppSettingsTestImpl() as AppSettings }
         }
         startKoin(listOf(module))
 
@@ -120,6 +124,7 @@ class SyncJobServiceNotificationTest: KoinTest{
             provide { YearGradesModelComparatorImpl() as YearGradesModelComparator }
             provide { notificationFactoryMock as NotificationFactory }
             provide { notificationSummaryGenerator as NotificationSummaryGenerator }
+            provide { AppSettingsTestImpl() as AppSettings }
         }
 
         startKoin(listOf(module))
@@ -160,6 +165,7 @@ class SyncJobServiceNotificationTest: KoinTest{
             provide { YearGradesModelComparatorImpl() as YearGradesModelComparator }
             provide { notificationFactoryMock as NotificationFactory }
             provide { notificationSummaryGenerator as NotificationSummaryGenerator }
+            provide { AppSettingsTestImpl() as AppSettings }
         }
 
         startKoin(listOf(module))
@@ -176,9 +182,6 @@ class SyncJobServiceNotificationTest: KoinTest{
 
     @Test
     fun `Notifications disabled`(){
-        /**
-         * Even with multiple changes to the grade table, there should only be a single notification
-         */
         var defaultGradeCollectionWithChangedGrade= YearGradesCollectionProviderTest.createDefaultYearGradesCollection()
         defaultGradeCollectionWithChangedGrade.yearList.last()!!.semesterList.last()!!.moduleList.last()!!
                 .grades.last()!!.marks.add("10")
@@ -200,17 +203,18 @@ class SyncJobServiceNotificationTest: KoinTest{
             provide { YearGradesModelComparatorImpl() as YearGradesModelComparator }
             provide { notificationFactoryMock as NotificationFactory }
             provide { notificationSummaryGenerator as NotificationSummaryGenerator }
+            provide { AppSettingsTestImpl() as AppSettings }
         }
 
         startKoin(listOf(module))
 
         val syncJob = SyncJob()
-        syncJob.sync(1)
+        syncJob.sync(0)
 
         sleep(1000) // wait for the service to finish
         //(this is because, the comparison and fetching of the grade tables happens in a background thread)
         closeKoin()
 
-        verify(notificationFactoryMock, times(1)).pushNotification(ArgumentMatchers.anyString())
+        verify(notificationFactoryMock, times(0)).pushNotification(ArgumentMatchers.anyString())
     }
 }

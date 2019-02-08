@@ -43,17 +43,17 @@ class AppSettingsPreferencesImpl(private val context: Context): AppSettings, Koi
             preferenceRepository.setValue(context.getString(R.string.grade_notifications_enabled), value.toString())
         }
 
-    override var persistentLectureNotificationEnabled: Boolean
+    override var networkingEnabled: Boolean
         get(){
             try{
-                return preferenceRepository.getValue(context.getString(R.string.lecture_notifications_enabled)).toBoolean()
+                return preferenceRepository.getValue(context.getString(R.string.networking_enabled_key)).toBoolean()
             }catch (e: NumberFormatException){
                 warn("Wrong preferenceVariable set! Resetting..")
-                preferenceRepository.setValue(context.getString(R.string.lecture_notifications_enabled), false.toString())
+                preferenceRepository.setValue(context.getString(R.string.networking_enabled_key), true.toString())
             }
             return true
         }
         set(value){
-            preferenceRepository.setValue(context.getString(R.string.lecture_notifications_enabled), value.toString())
+            preferenceRepository.setValue(context.getString(R.string.networking_enabled_key), value.toString())
         }
 }

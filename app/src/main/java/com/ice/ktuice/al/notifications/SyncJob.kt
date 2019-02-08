@@ -4,6 +4,7 @@ import com.ice.ktuice.al.GradeTable.notifications.NotificationFactory
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.Difference
 import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparator
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
+import com.ice.ktuice.al.settings.AppSettings
 import com.ice.ktuice.models.YearGradesCollectionModel
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.getStackTraceString
@@ -13,7 +14,7 @@ import org.koin.standalone.inject
 
 class SyncJob: KoinComponent, AnkoLogger {
 
-
+    private val settings: AppSettings by inject()
     private val yearGradesService: YearGradesService by inject()
     private val yearGradesComparator: YearGradesModelComparator by inject()
     private val notificationFactory: NotificationFactory by inject()
@@ -23,6 +24,7 @@ class SyncJob: KoinComponent, AnkoLogger {
         info("Starting comparison async")
         //starts the network request
         val dbYear: YearGradesCollectionModel? = yearGradesService.getYearGradesListFromDB()
+        if(!settings.networkingEnabled) return // break out before syncing if networking is disabled
         val webYear: YearGradesCollectionModel? = yearGradesService.getYearGradesListFromWeb()
         //notifications are enabled if not specified otherwise in the extras!
         if(dbYear != null && webYear != null && notificationsEnabled > 0){

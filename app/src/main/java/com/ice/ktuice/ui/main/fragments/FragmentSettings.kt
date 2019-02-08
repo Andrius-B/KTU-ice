@@ -41,7 +41,7 @@ class FragmentSettings: Fragment(), KoinComponent, AnkoLogger{
 
         this.notifications_new_grades_switch.isChecked = settings.gradeNotificationsEnabled
         setGradeUpdateSwitchListener()
-        this.current_lecture_notification_switch.isChecked = settings.persistentLectureNotificationEnabled
+        this.networking_enable_switch.isChecked = settings.networkingEnabled
         setLectureNotificationSwitchListener()
 
     }
@@ -56,8 +56,8 @@ class FragmentSettings: Fragment(), KoinComponent, AnkoLogger{
     }
 
     private fun setLectureNotificationSwitchListener(){
-        this.current_lecture_notification_switch.setOnCheckedChangeListener{ _: CompoundButton, b: Boolean ->
-            settings.persistentLectureNotificationEnabled = b
+        this.networking_enable_switch.setOnCheckedChangeListener{ _: CompoundButton, b: Boolean ->
+            settings.networkingEnabled = b
         }
     }
 
