@@ -15,6 +15,8 @@ import org.koin.standalone.StandAloneContext.startKoin
 import org.koin.standalone.inject
 import org.koin.test.KoinTest
 import java.io.File
+import java.io.FileDescriptor
+import java.io.FileNotFoundException
 
 class KTUScraperTest: KoinTest{
 
@@ -34,7 +36,12 @@ class KTUScraperTest: KoinTest{
      */
     @Before
     fun init(){
-        val inputStream = File("ktulogin.local").inputStream()
+        val file = File("ktulogin.local")
+        if(!file.exists()){
+            throw FileNotFoundException("For this test to work, a file at /app/ktulogin.local must exists" +
+                    " and contain the login information to ktu ais")
+        }
+        val inputStream = file.inputStream()
         inputStream.bufferedReader().use {
             val lines = it.readLines()
             username = lines[0]

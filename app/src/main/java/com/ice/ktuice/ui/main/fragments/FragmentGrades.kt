@@ -31,8 +31,10 @@ import java.util.concurrent.TimeUnit
  * displays a Grade Table component and lets the student log out
  */
 class FragmentGrades: Fragment(), KoinComponent, AnkoLogger {
+
     private val yearGradesService: YearGradesService by inject()
     private val viewModel: GradesFragmentViewModel by inject()
+
     private lateinit var gradeTableView: GradeTable
     private val syncJob = SyncJob()
     override fun onCreate(savedInstanceState: Bundle?) {
