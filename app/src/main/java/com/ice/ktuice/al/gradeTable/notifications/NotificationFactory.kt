@@ -1,4 +1,4 @@
-package com.ice.ktuice.al.GradeTable.notifications
+package com.ice.ktuice.al.gradeTable.notifications
 
 /**
  * Created by Andrius on 3/14/2018.

@@ -6,6 +6,9 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
+import com.ice.ktuice.al.logger.FileLogReader
+import com.ice.ktuice.al.logger.IceLog
+import com.ice.ktuice.al.logger.info
 import com.ice.ktuice.al.services.userService.UserService
 import com.ice.ktuice.ui.adapters.FragmentAdapter
 import com.ice.ktuice.ui.login.LoginActivity
@@ -16,7 +19,7 @@ import org.koin.android.ext.android.inject
 
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), IceLog {
 
     /**
      * This preference is set in the settigns fragment and defines the number of the currently selected theme:
@@ -51,7 +54,6 @@ class MainActivity : AppCompatActivity() {
             AppCompatDelegate.setDefaultNightMode(
                     AppCompatDelegate.MODE_NIGHT_YES)
         }
-
         try{
             /**
              * If the user is not yet logged in,

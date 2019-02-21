@@ -1,4 +1,4 @@
-package com.ice.ktuice.al.GradeTable.yearGradesModelComparator
+package com.ice.ktuice.al.gradeTable.yearGradesModelComparator
 
 import com.ice.ktuice.models.GradeModel
 import com.ice.ktuice.models.YearGradesCollectionModel

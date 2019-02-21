@@ -2,7 +2,6 @@ package com.ice.ktuice.ui.main.components
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
@@ -10,10 +9,10 @@ import android.view.ViewGroup
 import android.widget.*
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
-import com.ice.ktuice.al.GradeTable.GradeTableManager
-import com.ice.ktuice.al.GradeTable.gradeTableModels.GradeTableModel
-import com.ice.ktuice.al.GradeTable.gradeTableModels.SemesterAdapterItem
-import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparator
+import com.ice.ktuice.al.gradeTable.GradeTableManager
+import com.ice.ktuice.al.gradeTable.gradeTableModels.GradeTableModel
+import com.ice.ktuice.al.gradeTable.gradeTableModels.SemesterAdapterItem
+import com.ice.ktuice.al.gradeTable.yearGradesModelComparator.YearGradesModelComparator
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.ui.adapters.SemesterSpinnerAdapter
@@ -22,9 +21,6 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
-import android.R.attr.data
-import android.content.res.TypedArray
-
 
 
 /**

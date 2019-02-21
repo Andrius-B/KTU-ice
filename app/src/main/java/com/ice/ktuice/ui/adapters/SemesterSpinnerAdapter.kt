@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import com.ice.ktuice.R
-import com.ice.ktuice.al.GradeTable.gradeTableModels.SemesterAdapterItem
+import com.ice.ktuice.al.gradeTable.gradeTableModels.SemesterAdapterItem
 
 /**
  * Created by Andrius on 2/15/2018.

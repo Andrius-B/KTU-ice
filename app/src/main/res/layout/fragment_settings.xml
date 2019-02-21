@@ -8,8 +8,7 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        card_view:cardBackgroundColor="?attr/colorCardBackground"
+        app:cardBackgroundColor="?attr/colorCardBackground"
         android:layout_height="wrap_content"
         android:minHeight="256dp"
         android:layout_marginStart="8dp"
@@ -22,6 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="16dp">
+
             <TableRow>
                 <TextView
                     android:id="@+id/settings_card_title"
@@ -30,6 +30,7 @@
                     android:textStyle="bold"
                     android:textSize="24sp"
                     android:text="@string/settings_card_title"/>
+
             </TableRow>
             <TableRow>
             <TextView
@@ -64,6 +65,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </TableRow>
-    </TableLayout>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/deleteLogs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/clear_logs"
+                    tools:layout_editor_absoluteX="16dp"
+                    tools:layout_editor_absoluteY="278dp" />
+            </TableRow>
+        </TableLayout>
     </android.support.v7.widget.CardView>
+
 </android.support.constraint.ConstraintLayout>

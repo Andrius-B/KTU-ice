@@ -7,19 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.work.Data
-import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.ice.ktuice.R
+import com.ice.ktuice.al.logger.IceLog
+import com.ice.ktuice.al.logger.info
+import com.ice.ktuice.al.logger.infoFile
 import com.ice.ktuice.al.notifications.SyncJob
 import com.ice.ktuice.al.notifications.SyncJobWorker
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.ui.main.components.GradeTable
 import com.ice.ktuice.viewModels.gradesFragment.GradesFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_grades.*
-import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.info
 import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
 import java.util.concurrent.TimeUnit
@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit
  * The main fragment of the application:
  * displays a Grade Table component and lets the student log out
  */
-class FragmentGrades: Fragment(), KoinComponent, AnkoLogger {
+class FragmentGrades: Fragment(), KoinComponent, IceLog {
 
     private val yearGradesService: YearGradesService by inject()
     private val viewModel: GradesFragmentViewModel by inject()
@@ -109,13 +109,18 @@ class FragmentGrades: Fragment(), KoinComponent, AnkoLogger {
         val dataToWorker = Data.Builder().putInt(resources.getString(R.string.notification_enabled_flag), notificationFlag).build()
 
         if(!instant){
-            info("Queueing periodic sync!")
-            val periodicSyncWork = PeriodicWorkRequestBuilder<SyncJobWorker>(3, TimeUnit.HOURS).setInputData(dataToWorker).build()
+            infoFile("Queueing periodic sync!")
+            val notificationWorkTag = resources.getString(R.string.notification_work_tag)
+            val periodicSyncWork = PeriodicWorkRequestBuilder<SyncJobWorker>(3, TimeUnit.HOURS)
+                    .setInputData(dataToWorker)
+                    .addTag(notificationWorkTag)
+                    .build()
+            wm.cancelAllWorkByTag(notificationWorkTag)
             wm.enqueue(periodicSyncWork)
             //TODO move period time to configuration, not inline
         }
         else{
-            info("Starting one time sync!")
+            infoFile("Starting one time sync!")
             doAsync {
                 syncJob.sync(notificationFlag)
             }

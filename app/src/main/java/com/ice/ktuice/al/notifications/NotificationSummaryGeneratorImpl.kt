@@ -2,7 +2,7 @@ package com.ice.ktuice.al.notifications
 
 import android.content.Context
 import com.ice.ktuice.R
-import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.Difference
+import com.ice.ktuice.al.gradeTable.yearGradesModelComparator.Difference
 import com.ice.ktuice.models.GradeModel
 
 /**

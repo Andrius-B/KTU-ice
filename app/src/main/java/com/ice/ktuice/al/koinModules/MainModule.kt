@@ -2,10 +2,10 @@ package com.ice.ktuice.al.koinModules
 
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.DAL.repositories.prefrenceRepository.SharedPreferenceRepositoryImpl
-import com.ice.ktuice.al.GradeTable.notifications.NotificationFactory
-import com.ice.ktuice.al.GradeTable.notifications.NotificationFactoryImpl
-import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparator
-import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparatorImpl
+import com.ice.ktuice.al.gradeTable.notifications.NotificationFactory
+import com.ice.ktuice.al.gradeTable.notifications.NotificationFactoryImpl
+import com.ice.ktuice.al.gradeTable.yearGradesModelComparator.YearGradesModelComparator
+import com.ice.ktuice.al.gradeTable.yearGradesModelComparator.YearGradesModelComparatorImpl
 import com.ice.ktuice.al.notifications.NotificationSummaryGenerator
 import com.ice.ktuice.al.notifications.NotificationSummaryGeneratorImpl
 import com.ice.ktuice.al.services.userService.UserService

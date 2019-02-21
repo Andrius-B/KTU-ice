@@ -2,9 +2,9 @@ package com.ice.ktuice
 
 import com.ice.ktuice.YearGradesCollectionProviderTest.Companion.addMark
 import com.ice.ktuice.YearGradesCollectionProviderTest.Companion.createDefaultYearGradesCollection
-import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.Difference
-import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparator
-import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparatorImpl
+import com.ice.ktuice.al.gradeTable.yearGradesModelComparator.Difference
+import com.ice.ktuice.al.gradeTable.yearGradesModelComparator.YearGradesModelComparator
+import com.ice.ktuice.al.gradeTable.yearGradesModelComparator.YearGradesModelComparatorImpl
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.models.GradeModel
 import com.ice.ktuice.models.YearGradesCollectionModel

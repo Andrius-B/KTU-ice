@@ -48,4 +48,5 @@
     <string name="settings_networking_enable">Enable networking</string>
     <string name="settings_mark_update_notifications">Mark Update Notifications</string>
     <string name="settings_card_title">Settings</string>
+    <string name="clear_logs">Clear Logs</string>
 </resources>

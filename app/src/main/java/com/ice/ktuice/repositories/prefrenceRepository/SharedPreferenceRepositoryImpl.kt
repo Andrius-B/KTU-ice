@@ -11,16 +11,15 @@ class SharedPreferenceRepositoryImpl(private val context: Context): PreferenceRe
     override fun getValue(key: String): String {
         val sharedPref = context.getSharedPreferences(
                 context.getString(R.string.shared_preference_file_key), Context.MODE_PRIVATE)
-        return sharedPref.getString(key, "")
+        return sharedPref.getString(key, "")!!
     }
 
-    @SuppressLint("CommitPrefEdits")
     override fun setValue(key: String, value: String) {
         val sharedPref = context.getSharedPreferences(
                 context.getString(R.string.shared_preference_file_key), Context.MODE_PRIVATE)
         with(sharedPref.edit()){
             putString(key, value)
-            commit()// the commit is right here fam
+            apply()
         }
     }
 

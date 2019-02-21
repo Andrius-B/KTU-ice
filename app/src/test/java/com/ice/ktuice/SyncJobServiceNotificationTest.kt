@@ -1,20 +1,10 @@
 package com.ice.ktuice
 
-import android.app.job.JobParameters
-import android.arch.core.executor.DefaultTaskExecutor
-import android.content.Context
-import androidx.test.core.app.ApplicationProvider
-import androidx.work.Data
-import androidx.work.WorkerFactory
-import androidx.work.WorkerParameters
-import androidx.work.impl.utils.SynchronousExecutor
-import androidx.work.impl.utils.taskexecutor.TaskExecutor
-import com.ice.ktuice.al.GradeTable.notifications.NotificationFactory
-import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparator
-import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparatorImpl
+import com.ice.ktuice.al.gradeTable.notifications.NotificationFactory
+import com.ice.ktuice.al.gradeTable.yearGradesModelComparator.YearGradesModelComparator
+import com.ice.ktuice.al.gradeTable.yearGradesModelComparator.YearGradesModelComparatorImpl
 import com.ice.ktuice.al.notifications.NotificationSummaryGenerator
 import com.ice.ktuice.al.notifications.SyncJob
-import com.ice.ktuice.al.notifications.SyncJobWorker
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.al.settings.AppSettings
 import com.ice.ktuice.al.settings.AppSettingsTestImpl
@@ -28,8 +18,6 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import org.mockito.Mockito.*
 import java.lang.Thread.sleep
-import java.util.*
-import java.util.concurrent.Executor
 
 /**
  * Created by Andrius on 3/14/2018.

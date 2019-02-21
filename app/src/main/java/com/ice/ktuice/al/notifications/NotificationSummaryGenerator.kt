@@ -1,6 +1,6 @@
 package com.ice.ktuice.al.notifications
 
-import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.Difference
+import com.ice.ktuice.al.gradeTable.yearGradesModelComparator.Difference
 
 /**
  * Created by Andrius on 2018-03-22.

@@ -1,4 +1,4 @@
-package com.ice.ktuice.al.GradeTable.gradeTableModels
+package com.ice.ktuice.al.gradeTable.gradeTableModels
 
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info

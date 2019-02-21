@@ -1,18 +1,20 @@
 package com.ice.ktuice.al.notifications
 
-import com.ice.ktuice.al.GradeTable.notifications.NotificationFactory
-import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.Difference
-import com.ice.ktuice.al.GradeTable.yearGradesModelComparator.YearGradesModelComparator
+import com.ice.ktuice.al.gradeTable.notifications.NotificationFactory
+import com.ice.ktuice.al.gradeTable.yearGradesModelComparator.Difference
+import com.ice.ktuice.al.gradeTable.yearGradesModelComparator.YearGradesModelComparator
+import com.ice.ktuice.al.logger.IceLog
+import com.ice.ktuice.al.logger.info
+import com.ice.ktuice.al.logger.infoFile
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.al.settings.AppSettings
+import com.ice.ktuice.models.GradeModel
 import com.ice.ktuice.models.YearGradesCollectionModel
-import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.getStackTraceString
-import org.jetbrains.anko.info
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
-class SyncJob: KoinComponent, AnkoLogger {
+class SyncJob: KoinComponent, IceLog {
 
     private val settings: AppSettings by inject()
     private val yearGradesService: YearGradesService by inject()
@@ -21,7 +23,7 @@ class SyncJob: KoinComponent, AnkoLogger {
     private val notificationSummaryGenerator:NotificationSummaryGenerator by inject()
 
     fun sync(notificationsEnabled: Int){
-        info("Starting comparison async")
+        infoFile("Starting comparison async")
         //starts the network request
         val dbYear: YearGradesCollectionModel? = yearGradesService.getYearGradesListFromDB()
         if(!settings.networkingEnabled) return // break out before syncing if networking is disabled
@@ -41,22 +43,25 @@ class SyncJob: KoinComponent, AnkoLogger {
 
 
             if(totalDifference.isNotEmpty()){
-                info("Differences found: ${totalDifference.size}")
+                infoFile("Differences found: ${totalDifference.size}")
                 totalDifference.forEach{
-                    info(String.format("\t\t type:%s change:%s", it.field.toString(), it.change.toString()))
+                    val grade = it.supplementary as GradeModel?
+                    infoFile("\t\t type: ${it.field} change:${it.change} of grade ${it.supplementary?.marks?.toArray()?.joinToString(", ") ?: "null"}")
                 }
                 try {
                     val message = notificationSummaryGenerator.generateSummaryFromDifferences(totalDifference)
                     notificationFactory.pushNotification(message)
-                    info("Notification pushed!")
+                    infoFile("====================================")
+                    infoFile("Notification pushed!")
+                    infoFile("====================================")
                 }catch (e: Exception){
-                    info(e.getStackTraceString())
-                    info("Notification push failed!")
+                    infoFile(e.getStackTraceString())
+                    infoFile("Notification push failed!")
                 }
             }
         }
         webYear!!.isUpdating = false
         yearGradesService.persistYearGradesModel(webYear)
-        info("service finished without errors!")
+        infoFile("service finished without errors!")
     }
 }

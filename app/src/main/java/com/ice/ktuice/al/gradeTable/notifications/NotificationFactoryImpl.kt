@@ -1,4 +1,4 @@
-package com.ice.ktuice.al.GradeTable.notifications
+package com.ice.ktuice.al.gradeTable.notifications
 
 import android.annotation.SuppressLint
 import android.app.NotificationChannel

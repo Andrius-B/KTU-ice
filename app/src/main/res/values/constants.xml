@@ -9,4 +9,5 @@
     <string name="currently_selected_theme_position">com.ice.ktu.selected_theme</string>
     <string name="grade_notifications_enabled">com.ice.ktu.grade_notifications_enabled</string>
     <string name="networking_enabled_key">com.ice.ktu.networking_enabled</string>
+    <string name="notification_work_tag">com.ice.ktu.notification_work_tag</string>
 </resources>

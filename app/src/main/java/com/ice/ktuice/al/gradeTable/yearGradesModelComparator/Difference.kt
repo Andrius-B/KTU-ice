@@ -1,4 +1,4 @@
-package com.ice.ktuice.al.GradeTable.yearGradesModelComparator
+package com.ice.ktuice.al.gradeTable.yearGradesModelComparator
 
 /**
  * Created by Andrius on 2/20/2018.

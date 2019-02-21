@@ -1,10 +1,8 @@
-package com.ice.ktuice.al.GradeTable
+package com.ice.ktuice.al.gradeTable
 
-import com.ice.ktuice.al.GradeTable.gradeTableModels.GradeTableFactory
-import com.ice.ktuice.al.GradeTable.gradeTableModels.GradeTableModel
-import com.ice.ktuice.al.GradeTable.gradeTableModels.SemesterAdapterItem
-import com.ice.ktuice.al.services.userService.UserService
-import com.ice.ktuice.al.services.yearGradesService.YearGradesService
+import com.ice.ktuice.al.gradeTable.gradeTableModels.GradeTableFactory
+import com.ice.ktuice.al.gradeTable.gradeTableModels.GradeTableModel
+import com.ice.ktuice.al.gradeTable.gradeTableModels.SemesterAdapterItem
 import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.models.YearModel
 import com.ice.ktuice.al.services.scraperService.exceptions.AuthenticationException
@@ -12,7 +10,6 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.getStackTraceString
 import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
 
 /**
  * Created by Andrius on 2/15/2018.

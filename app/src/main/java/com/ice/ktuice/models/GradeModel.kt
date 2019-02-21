@@ -50,4 +50,9 @@ open class GradeModel(
                 }
                 return same
         }
+
+        override fun toString(): String {
+                val markStr = marks.toArray().joinToString(separator = ", ")
+                return "$module_name[$week]: $markStr"
+        }
 }
