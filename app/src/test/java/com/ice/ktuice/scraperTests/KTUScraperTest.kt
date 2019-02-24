@@ -1,9 +1,10 @@
-package com.ice.ktuice
+package com.ice.ktuice.scraperTests
 
-import com.ice.ktuice.models.Cookie
 import com.ice.ktuice.al.services.scraperService.ScraperService
 import com.ice.ktuice.al.services.scraperService.exceptions.AuthenticationException
 import com.ice.ktuice.al.services.scraperService.ktuScraperService.KTUScraperService
+import com.ice.ktuice.impl.FileLoginProvider
+import com.ice.ktuice.models.Cookie
 import org.jetbrains.anko.getStackTraceString
 import org.junit.After
 import org.junit.Before
@@ -14,9 +15,6 @@ import org.koin.standalone.StandAloneContext.closeKoin
 import org.koin.standalone.StandAloneContext.startKoin
 import org.koin.standalone.inject
 import org.koin.test.KoinTest
-import java.io.File
-import java.io.FileDescriptor
-import java.io.FileNotFoundException
 
 class KTUScraperTest: KoinTest{
 
@@ -36,17 +34,9 @@ class KTUScraperTest: KoinTest{
      */
     @Before
     fun init(){
-        val file = File("ktulogin.local")
-        if(!file.exists()){
-            throw FileNotFoundException("For this test to work, a file at /app/ktulogin.local must exists" +
-                    " and contain the login information to ktu ais")
-        }
-        val inputStream = file.inputStream()
-        inputStream.bufferedReader().use {
-            val lines = it.readLines()
-            username = lines[0]
-            password = lines[1]
-        }
+        val l = FileLoginProvider.getLoginFromFile()
+        username = l.first
+        password = l.second
         startKoin(listOf(scraperModule))
     }
     @After

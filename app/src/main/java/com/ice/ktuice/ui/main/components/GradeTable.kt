@@ -27,7 +27,6 @@ import org.koin.standalone.inject
  * Created by Andrius on 1/29/2018.
  * The Grade table component contains a spinner for semester selection,
  * and then the grades in a table, that correspond to the selected semester.
- * TODO move all the application logic to GradeTableManager
  */
 class GradeTable(
          c: Context,
