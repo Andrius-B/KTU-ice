@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.work.Data
+import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.ice.ktuice.R
@@ -100,6 +101,7 @@ class FragmentGrades: Fragment(), KoinComponent, IceLog {
     }
 
     private fun logout(){
+        viewModel.dispose()
         viewModel.logoutCurrentUser(this.activity)
     }
 
@@ -115,8 +117,7 @@ class FragmentGrades: Fragment(), KoinComponent, IceLog {
                     .setInputData(dataToWorker)
                     .addTag(notificationWorkTag)
                     .build()
-            wm.cancelAllWorkByTag(notificationWorkTag)
-            wm.enqueue(periodicSyncWork)
+            wm.enqueueUniquePeriodicWork(resources.getString(R.string.notification_work_name), ExistingPeriodicWorkPolicy.KEEP, periodicSyncWork)
             //TODO move period time to configuration, not inline
         }
         else{

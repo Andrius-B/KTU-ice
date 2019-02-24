@@ -13,6 +13,7 @@ import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.ui.login.LoginActivity
+import io.reactivex.disposables.Disposable
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
@@ -21,7 +22,7 @@ import org.koin.standalone.inject
  * FragmentGrades and some additional fields to improve
  * user experience
  */
-class GradesFragmentViewModel: ViewModel(), KoinComponent{
+class GradesFragmentViewModel: ViewModel(), KoinComponent, Disposable{
     private val userService: UserService by inject()
     private val yearGradesService: YearGradesService by inject()
     private val preferenceRepository:PreferenceRepository by inject()
@@ -41,6 +42,8 @@ class GradesFragmentViewModel: ViewModel(), KoinComponent{
     val selectedYear = MutableLiveData<String>()
     val selectedSemesterNumber = MutableLiveData<String>()
 
+    val yearGradesSubjectDisposable: Disposable
+
     init {
         val selectedSemesterNumberVal = preferenceRepository.getValue(R.string.currently_selected_semester_id)
         selectedSemesterNumber.postValue(selectedSemesterNumberVal)
@@ -52,7 +55,7 @@ class GradesFragmentViewModel: ViewModel(), KoinComponent{
         mLoginModel.postValue(loginModelValue)
 
         val yearGrades = yearGradesService.getYearGradesList()
-        yearGrades.subscribe{
+        yearGradesSubjectDisposable = yearGrades.subscribe{
             mGrades.postValue(it)
         }
     }
@@ -66,4 +69,13 @@ class GradesFragmentViewModel: ViewModel(), KoinComponent{
             activity.finish()
         }
     }
+
+    override fun isDisposed(): Boolean {
+        return  yearGradesSubjectDisposable.isDisposed
+    }
+
+    override fun dispose() {
+        return yearGradesSubjectDisposable.dispose()
+    }
+
 }

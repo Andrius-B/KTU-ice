@@ -46,7 +46,7 @@ class SyncJob: KoinComponent, IceLog {
                 infoFile("Differences found: ${totalDifference.size}")
                 totalDifference.forEach{
                     val grade = it.supplementary as GradeModel?
-                    infoFile("\t\t type: ${it.field} change:${it.change} of grade ${it.supplementary?.marks?.toArray()?.joinToString(", ") ?: "null"}")
+                    infoFile("\t\t type: ${it.field} change:${it.change} of grade ${grade?.marks?.toArray()?.joinToString(", ") ?: "null"}")
                 }
                 try {
                     val message = notificationSummaryGenerator.generateSummaryFromDifferences(totalDifference)

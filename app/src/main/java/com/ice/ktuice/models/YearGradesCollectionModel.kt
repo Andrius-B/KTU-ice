@@ -15,7 +15,8 @@ open class YearGradesCollectionModel(): RealmObject(){
     }
 
     @PrimaryKey
-    open var studentId: String? = ""
+    var studentId: String? = ""
+
 
     open var yearList = RealmList<YearGradesModel>()
     /**
@@ -29,6 +30,22 @@ open class YearGradesCollectionModel(): RealmObject(){
      */
     open var isUpdating = false
 
+    /**
+     * To make notification checking a bit easier this string should contain
+     * the relevant parts of the page
+     *  * Note: it does not make sense to store it after initial hashing
+     */
+    open var rawHtml = ""
+
+    open var htmlHash = ""
+
+    /**
+     * Model validation information
+     */
+    open var markCnt = 0
+    open var moduleCnt = 0
+    open var semesterCnt = 0
+    open var yearCnt = 0
 
     /**
      * List interface delegation to the yearList variable
