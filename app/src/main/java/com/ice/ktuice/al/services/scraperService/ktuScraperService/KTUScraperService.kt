@@ -6,7 +6,7 @@ import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.models.YearGradesModel
 import com.ice.ktuice.models.YearModel
-import com.ice.ktuice.models.responses.LoginResponse
+import com.ice.ktuice.models.responses.LoginResponseModel
 import com.ice.ktuice.models.responses.YearGradesResponseModel
 import com.ice.ktuice.al.services.scraperService.ScraperService
 import com.ice.ktuice.al.services.scraperService.exceptions.AuthenticationException
@@ -54,7 +54,7 @@ class  KTUScraperService: ScraperService, AnkoLogger{
         return grades
     }
 
-    override fun refreshLoginCookies(login: LoginModel): LoginResponse {
+    override fun refreshLoginCookies(login: LoginModel): LoginResponseModel {
         return login(login.username, login.password)
     }
 

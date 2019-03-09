@@ -2,14 +2,14 @@ package com.ice.ktuice.al.services.scraperService.ktuScraperService.handlers
 
 import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.models.YearModel
-import com.ice.ktuice.models.responses.LoginResponse
+import com.ice.ktuice.models.responses.LoginResponseModel
 import io.realm.RealmList
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 
 class LoginHandler: BaseHandler() {
 
-    fun getAuthCookies(username: String, password: String): LoginResponse {
+    fun getAuthCookies(username: String, password: String): LoginResponseModel {
         val autoLogin = getAutoLogin()
         val postLogin = postLogin(username, password, autoLogin)
         if (postLogin.cookies != null) {
@@ -19,7 +19,7 @@ class LoginHandler: BaseHandler() {
         }
         // if there are no cookies returned from postLogin,
         // assume not authorized!
-        return LoginResponse(null, 401)
+        return LoginResponseModel(null, 401)
     }
 
     private class AutoLoginResponse(
@@ -115,7 +115,7 @@ class LoginHandler: BaseHandler() {
         return AuthResponse(request.cookies(), request.statusCode())
     }
 
-    private fun getInfo(authResponse: AuthResponse, username: String, password: String): LoginResponse {
+    private fun getInfo(authResponse: AuthResponse, username: String, password: String): LoginResponseModel {
         val url = "https://uais.cr.ktu.lt/ktuis/vs.ind_planas"
         val request = Jsoup.connect(url)
                 .cookies(authResponse.authCookies)
@@ -146,6 +146,6 @@ class LoginHandler: BaseHandler() {
                 password = password
         )
         loginModel.setCookieMap(authResponse.authCookies)
-        return LoginResponse(loginModel, request.statusCode())
+        return LoginResponseModel(loginModel, request.statusCode())
     }
 }
