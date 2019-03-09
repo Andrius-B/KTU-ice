@@ -1,8 +1,8 @@
 package com.ice.ktuice.scraperTests
 
-import com.ice.ktuice.al.services.scraperService.ScraperService
-import com.ice.ktuice.al.services.scraperService.exceptions.AuthenticationException
-import com.ice.ktuice.al.services.scraperService.ktuScraperService.KTUScraperService
+import com.ice.ktuice.al.services.scrapers.base.ScraperService
+import com.ice.ktuice.al.services.scrapers.base.exceptions.AuthenticationException
+import com.ice.ktuice.al.services.scrapers.base.ktuScraperService.KTUScraperService
 import com.ice.ktuice.impl.FileLoginProvider
 import com.ice.ktuice.models.Cookie
 import org.jetbrains.anko.getStackTraceString

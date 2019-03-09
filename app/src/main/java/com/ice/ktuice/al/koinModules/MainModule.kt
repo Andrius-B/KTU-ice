@@ -12,8 +12,12 @@ import com.ice.ktuice.al.services.userService.UserService
 import com.ice.ktuice.al.services.userService.UserServiceImpl
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.al.services.yearGradesService.YearGradesServiceImpl
-import com.ice.ktuice.al.services.scraperService.ktuScraperService.KTUScraperService
-import com.ice.ktuice.al.services.scraperService.ScraperService
+import com.ice.ktuice.al.services.scrapers.base.ktuScraperService.KTUScraperService
+import com.ice.ktuice.al.services.scrapers.base.ScraperService
+import com.ice.ktuice.al.services.scrapers.calendar.CalendarScraper
+import com.ice.ktuice.al.services.scrapers.calendar.CalendarScraperHanderImpl
+import com.ice.ktuice.al.services.scrapers.timetable.TimetableScraper
+import com.ice.ktuice.al.services.scrapers.timetable.TimetableScraperHandlerImpl
 import com.ice.ktuice.al.settings.AppSettings
 import com.ice.ktuice.al.settings.AppSettingsPreferencesImpl
 import com.ice.ktuice.viewModels.gradesFragment.GradesFragmentViewModel
@@ -35,4 +39,6 @@ val mainModule: Module = applicationContext {
     provide(isSingleton = true) { GradesFragmentViewModel()}
     provide { KTUScraperService() as ScraperService }
     provide { AppSettingsPreferencesImpl(this.androidApplication()) as AppSettings }
+    provide { CalendarScraperHanderImpl() as CalendarScraper }
+    provide { TimetableScraperHandlerImpl() as TimetableScraper }
 }

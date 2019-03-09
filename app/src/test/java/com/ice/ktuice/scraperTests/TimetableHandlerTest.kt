@@ -1,8 +1,10 @@
 package com.ice.ktuice.scraperTests
 
-import com.ice.ktuice.al.services.scraperService.ScraperService
-import com.ice.ktuice.al.services.scraperService.ktuScraperService.KTUScraperService
-import com.ice.ktuice.al.services.scraperService.ktuScraperService.handlers.TimetableHandler
+import com.ice.ktuice.al.services.scrapers.base.ScraperService
+import com.ice.ktuice.al.services.scrapers.base.ktuScraperService.KTUScraperService
+import com.ice.ktuice.al.services.scrapers.timetable.TimetableHandler
+import com.ice.ktuice.al.services.scrapers.timetable.TimetableScraper
+import com.ice.ktuice.al.services.scrapers.timetable.TimetableScraperHandlerImpl
 import com.ice.ktuice.impl.FileLoginProvider
 import com.ice.ktuice.models.LoginModel
 import org.junit.After
@@ -19,8 +21,11 @@ import java.util.*
 class TimetableHandlerTest: KoinComponent {
 
     private val scraperService: ScraperService by inject()
+    private val timetableScraper: TimetableScraper by inject()
+    
     private val scraperModule: Module = applicationContext {
         provide { KTUScraperService() as ScraperService }
+        provide { TimetableScraperHandlerImpl() as TimetableScraper }
     }
 
     lateinit var username: String
@@ -49,7 +54,7 @@ class TimetableHandlerTest: KoinComponent {
         cal.time = nowDate
         cal.add(Calendar.DATE, 0)
         val nextWeekDate = cal.time
-        val timetableResponse = TimetableHandler.getTimetable(loginModel, listOf(nextWeekDate))
+        val timetableResponse = timetableScraper.getTimetable(loginModel, listOf(nextWeekDate))
         if(timetableResponse.statusCode != 200){
             println("Something went wrong!")
         }else{

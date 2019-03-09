@@ -1,4 +1,4 @@
-package com.ice.ktuice.al.services.scraperService.ktuScraperService.handlers
+package com.ice.ktuice.al.services.scrapers.timetable
 
 import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.models.TimetableModel
@@ -17,7 +17,7 @@ class TimetableHandler{
     companion object {
         /**
          * @param login - the authentication required to fetch the timetable
-         * @param fetchTestsFor -  a list of dates, for which weeks to fetch the upcoming tests
+         * @param fetchUpcomingTestsFor -  a list of dates, for which weeks to fetch the upcoming tests
          */
         fun getTimetable(login: LoginModel, fetchUpcomingTestsFor: List<Date>? = listOf()): TimetableResponseModel {
             val urlInitial = String.format("https://uais.cr.ktu.lt/ktuis/TV_STUD.stud_kal_w0")

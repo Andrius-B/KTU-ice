@@ -3,8 +3,8 @@ package com.ice.ktuice.al.services.yearGradesService
 import com.ice.ktuice.al.logger.IceLog
 import com.ice.ktuice.al.logger.info
 import com.ice.ktuice.al.logger.infoFile
-import com.ice.ktuice.al.services.scraperService.ScraperService
-import com.ice.ktuice.al.services.scraperService.exceptions.AuthenticationException
+import com.ice.ktuice.al.services.scrapers.base.ScraperService
+import com.ice.ktuice.al.services.scrapers.base.exceptions.AuthenticationException
 import com.ice.ktuice.al.services.userService.UserService
 import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.repositories.yearGradesResponseRepository.YearGradesRepository

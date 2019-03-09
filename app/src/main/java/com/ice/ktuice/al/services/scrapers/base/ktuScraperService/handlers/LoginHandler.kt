@@ -1,4 +1,4 @@
-package com.ice.ktuice.al.services.scraperService.ktuScraperService.handlers
+package com.ice.ktuice.al.services.scrapers.base.ktuScraperService.handlers
 
 import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.models.YearModel

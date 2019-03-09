@@ -1,12 +1,12 @@
-package com.ice.ktuice.al.services.scraperService
+package com.ice.ktuice.al.services.scrapers.base
 
 import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.models.YearGradesModel
 import com.ice.ktuice.models.YearModel
 import com.ice.ktuice.models.responses.LoginResponseModel
-import com.ice.ktuice.al.services.scraperService.exceptions.AuthenticationException
-import com.ice.ktuice.al.services.scraperService.exceptions.ServerErrorException
+import com.ice.ktuice.al.services.scrapers.base.exceptions.AuthenticationException
+import com.ice.ktuice.al.services.scrapers.base.exceptions.ServerErrorException
 
 interface ScraperService {
     /**
