@@ -5,7 +5,7 @@ import com.ice.ktuice.al.gradeTable.gradeTableModels.GradeTableModel
 import com.ice.ktuice.al.gradeTable.gradeTableModels.SemesterAdapterItem
 import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.models.YearModel
-import com.ice.ktuice.al.services.scraperService.exceptions.AuthenticationException
+import com.ice.ktuice.al.services.scrapers.base.exceptions.AuthenticationException
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.getStackTraceString

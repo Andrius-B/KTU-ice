@@ -1,4 +1,4 @@
-package com.ice.ktuice.al.services.scraperService.ktuScraperService.handlers
+package com.ice.ktuice.al.services.scrapers.base.ktuScraperService.handlers
 
 import org.jsoup.nodes.Document
 

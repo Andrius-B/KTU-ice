@@ -9,7 +9,7 @@ import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
 import com.ice.ktuice.ui.main.MainActivity
 import com.ice.ktuice.models.LoginModel
-import com.ice.ktuice.al.services.scraperService.ScraperService
+import com.ice.ktuice.al.services.scrapers.base.ScraperService
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.*
 import org.koin.android.ext.android.inject
