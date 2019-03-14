@@ -36,7 +36,7 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent, IceLog {
      * Queries the database for a current version, and
      * later returns a new yearGradesCollection from the web
      */
-    override fun getYearGradesList(): Subject<YearGradesCollectionModel> {
+    override fun getYearGradesListSubject(): Subject<YearGradesCollectionModel> {
         val dbGrades = getYearGradesListFromDB()
         yearGradesRepository.setUpdating(dbGrades, true)
         currentSubject.onNext(dbGrades)
@@ -65,20 +65,29 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent, IceLog {
         val currentGrades = getYearGradesListFromDB()
         yearGradesRepository.setUpdating(currentGrades, true)
         currentSubject.onNext(currentGrades)
-        val marks: YearGradesCollectionModel
+        val webGrades: YearGradesCollectionModel
         try {
-            marks = scraperService.getAllGrades(login)
-            marks.isUpdating = false
-            marks.dateUpdated = Date()
-            validator.addValidationInformation(marks)
-            currentSubject.onNext(marks)
+            webGrades = scraperService.getAllGrades(login)
+            webGrades.isUpdating = false
+            webGrades.dateUpdated = Date()
+            validator.addValidationInformation(webGrades)
+            currentSubject.onNext(webGrades)
         }catch (e : AuthenticationException){
             userService.refreshLoginCookies()
+            infoFile{ "Fetching grades from web after cookie refresh" }
             return getYearGradesListFromWeb()
         }catch (e: Exception){
             throw e
         }
-        return marks
+        infoFile{"YearGradesCollectionModel fetched from the web:"}
+        infoFile{"Mark count: ${webGrades.markCnt}"}
+        infoFile{"Module count: ${webGrades.moduleCnt}"}
+        infoFile{"Semester count: ${webGrades.semesterCnt}"}
+        infoFile{"Year count: ${webGrades.yearCnt}"}
+        infoFile{"HTML Hash: ${webGrades.htmlHash}"}
+        infoFile { "The new table looks like this:" }
+        infoFile { webGrades.toString() }
+        return webGrades
     }
 
     override fun getYearGradesListFromDB(): YearGradesCollectionModel {

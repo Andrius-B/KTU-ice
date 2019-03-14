@@ -4,6 +4,7 @@ import android.content.Context
 import android.icu.text.DateFormat
 import android.os.Build
 import android.util.Log
+import io.realm.log.RealmLog.info
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.*
@@ -16,14 +17,18 @@ class FileIceLoggerImpl(private val context: Context): Logger {
                     DateFormat.getDateTimeInstance().format(Date())
                 } else {
                     "--"
-                };
-                if(level == Log.INFO){
-                    it.write("$now INFO: $message")
-                }else if(level == Log.WARN){
-                    it.write("$now DEBUG: $message")
-                }else if(level == Log.DEBUG){
-                    it.write("$now DEBUG: $message")
                 }
+                val logLine: String = if(level == Log.INFO){
+                    "$now INFO: $message"
+                }else if(level == Log.WARN){
+                    "$now DEBUG: $message"
+                }else if(level == Log.DEBUG){
+                    "$now DEBUG: $message"
+                }else{
+                    throw IllegalArgumentException("Invalid log level given to FileIceLoggerImpl!")
+                }
+                it.write(logLine)
+                Log.i("FileLogger/INFO", logLine)
             }
         }
     }

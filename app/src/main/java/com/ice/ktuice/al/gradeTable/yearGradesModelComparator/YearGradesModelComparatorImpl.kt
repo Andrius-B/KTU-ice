@@ -1,7 +1,6 @@
 package com.ice.ktuice.al.gradeTable.yearGradesModelComparator
 
 import com.ice.ktuice.al.logger.IceLog
-import com.ice.ktuice.al.logger.info
 import com.ice.ktuice.al.logger.infoFile
 import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.models.YearGradesModel
@@ -53,7 +52,7 @@ class YearGradesModelComparatorImpl: YearGradesModelComparator, IceLog {
             }
         }
 
-        infoFile("Differences total differences: ${diff.size}")
+        infoFile("Total differences: ${diff.size}")
         if(diff.size > 0){
             infoFile("Initial year:")
             infoFile(previous.toString())
@@ -67,12 +66,12 @@ class YearGradesModelComparatorImpl: YearGradesModelComparator, IceLog {
         return model.convertToGradeList().size
     }
 
-    override fun compare(previuos: YearGradesCollectionModel, new: YearGradesCollectionModel): List<Difference> {
+    override fun compare(previous: YearGradesCollectionModel, new: YearGradesCollectionModel): List<Difference> {
         val totalDifference = mutableListOf<Difference>()
 
         new.yearList.forEach {
             val freshYear = it
-            val previousYear = previuos.find { it.year.equals(freshYear.year) }
+            val previousYear = previous.find { it.year.equals(freshYear.year) }
             if(previousYear != null) {
                 val newDiff = compare(previousYear, freshYear)
                 totalDifference.addAll(newDiff)

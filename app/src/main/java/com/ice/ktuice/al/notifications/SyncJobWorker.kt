@@ -5,6 +5,8 @@ import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.ice.ktuice.R
+import com.ice.ktuice.al.logger.IceLog
+import com.ice.ktuice.al.logger.infoFile
 import com.ice.ktuice.al.settings.AppSettings
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -16,16 +18,18 @@ import org.koin.standalone.inject
  * A job service to be used for polling the KTU AIS about whether there are any new grades
  * Note: I moved all of the work to a separate class (SyncJob), for easier testing.
  */
-class SyncJobWorker(context : Context, params : WorkerParameters): Worker(context, params), KoinComponent, AnkoLogger {
+class SyncJobWorker(context : Context, params : WorkerParameters): Worker(context, params), KoinComponent, IceLog {
     private val syncJob = SyncJob()
     override fun doWork(): Result {
+        infoFile("Starting SyncJobWorker")
         val notificationsEnabled = inputData.getInt(applicationContext.resources.getString(R.string.notification_enabled_flag), 1)
         try{
             syncJob.sync(notificationsEnabled)
         }catch (nullPtrException: NullPointerException){
-            info("Sync task failed..")
+            infoFile { "Sync task failed.." }
             return ListenableWorker.Result.failure()
         }
+        infoFile("Sync worker done!")
         return  ListenableWorker.Result.success()
     }
 }

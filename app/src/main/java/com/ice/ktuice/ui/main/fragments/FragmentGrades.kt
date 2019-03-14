@@ -117,13 +117,13 @@ class FragmentGrades: Fragment(), KoinComponent, IceLog {
                     .setInputData(dataToWorker)
                     .addTag(notificationWorkTag)
                     .build()
-            wm.enqueueUniquePeriodicWork(resources.getString(R.string.notification_work_name), ExistingPeriodicWorkPolicy.KEEP, periodicSyncWork)
+            wm.enqueueUniquePeriodicWork(resources.getString(R.string.notification_work_name), ExistingPeriodicWorkPolicy.REPLACE, periodicSyncWork)
             //TODO move period time to configuration, not inline
         }
         else{
             infoFile("Starting one time sync!")
             doAsync {
-                syncJob.sync(notificationFlag)
+                syncJob.sync(1)
             }
         }
     }

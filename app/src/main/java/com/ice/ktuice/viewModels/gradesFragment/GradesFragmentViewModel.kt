@@ -35,9 +35,9 @@ class GradesFragmentViewModel: ViewModel(), KoinComponent, Disposable{
     val loginModel: LiveData<LoginModel>
         get() = mLoginModel
 
-    private val mGrades = MutableLiveData<YearGradesCollectionModel>()
+    private val gradesData = MutableLiveData<YearGradesCollectionModel>()
     val grades: LiveData<YearGradesCollectionModel>
-        get() = mGrades
+        get() = gradesData
 
     val selectedYear = MutableLiveData<String>()
     val selectedSemesterNumber = MutableLiveData<String>()
@@ -54,9 +54,9 @@ class GradesFragmentViewModel: ViewModel(), KoinComponent, Disposable{
         val loginModelValue = userService.getLoginForCurrentUser()!!
         mLoginModel.postValue(loginModelValue)
 
-        val yearGrades = yearGradesService.getYearGradesList()
+        val yearGrades = yearGradesService.getYearGradesListSubject()
         yearGradesSubjectDisposable = yearGrades.subscribe{
-            mGrades.postValue(it)
+            gradesData.postValue(it)
         }
     }
 
