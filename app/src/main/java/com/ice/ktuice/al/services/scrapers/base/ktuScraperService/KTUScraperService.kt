@@ -1,17 +1,17 @@
-package com.ice.ktuice.al.services.scraperService.ktuScraperService
+package com.ice.ktuice.al.services.scrapers.base.ktuScraperService
 
-import com.ice.ktuice.al.services.scraperService.ktuScraperService.handlers.DataHandler
-import com.ice.ktuice.al.services.scraperService.ktuScraperService.handlers.LoginHandler
+import com.ice.ktuice.al.services.scrapers.base.ktuScraperService.handlers.DataHandler
+import com.ice.ktuice.al.services.scrapers.base.ktuScraperService.handlers.LoginHandler
 import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.models.YearGradesModel
 import com.ice.ktuice.models.YearModel
-import com.ice.ktuice.models.responses.LoginResponse
+import com.ice.ktuice.models.responses.LoginResponseModel
 import com.ice.ktuice.models.responses.YearGradesResponseModel
-import com.ice.ktuice.al.services.scraperService.ScraperService
-import com.ice.ktuice.al.services.scraperService.exceptions.AuthenticationException
-import com.ice.ktuice.al.services.scraperService.exceptions.ParsingException
-import com.ice.ktuice.al.services.scraperService.exceptions.ServerErrorException
+import com.ice.ktuice.al.services.scrapers.base.ScraperService
+import com.ice.ktuice.al.services.scrapers.base.exceptions.AuthenticationException
+import com.ice.ktuice.al.services.scrapers.base.exceptions.ParsingException
+import com.ice.ktuice.al.services.scrapers.base.exceptions.ServerErrorException
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 
@@ -54,7 +54,7 @@ class  KTUScraperService: ScraperService, AnkoLogger{
         return grades
     }
 
-    override fun refreshLoginCookies(login: LoginModel): LoginResponse {
+    override fun refreshLoginCookies(login: LoginModel): LoginResponseModel {
         return login(login.username, login.password)
     }
 

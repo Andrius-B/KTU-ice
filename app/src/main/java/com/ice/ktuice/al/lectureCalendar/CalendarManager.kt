@@ -2,7 +2,8 @@ package com.ice.ktuice.al.lectureCalendar
 
 import com.ice.ktuice.DAL.repositories.calendarRepository.CalendarRepositoryImpl
 import com.ice.ktuice.models.lectureCalendarModels.CalendarModel
-import com.ice.ktuice.al.services.scraperService.ktuScraperService.handlers.CalendarHandler
+import com.ice.ktuice.al.services.scrapers.calendar.CalendarHandler
+import com.ice.ktuice.al.services.scrapers.calendar.CalendarScraper
 import com.ice.ktuice.al.services.userService.UserService
 import io.reactivex.subjects.ReplaySubject
 import io.reactivex.subjects.Subject
@@ -19,10 +20,11 @@ import java.util.*
 class CalendarManager: KoinComponent, AnkoLogger {
     private val calendarRepository = CalendarRepositoryImpl()
     private val userService: UserService by inject()
+    private val calendarScraper: CalendarScraper by inject()
 
     private fun getCalendarEventsModelFromWeb(): CalendarModel{
         val login = userService.getLoginForCurrentUser()!!
-        val calendar = CalendarHandler.getCalendar(login)
+        val calendar = calendarScraper.getCalendar(login)
         return calendar
     }
 

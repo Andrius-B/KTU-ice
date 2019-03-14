@@ -1,4 +1,4 @@
-package com.ice.ktuice.al.services.scraperService.ktuScraperService.handlers
+package com.ice.ktuice.al.services.scrapers.calendar
 
 import biweekly.Biweekly
 import biweekly.ICalendar
@@ -9,7 +9,7 @@ import org.jsoup.Connection
 import org.jsoup.Jsoup
 /**
  * Created by Andrius on 2/23/2018.
- * Fetches the upcoming events from KTU AIS,
+ * Fetches the upcoming events (lectures) from KTU AIS,
  * NOTE: This service does not require authentication, other than the student vidko
  */
 class CalendarHandler{

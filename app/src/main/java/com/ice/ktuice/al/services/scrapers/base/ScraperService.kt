@@ -1,12 +1,12 @@
-package com.ice.ktuice.al.services.scraperService
+package com.ice.ktuice.al.services.scrapers.base
 
 import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.models.YearGradesModel
 import com.ice.ktuice.models.YearModel
-import com.ice.ktuice.models.responses.LoginResponse
-import com.ice.ktuice.al.services.scraperService.exceptions.AuthenticationException
-import com.ice.ktuice.al.services.scraperService.exceptions.ServerErrorException
+import com.ice.ktuice.models.responses.LoginResponseModel
+import com.ice.ktuice.al.services.scrapers.base.exceptions.AuthenticationException
+import com.ice.ktuice.al.services.scrapers.base.exceptions.ServerErrorException
 
 interface ScraperService {
     /**
@@ -14,7 +14,7 @@ interface ScraperService {
      * and general information about a student
      * @return Authentication cookies and user info
      */
-    fun login(username: String, password: String): LoginResponse
+    fun login(username: String, password: String): LoginResponseModel
 
     /**
      * Gets all marks for requested year.
@@ -44,5 +44,5 @@ interface ScraperService {
      * the cookies are expired and tries to refresh the cookies at least once)
      * works exactly as the login() function, just for convenience
      */
-    fun refreshLoginCookies(login: LoginModel): LoginResponse
+    fun refreshLoginCookies(login: LoginModel): LoginResponseModel
 }

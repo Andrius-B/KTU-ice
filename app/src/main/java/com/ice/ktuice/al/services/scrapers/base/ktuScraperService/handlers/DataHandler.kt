@@ -1,9 +1,9 @@
-package com.ice.ktuice.al.services.scraperService.ktuScraperService.handlers
+package com.ice.ktuice.al.services.scrapers.base.ktuScraperService.handlers
 
 import com.ice.ktuice.models.*
 import com.ice.ktuice.models.responses.ModuleResponseModel
 import com.ice.ktuice.models.responses.YearGradesResponseModel
-import com.ice.ktuice.al.services.scraperService.exceptions.AuthenticationException
+import com.ice.ktuice.al.services.scrapers.base.exceptions.AuthenticationException
 import io.realm.RealmList
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
