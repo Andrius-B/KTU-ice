@@ -11,4 +11,5 @@
     <string name="networking_enabled_key">com.ice.ktu.networking_enabled</string>
     <string name="notification_work_tag">com.ice.ktu.notification_work_tag</string>
     <string name="notification_work_name">com.ice.ktu.notification_work_name</string>
+    <string name="grade_scraper_retries">com.ice.ktu.grade_scraper_retries</string>
 </resources>

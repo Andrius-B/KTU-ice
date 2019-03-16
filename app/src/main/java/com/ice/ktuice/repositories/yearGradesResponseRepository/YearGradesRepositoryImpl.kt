@@ -1,7 +1,6 @@
-package com.ice.ktuice.DAL.repositories.gradeResponseRepository
+package com.ice.ktuice.repositories.yearGradesResponseRepository
 
 import com.ice.ktuice.models.YearGradesCollectionModel
-import com.ice.ktuice.repositories.yearGradesResponseRepository.YearGradesRepository
 import io.realm.Realm
 import io.realm.RealmModel
 

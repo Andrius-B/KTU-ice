@@ -6,7 +6,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.content.Intent
 import android.support.v4.content.ContextCompat.startActivity
-import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
+import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
 import com.ice.ktuice.al.services.userService.UserService
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
@@ -25,7 +25,7 @@ import org.koin.standalone.inject
 class GradesFragmentViewModel: ViewModel(), KoinComponent, Disposable{
     private val userService: UserService by inject()
     private val yearGradesService: YearGradesService by inject()
-    private val preferenceRepository:PreferenceRepository by inject()
+    private val preferenceRepository: PreferenceRepository by inject()
 
     /**
      * Private mutable versions with the m* prefix and public

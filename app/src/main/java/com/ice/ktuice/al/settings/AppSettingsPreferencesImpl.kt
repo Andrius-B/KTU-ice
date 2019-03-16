@@ -1,10 +1,9 @@
 package com.ice.ktuice.al.settings
 
 import android.content.Context
-import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
+import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
 import io.realm.log.RealmLog.warn
-import org.jetbrains.anko.warn
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
@@ -31,13 +30,7 @@ class AppSettingsPreferencesImpl(private val context: Context): AppSettings, Koi
 
     override var gradeNotificationsEnabled: Boolean
         get(){
-            try{
-                return preferenceRepository.getValue(context.getString(R.string.grade_notifications_enabled)).toBoolean()
-            }catch (e: NumberFormatException){
-                warn("Wrong preference variable set! Resetting..")
-                preferenceRepository.setValue(context.getString(R.string.grade_notifications_enabled), true.toString())
-            }
-            return true
+            return getValue(R.string.grade_notifications_enabled, true);
         }
         set(value){
             preferenceRepository.setValue(context.getString(R.string.grade_notifications_enabled), value.toString())
@@ -56,4 +49,14 @@ class AppSettingsPreferencesImpl(private val context: Context): AppSettings, Koi
         set(value){
             preferenceRepository.setValue(context.getString(R.string.networking_enabled_key), value.toString())
         }
+
+    private fun <T>getValue(key_string_id: Int, default: T): T{
+        try{
+            return (preferenceRepository.getValue(context.getString(key_string_id)) to default).second
+        }catch (e: NumberFormatException){
+            warn("Wrong preferenceVariable set! Resetting..")
+            preferenceRepository.setValue(context.getString(R.string.networking_enabled_key), default.toString())
+        }
+        return default
+    }
 }

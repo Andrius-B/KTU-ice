@@ -54,7 +54,7 @@ class FragmentSettings: Fragment(), KoinComponent, AnkoLogger{
                 info{"Log file collected since last onCreate:"}
                 reader.printFile(filename)
                 context?.deleteFile(filename)
-                info{"Log file cleared!"}
+                info{"Log file cleared! does it still exist: ${context?.fileList()?.contains(filename)}"}
             }
         }
 

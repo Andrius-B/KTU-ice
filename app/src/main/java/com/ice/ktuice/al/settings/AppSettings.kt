@@ -20,4 +20,5 @@ interface AppSettings {
      *      to be able to use the web interface without getting logged out.
      */
     var networkingEnabled: Boolean
+
 }

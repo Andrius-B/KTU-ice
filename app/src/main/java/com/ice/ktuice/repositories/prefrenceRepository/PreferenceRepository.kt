@@ -1,4 +1,4 @@
-package com.ice.ktuice.DAL.repositories.prefrenceRepository
+package com.ice.ktuice.repositories.prefrenceRepository
 
 /**
  * Created by Andrius on 1/31/2018.

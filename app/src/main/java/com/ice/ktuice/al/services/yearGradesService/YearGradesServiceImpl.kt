@@ -1,5 +1,7 @@
 package com.ice.ktuice.al.services.yearGradesService
 
+import com.ice.ktuice.R
+import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.al.logger.IceLog
 import com.ice.ktuice.al.logger.info
 import com.ice.ktuice.al.logger.infoFile
@@ -25,6 +27,7 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent, IceLog {
     private val yearGradesRepository: YearGradesRepository by inject()
     private val userService: UserService by inject()
     private val scraperService: ScraperService by inject()
+    private val preferenceRepository: PreferenceRepository by inject()
     /**
      * This variable keeps the current state of the service
      */
@@ -59,7 +62,6 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent, IceLog {
         return currentSubject
     }
 
-
     override fun getYearGradesListFromWeb(): YearGradesCollectionModel {
         val login = userService.getLoginForCurrentUser()!!
         val currentGrades = getYearGradesListFromDB()
@@ -74,6 +76,14 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent, IceLog {
             currentSubject.onNext(webGrades)
         }catch (e : AuthenticationException){
             userService.refreshLoginCookies()
+            val refreshRetries = preferenceRepository.getValue(R.string.grade_scraper_retries).toIntOrNull() ?: 0
+            preferenceRepository.setValue(R.string.grade_scraper_retries, (refreshRetries + 1).toString())
+
+            if(refreshRetries >= 3){
+                infoFile { "Crash due to repeatedly failing authentication" }
+                throw AuthenticationException("Authentication failed after $refreshRetries requests!", e)
+            }
+
             infoFile{ "Fetching grades from web after cookie refresh" }
             return getYearGradesListFromWeb()
         }catch (e: Exception){

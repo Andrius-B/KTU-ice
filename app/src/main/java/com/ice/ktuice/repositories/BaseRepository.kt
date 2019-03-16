@@ -1,4 +1,4 @@
-package com.ice.ktuice.DAL.repositories
+package com.ice.ktuice.repositories
 
 import io.realm.Realm
 import io.realm.RealmObject

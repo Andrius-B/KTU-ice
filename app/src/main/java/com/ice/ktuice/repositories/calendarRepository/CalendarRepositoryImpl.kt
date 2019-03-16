@@ -1,4 +1,4 @@
-package com.ice.ktuice.DAL.repositories.calendarRepository
+package com.ice.ktuice.repositories.calendarRepository
 
 import com.ice.ktuice.models.lectureCalendarModels.CalendarModel
 import io.realm.Realm
