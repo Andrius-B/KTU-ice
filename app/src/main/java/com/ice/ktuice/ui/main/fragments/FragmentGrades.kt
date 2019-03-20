@@ -117,11 +117,11 @@ class FragmentGrades: Fragment(), KoinComponent, IceLog {
             infoFile("Queueing periodic sync!")
             val notificationWorkTag = resources.getString(R.string.notification_work_tag)
 
-            val periodicSyncWork = PeriodicWorkRequestBuilder<SyncJobWorker>(3, TimeUnit.HOURS)
+            val periodicSyncWork = PeriodicWorkRequestBuilder<SyncJobWorker>(1, TimeUnit.HOURS)
                     .setInputData(dataToWorker)
                     .addTag(notificationWorkTag)
                     .build()
-            wm.enqueueUniquePeriodicWork(resources.getString(R.string.notification_work_name), ExistingPeriodicWorkPolicy.REPLACE, periodicSyncWork)
+            wm.enqueueUniquePeriodicWork(resources.getString(R.string.notification_work_name), ExistingPeriodicWorkPolicy.KEEP, periodicSyncWork)
             //TODO move period time to configuration, not inline
         }
         else{

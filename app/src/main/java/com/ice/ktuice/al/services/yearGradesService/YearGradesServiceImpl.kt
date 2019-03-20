@@ -84,7 +84,7 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent, IceLog {
                 throw AuthenticationException("Authentication failed after $refreshRetries requests!", e)
             }
 
-            infoFile{ "Fetching grades from web after cookie refresh" }
+            infoFile{ "Fetching grades from web after cookie refresh (attempt #${refreshRetries + 1})" }
             return getYearGradesListFromWeb()
         }catch (e: Exception){
             throw e
@@ -118,13 +118,6 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent, IceLog {
                 infoFile{"Semester count expected: ${dbGrades.semesterCnt} -> actual ${validationInfo.semesterCnt}"}
                 infoFile{"Year count expected: ${dbGrades.yearCnt} -> actual ${validationInfo.yearCnt}"}
                 infoFile{"HTML Hash expected: ${dbGrades.htmlHash} -> actual ${validationInfo.htmlHash}"}
-            }else{
-                infoFile{"YearGradesCollectionModel fetched from database:"}
-                infoFile{"Mark count: ${dbGrades.markCnt}"}
-                infoFile{"Module count: ${dbGrades.moduleCnt}"}
-                infoFile{"Semester count: ${dbGrades.semesterCnt}"}
-                infoFile{"Year count: ${dbGrades.yearCnt}"}
-                infoFile{"HTML Hash: ${dbGrades.htmlHash}"}
             }
         }
         return dbGrades

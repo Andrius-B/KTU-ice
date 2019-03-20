@@ -29,6 +29,7 @@ class SyncJob: KoinComponent, IceLog {
         if(!settings.networkingEnabled) return // break out before syncing if networking is disabled
         val webYear: YearGradesCollectionModel? = yearGradesService.getYearGradesListFromWeb()
         //notifications are enabled if not specified otherwise in the extras!
+        infoFile { "Grades fetched from web" }
         if(dbYear != null && webYear != null && notificationsEnabled > 0){
             val totalDifference = mutableListOf<Difference>()
 
