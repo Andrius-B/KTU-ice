@@ -8,6 +8,7 @@ import com.ice.ktuice.al.notifications.SyncJob
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.al.settings.AppSettings
 import com.ice.ktuice.al.settings.AppSettingsTestImpl
+import org.junit.After
 import org.junit.Test
 import org.koin.dsl.module.Module
 import org.koin.dsl.module.applicationContext
@@ -17,12 +18,23 @@ import org.koin.test.KoinTest
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import org.mockito.Mockito.*
+import java.lang.Exception
 import java.lang.Thread.sleep
 
 /**
  * Created by Andrius on 3/14/2018.
  */
 class SyncJobServiceNotificationTest: KoinTest{
+
+    @After
+    fun cleanup(){
+        try {
+            closeKoin()
+        }catch (e: Exception){
+            println(e.message)
+        }
+    }
+
     /**
      * Tests the sync job service with a mocked service, for
      * if there are no notifications thrown when both the

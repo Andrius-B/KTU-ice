@@ -10,6 +10,7 @@ import com.ice.ktuice.models.GradeModel
 import com.ice.ktuice.models.YearGradesCollectionModel
 import junit.framework.Assert.assertNotNull
 import junit.framework.Assert.assertTrue
+import org.junit.After
 import org.junit.Test
 import org.koin.dsl.module.Module
 import org.koin.dsl.module.applicationContext
@@ -19,12 +20,22 @@ import org.koin.standalone.inject
 import org.koin.test.KoinTest
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import java.lang.Exception
 
 /**
  * Created by Andrius on 3/13/2018.
  * Testing the year collection comparator
  */
 class YearGradesComparatorTest: KoinTest {
+
+    @After
+    fun cleanup(){
+        try {
+            closeKoin()
+        }catch (e: Exception){
+            println(e.message)
+        }
+    }
 
     /**
      * Test if the correct comparison is made for the case,

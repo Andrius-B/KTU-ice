@@ -5,6 +5,10 @@ import com.ice.ktuice.al.services.scrapers.base.exceptions.AuthenticationExcepti
 import com.ice.ktuice.al.services.scrapers.base.ktuScraperService.KTUScraperService
 import com.ice.ktuice.impl.FileLoginProvider
 import com.ice.ktuice.models.Cookie
+import com.ice.ktuice.models.LoginModel
+import com.ice.ktuice.models.YearGradesCollectionModel
+import com.ice.ktuice.models.YearModel
+import io.realm.RealmList
 import org.jetbrains.anko.getStackTraceString
 import org.junit.After
 import org.junit.Before
@@ -39,6 +43,7 @@ class KTUScraperTest: KoinTest{
         password = l.second
         startKoin(listOf(scraperModule))
     }
+
     @After
     fun cleanup(){
         closeKoin()
@@ -127,11 +132,13 @@ class KTUScraperTest: KoinTest{
                 )
         )
         var authExceptionThrown = false
+        var grades: YearGradesCollectionModel? = null
         try {
-            val grades = scraperService.getAllGrades(loginModel)
+            grades = scraperService.getAllGrades(loginModel)
         }catch (e : AuthenticationException){
             authExceptionThrown = true
         }
         assert(authExceptionThrown)
+        assert(grades == null)
     }
 }
