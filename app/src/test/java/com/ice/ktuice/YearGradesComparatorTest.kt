@@ -8,6 +8,7 @@ import com.ice.ktuice.al.gradeTable.yearGradesModelComparator.YearGradesModelCom
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.models.GradeModel
 import com.ice.ktuice.models.YearGradesCollectionModel
+import junit.framework.Assert.assertNotNull
 import junit.framework.Assert.assertTrue
 import org.junit.Test
 import org.koin.dsl.module.Module
@@ -24,7 +25,6 @@ import org.mockito.Mockito.mock
  * Testing the year collection comparator
  */
 class YearGradesComparatorTest: KoinTest {
-    lateinit var defaultYearCollection: YearGradesCollectionModel
 
     /**
      * Test if the correct comparison is made for the case,
@@ -60,6 +60,7 @@ class YearGradesComparatorTest: KoinTest {
      */
     @Test
     fun `One new mark added`(){
+
         val defaultGradeCollection= createDefaultYearGradesCollection()
         val defaultGradeCollectionWithAddedGrade = addMark(defaultGradeCollection)
 
@@ -72,6 +73,7 @@ class YearGradesComparatorTest: KoinTest {
             provide { serviceMock as YearGradesService }
         }
         startKoin(listOf(module))
+
         val service by inject<YearGradesService>()
         val comparator by inject<YearGradesModelComparator>()
 
@@ -80,13 +82,13 @@ class YearGradesComparatorTest: KoinTest {
 
         val differences = comparator.compare(db.yearList.last()!!, new.yearList.last()!!)
 
-        closeKoin()
-
         assertTrue(differences.size == 1)
-        assertTrue(differences.find { it.field == Difference.Field.Grade &&
-                                  it.change == Difference.FieldChange.Added &&
-                                  it.supplementary!!.javaClass == GradeModel::class.java
-                                  } != null)
+        val change = differences.firstOrNull()
+        assertNotNull(change)
+        assertTrue( change!!.field == Difference.Field.Grade &&
+                    change.change == Difference.FieldChange.Added &&
+                    change.supplementary!!.javaClass == GradeModel::class.java)
+        closeKoin()
     }
 
     /**

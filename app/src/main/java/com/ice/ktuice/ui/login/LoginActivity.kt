@@ -88,7 +88,7 @@ class LoginActivity: AppCompatActivity(), AnkoLogger {
                             info("Login successful! " + loginModel.studentName)
                         }
                     }catch (e: Exception){
-                        info("Exception while making the login requests!:"+e)
+                        info("Exception while making the login requests!:$e")
                         setErrorDisplay(e.toString(), true)
                         info(e.getStackTraceString())
                         setLoadingVisible(false)

@@ -48,7 +48,9 @@ dependencies {
     implementation 'net.sf.biweekly:biweekly:0.6.1'
     implementation 'com.android.support:design:28.0.0'
     //rxJava for submitting the models to views
-    implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
+    implementation "io.reactivex.rxjava2:rxjava:2.2.8"
+    implementation "io.reactivex.rxjava2:rxkotlin:2.3.0"
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
@@ -63,7 +65,7 @@ dependencies {
     implementation project(':week-view-lib')
 
     // the new WorkManager API
-    def work_version = "1.0.0-beta05"
+    def work_version = "1.0.1"
 
     implementation "android.arch.work:work-runtime-ktx:$work_version" // use -ktx for Kotlin
 

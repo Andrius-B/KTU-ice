@@ -24,8 +24,8 @@ class SyncJobWorker(context : Context, params : WorkerParameters): Worker(contex
             syncJob.sync(notificationsEnabled)
         }catch (nullPtrException: NullPointerException){
             info("Sync task failed..")
-            return ListenableWorker.Result.failure()
+            return Result.failure()
         }
-        return  ListenableWorker.Result.success()
+        return  Result.success()
     }
 }
