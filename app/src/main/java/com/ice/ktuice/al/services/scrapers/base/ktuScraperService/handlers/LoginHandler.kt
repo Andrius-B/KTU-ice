@@ -7,6 +7,8 @@ import io.realm.RealmList
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 
+// TODO Fix substring thingy
+// ookies librarry
 class LoginHandler: BaseHandler() {
 
     fun getAuthCookies(username: String, password: String): LoginResponseModel {
@@ -79,11 +81,13 @@ class LoginHandler: BaseHandler() {
         val parse = request.parse()
         val inputList = parse.select("input")
         val filteredInputList = inputList.firstOrNull { it.attr("name") == "StateId" }
-        if (filteredInputList != null) {
-            val stateId = filteredInputList.attr("value")
-            return PostLoginResponse(stateId, request.cookies() + autoLoginResponse.cookies, request.statusCode())
-        }
-        return PostLoginResponse(null, null, request.statusCode())
+        val stateId = parse.baseUri().substring(79).split('&')[0]
+        //if (filteredInputList != null) {
+            //val stateId = filteredInputList.attr("value")
+        return PostLoginResponse(stateId, request.cookies() + autoLoginResponse.cookies, request.statusCode())
+        //}
+        //return PostLoginResponse(null, null, request.statusCode())
+        //return PostLoginResponse(null, request.cookies() + autoLoginResponse.cookies, request.statusCode())
     }
 
     private fun getAgree(postLoginResponse: PostLoginResponse): AgreeResponse {
@@ -91,12 +95,15 @@ class LoginHandler: BaseHandler() {
                 "StateId=${postLoginResponse.stateId}&" +
                 "yes=Yes%2C%20continue%0D%0A&" +
                 "saveconsent=1"
+        println("geragree works")
         val request = Jsoup.connect(url)
                 .method(Connection.Method.GET)
                 .cookies(postLoginResponse.cookies)
                 .execute()
-
+        println(request.body())
         val parse = request.parse()
+        println("----------")
+        println(parse.body())
         val inputList = parse.select("input")
         val samlResponse = inputList.first { it.attr("name") == "SAMLResponse" }.attr("value")
         val relayState = inputList.first { it.attr("name") == "RelayState" }.attr("value")
