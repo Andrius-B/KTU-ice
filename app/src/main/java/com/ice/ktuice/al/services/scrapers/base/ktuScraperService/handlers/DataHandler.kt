@@ -1,19 +1,19 @@
 package com.ice.ktuice.al.services.scrapers.base.ktuScraperService.handlers
 
+import com.ice.ktuice.al.logger.IceLog
+import com.ice.ktuice.al.logger.info
 import com.ice.ktuice.models.*
 import com.ice.ktuice.models.responses.ModuleResponseModel
 import com.ice.ktuice.models.responses.YearGradesResponseModel
 import com.ice.ktuice.al.services.scrapers.base.exceptions.AuthenticationException
 import io.realm.RealmList
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.util.*
 
 class DataHandler {
-    companion object: AnkoLogger{
+    companion object: IceLog{
         fun getGrades(loginModel: LoginModel, planYear: YearModel)
                 = getGrades(loginModel, planYear.year, planYear.id)
 
@@ -89,7 +89,8 @@ class DataHandler {
                     .method(Connection.Method.POST)
                     .data(mapOf(
                             "p1" to moduleModel.p1,
-                            "p2" to moduleModel.p2
+                            "p2" to moduleModel.p2,
+                            "p3" to moduleModel.p3
                     ))
                     .execute()
 

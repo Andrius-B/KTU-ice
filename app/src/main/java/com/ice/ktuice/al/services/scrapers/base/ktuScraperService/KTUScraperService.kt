@@ -1,5 +1,7 @@
 package com.ice.ktuice.al.services.scrapers.base.ktuScraperService
 
+import com.ice.ktuice.al.logger.IceLog
+import com.ice.ktuice.al.logger.info
 import com.ice.ktuice.al.services.scrapers.base.ktuScraperService.handlers.DataHandler
 import com.ice.ktuice.al.services.scrapers.base.ktuScraperService.handlers.LoginHandler
 import com.ice.ktuice.models.LoginModel
@@ -16,7 +18,7 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 
 
-class  KTUScraperService: ScraperService, AnkoLogger{
+class  KTUScraperService: ScraperService, IceLog{
 
     override fun login(username: String, password: String)
             = LoginHandler().getAuthCookies(username, password)
@@ -49,6 +51,7 @@ class  KTUScraperService: ScraperService, AnkoLogger{
                 val yearModel = getGrades(loginModel, it)
                 grades.add(yearModel)
             }catch (parsingException: ParsingException){
+                info("Parsing exception while fetching grades:${parsingException.localizedMessage}\n${parsingException.stackTrace}")
             }
         }
         return grades

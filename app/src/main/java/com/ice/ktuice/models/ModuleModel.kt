@@ -21,8 +21,9 @@ open class ModuleModel(
         var credits: String = "",
         var language: String = "",
         var misc: String = "",
-        var p1: String? = "", // aka p1
-        var p2: String? = "", // aka p2
+        var p1: String? = "",
+        var p2: String? = "",
+        var p3: String? = "",
         var grades: RealmList<GradeModel> = RealmList()
 ):RealmObject() {
 
@@ -36,7 +37,8 @@ open class ModuleModel(
             misc = getMisc(element),
             p1 = getP1(element),
             p2 = getP2(element),
-            grades = RealmList()
+            p3 = getP3(element),
+            grades = RealmList<GradeModel>()
     )
 
     //since the model information is embedded into the mark model, this constructor makes sense.
@@ -79,22 +81,32 @@ open class ModuleModel(
         private fun getMisc(e: Element)
                 = e.children().eq(5).text()
 
-        private fun getP1(e: Element): String? {
-            val jsFunction = e.children().getOrNull(5)?.children()?.first()?.attr("onclick")
-            if (jsFunction != null) {
-                val split = "([0-9]*)(?:,')(.*)(?:'\\);)".toRegex().find(jsFunction)
-                return split?.groupValues?.getOrNull(1)
+        private fun getInfivertJsFunction(e: Element)
+                = e.children().getOrNull(5)?.children()?.first()?.attr("onclick")
+
+        private fun getInfivertJsFunctionArgument(jsFunction: String?, index: Int): String? {
+            if(jsFunction != null) {
+                val arguments = """\(.*\)""".toRegex().find(jsFunction)?.value?.removeSurrounding("(", ")")?.split(',')
+                return removeChars(arguments?.get(index), "\'\"")
             }
             return null
         }
 
-        private fun getP2(e: Element): String? {
-            val jsFunction = e.children().getOrNull(5)?.children()?.first()?.attr("onclick")
-            if (jsFunction != null) {
-                val split = "([0-9]*)(?:,')(.*)(?:'\\);)".toRegex().find(jsFunction)
-                return split?.groupValues?.getOrNull(2)
+        private fun getP1(e: Element)
+                = getInfivertJsFunctionArgument(getInfivertJsFunction(e), 0)
+
+        private fun getP2(e: Element)
+                = getInfivertJsFunctionArgument(getInfivertJsFunction(e), 1)
+
+        private fun getP3(e: Element)
+                = getInfivertJsFunctionArgument(getInfivertJsFunction(e), 2)
+
+        private fun removeChars(target: String?, chars: String): String? {
+            var result = target
+            for(c in chars){
+                result = result?.replace(c.toString(), "")
             }
-            return null
+            return result
         }
     }
 }
