@@ -1,4 +1,4 @@
-package com.ice.ktuice.DAL.repositories.loginRepository
+package com.ice.ktuice.repositories.loginRepository
 
 import com.ice.ktuice.models.LoginModel
 

@@ -80,4 +80,13 @@ open class YearGradesCollectionModel(): RealmObject(){
     fun find (action: (YearGradesModel) -> Boolean): YearGradesModel? {
         return yearList.find(action)
     }
+
+    override fun toString(): String{
+        var res = ""
+        forEach {
+            res += "Year: ${it.year.year}\n"
+            res += it.toString()
+        }
+        return res
+    }
 }

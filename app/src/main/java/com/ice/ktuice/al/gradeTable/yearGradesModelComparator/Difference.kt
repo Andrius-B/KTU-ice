@@ -6,5 +6,5 @@ package com.ice.ktuice.al.gradeTable.yearGradesModelComparator
  */
 class Difference(val field: Field, val change: FieldChange, val supplementary: Any? = null){
     enum class FieldChange{ Added, Removed, Changed }
-    enum class Field { Semester, Grade }
+    enum class Field { Semester, Grade, Module }
 }

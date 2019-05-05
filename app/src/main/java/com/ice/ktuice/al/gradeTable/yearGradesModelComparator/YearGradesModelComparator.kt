@@ -9,5 +9,5 @@ import com.ice.ktuice.models.YearGradesModel
 interface YearGradesModelComparator {
     fun compare(previous: YearGradesModel, new:YearGradesModel): List<Difference>
 
-    fun compare(previuos: YearGradesCollectionModel, new: YearGradesCollectionModel): List<Difference>
+    fun compare(previous: YearGradesCollectionModel, new: YearGradesCollectionModel): List<Difference>
 }

@@ -7,7 +7,7 @@ import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
+import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
 import com.ice.ktuice.al.gradeTable.GradeTableManager
 import com.ice.ktuice.al.gradeTable.gradeTableModels.GradeTableModel
@@ -99,7 +99,7 @@ class GradeTable(
             /**If there are no changes to the data,
              * Updating the view is pointless, so shortcircuit this
              */
-            return@updateGradeTable
+            return
         }
         if(grade_table_semester_spinner.adapter == null){
             //construct table spinner on initial widget construction

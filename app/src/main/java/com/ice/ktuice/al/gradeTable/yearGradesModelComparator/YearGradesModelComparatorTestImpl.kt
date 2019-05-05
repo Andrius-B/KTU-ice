@@ -9,7 +9,7 @@ import com.ice.ktuice.models.YearGradesModel
  * Used for testing out notifications, always reports a new grade to be added
  */
 class YearGradesModelComparatorTestImpl: YearGradesModelComparator{
-    override fun compare(previuos: YearGradesCollectionModel, new: YearGradesCollectionModel): List<Difference> {
+    override fun compare(previous: YearGradesCollectionModel, new: YearGradesCollectionModel): List<Difference> {
         val diff = mutableListOf<Difference>()
         /**
          * A grade for testing

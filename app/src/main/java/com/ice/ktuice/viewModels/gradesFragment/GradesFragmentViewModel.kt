@@ -6,7 +6,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.content.Intent
 import android.support.v4.content.ContextCompat.startActivity
-import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
+import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
 import com.ice.ktuice.al.services.userService.UserService
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
@@ -25,7 +25,7 @@ import org.koin.standalone.inject
 class GradesFragmentViewModel: ViewModel(), KoinComponent, Disposable{
     private val userService: UserService by inject()
     private val yearGradesService: YearGradesService by inject()
-    private val preferenceRepository:PreferenceRepository by inject()
+    private val preferenceRepository: PreferenceRepository by inject()
 
     /**
      * Private mutable versions with the m* prefix and public
@@ -35,9 +35,9 @@ class GradesFragmentViewModel: ViewModel(), KoinComponent, Disposable{
     val loginModel: LiveData<LoginModel>
         get() = mLoginModel
 
-    private val mGrades = MutableLiveData<YearGradesCollectionModel>()
+    private val gradesData = MutableLiveData<YearGradesCollectionModel>()
     val grades: LiveData<YearGradesCollectionModel>
-        get() = mGrades
+        get() = gradesData
 
     val selectedYear = MutableLiveData<String>()
     val selectedSemesterNumber = MutableLiveData<String>()
@@ -54,9 +54,9 @@ class GradesFragmentViewModel: ViewModel(), KoinComponent, Disposable{
         val loginModelValue = userService.getLoginForCurrentUser()!!
         mLoginModel.postValue(loginModelValue)
 
-        val yearGrades = yearGradesService.getYearGradesList()
+        val yearGrades = yearGradesService.getYearGradesListSubject()
         yearGradesSubjectDisposable = yearGrades.subscribe{
-            mGrades.postValue(it)
+            gradesData.postValue(it)
         }
     }
 

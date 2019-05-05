@@ -1,8 +1,8 @@
-package com.ice.ktuice.DAL.repositories.prefrenceRepository
+package com.ice.ktuice.repositories.prefrenceRepository
 
-import android.annotation.SuppressLint
 import android.content.Context
 import com.ice.ktuice.R
+import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
 
 /**
  * Created by Andrius on 1/31/2018.

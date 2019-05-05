@@ -1,6 +1,6 @@
-package com.ice.ktuice.DAL.repositories.loginRepository
+package com.ice.ktuice.repositories.loginRepository
 
-import com.ice.ktuice.DAL.repositories.BaseRepository
+import com.ice.ktuice.repositories.BaseRepository
 import com.ice.ktuice.models.LoginModel
 import io.realm.Realm
 import org.jetbrains.anko.AnkoLogger
@@ -10,7 +10,7 @@ import org.jetbrains.anko.info
  * Created by Andrius on 1/30/2018.
  * The default loginModel storage for realm
  */
-class LoginRepositoryImpl: BaseRepository<LoginModel>(), LoginRepository , AnkoLogger{
+class LoginRepositoryImpl: BaseRepository<LoginModel>(), LoginRepository, AnkoLogger{
     override fun getWhere(key: String, value: String): LoginModel? {
         val rl = Realm.getDefaultInstance()
         return where<LoginModel>(rl).equalTo(key, value).findFirst() ?: return null

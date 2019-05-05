@@ -1,8 +1,6 @@
 package com.ice.ktuice.al.gradeTable.yearGradesModelComparator
 
 import com.ice.ktuice.al.logger.IceLog
-import com.ice.ktuice.al.logger.info
-import com.ice.ktuice.al.logger.infoFile
 import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.models.YearGradesModel
 
@@ -15,15 +13,8 @@ class YearGradesModelComparatorImpl: YearGradesModelComparator, IceLog {
         val diff = mutableListOf<Difference>()
 
         val sameYear = previous.year.equals(new.year)
-        val semesterCountDifference = new.semesterList.size - previous.semesterList.size
-        val markCountDifference = getMarkCount(new) - getMarkCount(previous)
 
         if(!sameYear)throw IllegalArgumentException("Can not compare YearGradesModels of different years!")
-
-        infoFile(String.format("The years are the same:%s", sameYear))
-        infoFile("Semester count difference $semesterCountDifference")
-        infoFile("Mark count difference $markCountDifference")
-
 
         val newList = new.convertToGradeList()
         val prevList = previous.convertToGradeList()
@@ -38,8 +29,6 @@ class YearGradesModelComparatorImpl: YearGradesModelComparator, IceLog {
                 diff.add(
                     Difference(Difference.Field.Grade, Difference.FieldChange.Added, it)
                 )
-                infoFile("Grade added:")
-                infoFile("New grade: $newGrade")
             }else{
                 val oldGrade = prevList.find{ it.isOnSameDate(newGrade) && newGrade.gradesEqual(it) }
                 if(oldGrade == null){
@@ -47,18 +36,8 @@ class YearGradesModelComparatorImpl: YearGradesModelComparator, IceLog {
                      * Case where there was a mark, and it now is changed
                      */
                     diff.add(Difference(Difference.Field.Grade, Difference.FieldChange.Changed, newGrade))
-                    infoFile("Grade changed:")
-                    infoFile("Change: $oldGrade -> $newGrade")
                 }
             }
-        }
-
-        infoFile("Differences total differences: ${diff.size}")
-        if(diff.size > 0){
-            infoFile("Initial year:")
-            infoFile(previous.toString())
-            infoFile("New year:")
-            infoFile(new.toString())
         }
         return diff
     }
@@ -67,12 +46,12 @@ class YearGradesModelComparatorImpl: YearGradesModelComparator, IceLog {
         return model.convertToGradeList().size
     }
 
-    override fun compare(previuos: YearGradesCollectionModel, new: YearGradesCollectionModel): List<Difference> {
+    override fun compare(previous: YearGradesCollectionModel, new: YearGradesCollectionModel): List<Difference> {
         val totalDifference = mutableListOf<Difference>()
 
         new.yearList.forEach {
             val freshYear = it
-            val previousYear = previuos.find { it.year.equals(freshYear.year) }
+            val previousYear = previous.find { it.year.equals(freshYear.year) }
             if(previousYear != null) {
                 val newDiff = compare(previousYear, freshYear)
                 totalDifference.addAll(newDiff)

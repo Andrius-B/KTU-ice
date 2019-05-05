@@ -4,8 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import com.ice.ktuice.DAL.repositories.loginRepository.LoginRepository
-import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
+import com.ice.ktuice.repositories.loginRepository.LoginRepository
+import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
 import com.ice.ktuice.ui.main.MainActivity
 import com.ice.ktuice.models.LoginModel
@@ -46,7 +46,7 @@ class LoginActivity: AppCompatActivity(), AnkoLogger {
             doAsync {
                 val loginModel = loginFuture.get()
                 if (loginModel == null) {
-                    setErrorDisplay("login is null!", true)
+                    setErrorDisplay(resources.getString(R.string.failed_login), true)
                     setLoadingVisible(false)
                 } else {
                     activityUiThreadWithContext {

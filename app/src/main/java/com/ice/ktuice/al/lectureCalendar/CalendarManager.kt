@@ -1,8 +1,7 @@
 package com.ice.ktuice.al.lectureCalendar
 
-import com.ice.ktuice.DAL.repositories.calendarRepository.CalendarRepositoryImpl
+import com.ice.ktuice.repositories.calendarRepository.CalendarRepositoryImpl
 import com.ice.ktuice.models.lectureCalendarModels.CalendarModel
-import com.ice.ktuice.al.services.scrapers.calendar.CalendarHandler
 import com.ice.ktuice.al.services.scrapers.calendar.CalendarScraper
 import com.ice.ktuice.al.services.userService.UserService
 import io.reactivex.subjects.ReplaySubject

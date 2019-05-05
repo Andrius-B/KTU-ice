@@ -1,7 +1,7 @@
 package com.ice.ktuice.al.koinModules
 
-import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
-import com.ice.ktuice.DAL.repositories.prefrenceRepository.SharedPreferenceRepositoryImpl
+import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
+import com.ice.ktuice.repositories.prefrenceRepository.SharedPreferenceRepositoryImpl
 import com.ice.ktuice.al.gradeTable.notifications.NotificationFactory
 import com.ice.ktuice.al.gradeTable.notifications.NotificationFactoryImpl
 import com.ice.ktuice.al.gradeTable.yearGradesModelComparator.YearGradesModelComparator

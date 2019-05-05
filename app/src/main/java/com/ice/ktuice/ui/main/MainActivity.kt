@@ -4,17 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
-import com.ice.ktuice.DAL.repositories.prefrenceRepository.PreferenceRepository
+import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
-import com.ice.ktuice.al.logger.FileLogReader
 import com.ice.ktuice.al.logger.IceLog
-import com.ice.ktuice.al.logger.info
 import com.ice.ktuice.al.services.userService.UserService
 import com.ice.ktuice.ui.adapters.FragmentAdapter
 import com.ice.ktuice.ui.login.LoginActivity
 import io.realm.log.RealmLog.warn
 import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.warn
 import org.koin.android.ext.android.inject
 
 
@@ -41,7 +38,7 @@ class MainActivity : AppCompatActivity(), IceLog {
         }
 
     private val userService: UserService by inject()
-    private val preferenceRepository:PreferenceRepository by inject()
+    private val preferenceRepository: PreferenceRepository by inject()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

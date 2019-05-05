@@ -13,7 +13,7 @@ interface YearGradesService {
      * Queries the database and fetches the database version first, then fetches
      * the newest version from the web
      */
-    fun getYearGradesList(): Subject<YearGradesCollectionModel>
+    fun getYearGradesListSubject(): Subject<YearGradesCollectionModel>
 
     /**
      * This function returns a cached subject of the past observed versions!

@@ -13,10 +13,10 @@ import androidx.work.WorkManager
 import com.ice.ktuice.R
 import com.ice.ktuice.al.logger.IceLog
 import com.ice.ktuice.al.logger.info
-import com.ice.ktuice.al.logger.infoFile
 import com.ice.ktuice.al.notifications.SyncJob
 import com.ice.ktuice.al.notifications.SyncJobWorker
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
+import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.ui.main.components.GradeTable
 import com.ice.ktuice.viewModels.gradesFragment.GradesFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_grades.*
@@ -35,6 +35,7 @@ class FragmentGrades: Fragment(), KoinComponent, IceLog {
 
     private val yearGradesService: YearGradesService by inject()
     private val viewModel: GradesFragmentViewModel by inject()
+    private val preferenceRepository: PreferenceRepository by inject()
 
     private lateinit var gradeTableView: GradeTable
     private val syncJob = SyncJob()
@@ -87,9 +88,7 @@ class FragmentGrades: Fragment(), KoinComponent, IceLog {
             }
 
             test_button.setOnClickListener{
-                //info("job scheduling test button tap!")
                 scheduleJob(true)
-                //scheduleJob(false)
             }
         }
     }
@@ -109,11 +108,12 @@ class FragmentGrades: Fragment(), KoinComponent, IceLog {
         val wm = WorkManager.getInstance()
         val notificationFlag = if(instant) 0 else 1
         val dataToWorker = Data.Builder().putInt(resources.getString(R.string.notification_enabled_flag), notificationFlag).build()
+        preferenceRepository.setValue(R.string.grade_scraper_retries, "0")
 
         if(!instant){
-            infoFile("Queueing periodic sync!")
             val notificationWorkTag = resources.getString(R.string.notification_work_tag)
-            val periodicSyncWork = PeriodicWorkRequestBuilder<SyncJobWorker>(3, TimeUnit.HOURS)
+
+            val periodicSyncWork = PeriodicWorkRequestBuilder<SyncJobWorker>(1, TimeUnit.HOURS)
                     .setInputData(dataToWorker)
                     .addTag(notificationWorkTag)
                     .build()
@@ -121,9 +121,8 @@ class FragmentGrades: Fragment(), KoinComponent, IceLog {
             //TODO move period time to configuration, not inline
         }
         else{
-            infoFile("Starting one time sync!")
             doAsync {
-                syncJob.sync(notificationFlag)
+                syncJob.sync(0)
             }
         }
     }
