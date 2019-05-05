@@ -37,6 +37,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <TableLayout
@@ -58,13 +60,6 @@
                 <TextView android:text="@string/info_student_code" />
 
                 <TextView android:id="@+id/info_student_code" />
-            </TableRow>
-
-            <TableRow>
-
-                <TextView android:text="@string/info_years_found" />
-
-                <TextView android:id="@+id/info_semesters_found" />
             </TableRow>
 
             <TableRow>

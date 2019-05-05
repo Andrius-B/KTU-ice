@@ -7,14 +7,13 @@ import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
 import com.ice.ktuice.al.gradeTable.GradeTableManager
 import com.ice.ktuice.al.gradeTable.gradeTableModels.GradeTableModel
 import com.ice.ktuice.al.gradeTable.gradeTableModels.SemesterAdapterItem
 import com.ice.ktuice.al.gradeTable.yearGradesModelComparator.YearGradesModelComparator
-import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.models.YearGradesCollectionModel
+import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.ui.adapters.SemesterSpinnerAdapter
 import com.ice.ktuice.ui.main.dialogs.GradeTableCellDetailsDialog
 import org.jetbrains.anko.AnkoLogger
@@ -33,7 +32,6 @@ class GradeTable(
          attrs: AttributeSet?
 ): LinearLayout(c, attrs), KoinComponent, AnkoLogger {
 
-    private val yearGradesService: YearGradesService by inject()
     private val comparator: YearGradesModelComparator by inject()
     private val preferenceRepository: PreferenceRepository by inject()
 
