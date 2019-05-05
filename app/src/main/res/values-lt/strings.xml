@@ -1,0 +1,51 @@
+<resources>
+    <string name="app_name">KTU ice</string>
+
+    <string name="login_image_description">KTU Santakos slėnis</string>
+
+    <string name="module_name">Modulio pavadinimas:</string>
+    <string name="module_code">Modulio kodas:</string>
+    <string name="mark_influence">Pažymio įtaka:</string>
+    <string name="past_versions">Ankstesnės versijos:</string>
+    <string name="mark">Pažymys:</string>
+    <string name="no_marks_found">Pažymių nerasta!</string>
+    <string name="header_event_summary">Santrauka:</string>
+    <string name="header_event_location">Vietovė:</string>
+    <string name="header_event_start">Prasideda:</string>
+    <string name="loading">Kraunama..</string>
+
+    <!--Strings for generating notification content-->
+    <string name="notification_new_mark_found">Naujas pažymys: %s</string>
+    <string name="notification_new_marks_found">Nauji pažymiai!</string>
+    <string name="notification_mark_updated">Pažymys atnaujintas!</string>
+    <string name="notification_grade_table_changed">Pažymių lentelė pakeista!</string>
+    <string name="refreshing">Atnaujinama..</string>
+
+
+    <string name="clear_logs">Ištrinti žurnalus</string>
+    <string name="daily_agenda_title">Dienos darbotvarkė</string>
+    <string name="dummy_error_text">Testo klaida</string>
+    <string name="goto_today_btn">Šiandiena</string>
+    <string name="expand_calendar_button_description">Kalendoriaus išplėtimo mygtukas</string>
+    <string name="grade_table_mark_cell_details">Informacija</string>
+    <string name="grade_table_week_header">Savaitė</string>
+    <string name="tab_name_settings">Nustatymai</string>
+    <string name="tab_name_grades">Pažymiai</string>
+    <string name="student_info_button">Studento informacija</string>
+    <string name="tab_name_timetable">Kalendorius</string>
+    <string name="time_table">Kalendorius</string>
+    <string name="settings_theme">Tema</string>
+    <string name="settings_mark_update_notifications">Pažymių atnaujinimo pranešimai</string>
+    <string name="settings_card_title">Nustatymai</string>
+    <string name="refresh_btn">Atnaujinti</string>
+    <string name="info_student_code">Studento kodas</string>
+    <string name="info_student_name">Pavardė</string>
+    <string name="info_years_found">Rasti metai</string>
+    <string name="login_error_title">Klaida</string>
+    <string name="login_login_btn">Prisijungimas</string>
+    <string name="login_password_hint">Slaptažodis</string>
+    <string name="login_username_hint">Vartotojo vardas</string>
+    <string name="logout_text">Atsijungti</string>
+    <string name="marks_button">Pažymiai</string>
+    <string name="settings_networking_enable">Tinklų įgalinimas</string>
+</resources>
