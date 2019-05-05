@@ -2,7 +2,7 @@
     <string name="app_name">KTU ice</string>
 
     <string name="login_image_description">KTU Santakos slėnis</string>
-
+    <string name="failed_login">Nepavyko prisijungti!</string>
     <string name="module_name">Modulio pavadinimas:</string>
     <string name="module_code">Modulio kodas:</string>
     <string name="mark_influence">Pažymio įtaka:</string>
