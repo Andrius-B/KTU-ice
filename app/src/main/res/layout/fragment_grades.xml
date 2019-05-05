@@ -22,7 +22,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
         <FrameLayout
             android:id="@+id/grade_table_view_container"
             android:layout_width="match_parent"
@@ -40,35 +39,25 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="parent">
-
         <TableLayout
             android:id="@+id/bottom_info_drawer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="12dp"
             android:stretchColumns="*">
-
             <TableRow>
-
                 <TextView android:text="@string/info_student_name" />
-
                 <TextView android:id="@+id/info_student_name" />
             </TableRow>
-
             <TableRow>
-
                 <TextView android:text="@string/info_student_code" />
-
                 <TextView android:id="@+id/info_student_code" />
             </TableRow>
-
             <TableRow>
-
                 <Button
                     android:id="@+id/logout_btn"
                     style="?android:attr/buttonBarButtonStyle"
                     android:text="@string/logout_text" />
-
                 <Button
                     android:id="@+id/test_button"
                     style="?android:attr/buttonBarButtonStyle"

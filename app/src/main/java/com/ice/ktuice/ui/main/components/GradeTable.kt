@@ -141,6 +141,8 @@ class GradeTable(
         val rowModelList = gradeTableModel.getRows()
         val weekModelList = gradeTableModel.getTotalWeekList()
 
+        info{gradeTableModel.toString()}
+
         //header generation
         val weekTableRow = TableRow(context)
         /**
