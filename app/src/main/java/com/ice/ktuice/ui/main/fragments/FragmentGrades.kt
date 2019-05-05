@@ -113,7 +113,7 @@ class FragmentGrades: Fragment(), KoinComponent, IceLog {
         if(!instant){
             val notificationWorkTag = resources.getString(R.string.notification_work_tag)
 
-            val periodicSyncWork = PeriodicWorkRequestBuilder<SyncJobWorker>(1, TimeUnit.HOURS)
+            val periodicSyncWork = PeriodicWorkRequestBuilder<SyncJobWorker>(3, TimeUnit.HOURS)
                     .setInputData(dataToWorker)
                     .addTag(notificationWorkTag)
                     .build()
