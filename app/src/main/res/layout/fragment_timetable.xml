@@ -36,7 +36,7 @@
         app:dayBackgroundColor="#05000000"
         app:todayBackgroundColor="#1848adff"
         app:headerColumnBackground="?attr/colorPrimaryDark"
-        app:hourSeparatorColor="?attr/colorPrimaryDark"
+        app:hourSeparatorColor="?attr/colorPrimary"
         app:todayHeaderTextColor="?attr/colorAccent"
         app:newEventTimeResolutionInMinutes="15"
         app:timeColumnResolution="30"

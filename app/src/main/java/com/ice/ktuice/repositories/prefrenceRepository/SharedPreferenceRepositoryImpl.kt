@@ -8,11 +8,15 @@ import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
  * Created by Andrius on 1/31/2018.
  */
 class SharedPreferenceRepositoryImpl(private val context: Context): PreferenceRepository {
-    override fun getValue(key: String): String {
+
+    override fun getValue(key: String, default: String): String {
         val sharedPref = context.getSharedPreferences(
                 context.getString(R.string.shared_preference_file_key), Context.MODE_PRIVATE)
-        return sharedPref.getString(key, "")!!
+        return sharedPref.getString(key, default)!!
     }
+
+    override fun getValue(key: String)
+        = getValue(key, "")
 
     override fun setValue(key: String, value: String) {
         val sharedPref = context.getSharedPreferences(
