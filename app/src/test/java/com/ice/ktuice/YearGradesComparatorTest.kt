@@ -8,7 +8,9 @@ import com.ice.ktuice.al.gradeTable.yearGradesModelComparator.YearGradesModelCom
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.models.GradeModel
 import com.ice.ktuice.models.YearGradesCollectionModel
+import junit.framework.Assert.assertNotNull
 import junit.framework.Assert.assertTrue
+import org.junit.After
 import org.junit.Test
 import org.koin.dsl.module.Module
 import org.koin.dsl.module.applicationContext
@@ -18,13 +20,22 @@ import org.koin.standalone.inject
 import org.koin.test.KoinTest
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import java.lang.Exception
 
 /**
  * Created by Andrius on 3/13/2018.
  * Testing the year collection comparator
  */
 class YearGradesComparatorTest: KoinTest {
-    lateinit var defaultYearCollection: YearGradesCollectionModel
+
+    @After
+    fun cleanup(){
+        try {
+            closeKoin()
+        }catch (e: Exception){
+            println(e.message)
+        }
+    }
 
     /**
      * Test if the correct comparison is made for the case,
@@ -60,6 +71,7 @@ class YearGradesComparatorTest: KoinTest {
      */
     @Test
     fun `One new mark added`(){
+
         val defaultGradeCollection= createDefaultYearGradesCollection()
         val defaultGradeCollectionWithAddedGrade = addMark(defaultGradeCollection)
 
@@ -72,6 +84,7 @@ class YearGradesComparatorTest: KoinTest {
             provide { serviceMock as YearGradesService }
         }
         startKoin(listOf(module))
+
         val service by inject<YearGradesService>()
         val comparator by inject<YearGradesModelComparator>()
 
@@ -80,13 +93,13 @@ class YearGradesComparatorTest: KoinTest {
 
         val differences = comparator.compare(db.yearList.last()!!, new.yearList.last()!!)
 
-        closeKoin()
-
         assertTrue(differences.size == 1)
-        assertTrue(differences.find { it.field == Difference.Field.Grade &&
-                                  it.change == Difference.FieldChange.Added &&
-                                  it.supplementary!!.javaClass == GradeModel::class.java
-                                  } != null)
+        val change = differences.firstOrNull()
+        assertNotNull(change)
+        assertTrue( change!!.field == Difference.Field.Grade &&
+                    change.change == Difference.FieldChange.Added &&
+                    change.supplementary!!.javaClass == GradeModel::class.java)
+        closeKoin()
     }
 
     /**

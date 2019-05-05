@@ -8,6 +8,7 @@ import com.ice.ktuice.models.timetableModels.TimetableWeek
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import java.text.ParseException
 import java.util.*
 
 /**
@@ -18,6 +19,9 @@ class TimetableHandler{
         /**
          * @param login - the authentication required to fetch the timetable
          * @param fetchUpcomingTestsFor -  a list of dates, for which weeks to fetch the upcoming tests
+         *
+         * TODO as of now the current week selection mechanism is broken, because the AIS timetable no longer selects the current year/week by default
+         * I hope they fix that, not just for this app, but for everybody.
          */
         fun getTimetable(login: LoginModel, fetchUpcomingTestsFor: List<Date>? = listOf()): TimetableResponseModel {
             val urlInitial = String.format("https://uais.cr.ktu.lt/ktuis/TV_STUD.stud_kal_w0")
@@ -29,8 +33,10 @@ class TimetableHandler{
             val (v, n) = findVandN(documentInitial)
             val weekTests = mutableMapOf<TimetableWeek, List<String>>()
             val tm = TimetableModel(
-                    findCurrentSemester(documentInitial),
-                    findCurrentWeek(documentInitial),
+                    TimetableSemester("Not working for now", "2019.04.28"),
+//                    findCurrentSemester(documentInitial),
+                    TimetableWeek("Not working for now", "2019.04.28"),
+//                    findCurrentWeek(documentInitial),
                     getAllSemesters(documentInitial),
                     getAllWeeks(documentInitial),
                     weekTests // filled in later:
@@ -48,7 +54,7 @@ class TimetableHandler{
                         .method(Connection.Method.POST)
                         .execute()
                 val doc = response.parse()
-                val week = findCurrentWeek(doc)
+//                val week = findCurrentWeek(doc)
                 val dls = doc.select("dl")
                 if(dls.isNotEmpty()){
                     val dl = dls.last()
@@ -56,7 +62,7 @@ class TimetableHandler{
                     dl.children().forEach {
                         tests.add(it.text())
                     }
-                    weekTests[week] = tests
+//                    weekTests[week] = tests
                 }
             }
             // TODO add error handling
@@ -89,7 +95,12 @@ class TimetableHandler{
             val elem = doc.body().getElementById("prm1_id")
             val startList = mutableListOf<TimetableSemester>()
             elem.children().forEach {
-                startList.add(TimetableSemester(it.text(), it.attr("value")))
+                try{
+                    startList.add(TimetableSemester(it.text(), it.attr("value")))
+                }catch (e: ParseException){
+                    // oh well,
+                    // currently there are selections that are empty: ""
+                }
             }
             return startList
         }

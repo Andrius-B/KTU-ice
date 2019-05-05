@@ -5,6 +5,7 @@
     <string name="login_username_hint">Username</string>
     <string name="login_password_hint">Password</string>
     <string name="login_error_title">Error</string>
+    <string name="failed_login">Login failed!</string>
     <string name="login_image_description">A building on KTU premises called "Santakos slėnis"</string>
 
     <string name="info_student_code">Student code</string>

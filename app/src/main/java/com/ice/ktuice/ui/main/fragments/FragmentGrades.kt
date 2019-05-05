@@ -13,7 +13,6 @@ import androidx.work.WorkManager
 import com.ice.ktuice.R
 import com.ice.ktuice.al.logger.IceLog
 import com.ice.ktuice.al.logger.info
-import com.ice.ktuice.al.logger.infoFile
 import com.ice.ktuice.al.notifications.SyncJob
 import com.ice.ktuice.al.notifications.SyncJobWorker
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
@@ -89,9 +88,7 @@ class FragmentGrades: Fragment(), KoinComponent, IceLog {
             }
 
             test_button.setOnClickListener{
-                //info("job scheduling test button tap!")
                 scheduleJob(true)
-                //scheduleJob(false)
             }
         }
     }
@@ -114,7 +111,6 @@ class FragmentGrades: Fragment(), KoinComponent, IceLog {
         preferenceRepository.setValue(R.string.grade_scraper_retries, "0")
 
         if(!instant){
-            infoFile("Queueing periodic sync!")
             val notificationWorkTag = resources.getString(R.string.notification_work_tag)
 
             val periodicSyncWork = PeriodicWorkRequestBuilder<SyncJobWorker>(1, TimeUnit.HOURS)
@@ -125,9 +121,8 @@ class FragmentGrades: Fragment(), KoinComponent, IceLog {
             //TODO move period time to configuration, not inline
         }
         else{
-            infoFile("Starting one time sync!")
             doAsync {
-                syncJob.sync(1)
+                syncJob.sync(0)
             }
         }
     }

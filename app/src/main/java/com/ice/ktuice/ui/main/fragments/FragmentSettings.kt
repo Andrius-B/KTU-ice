@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.CompoundButton
 import com.ice.ktuice.R
 import com.ice.ktuice.al.logger.FileLogReader
+import com.ice.ktuice.al.logger.IceLog
 import com.ice.ktuice.al.logger.info
 import com.ice.ktuice.al.settings.AppSettings
 import kotlinx.android.synthetic.main.fragment_settings.*
@@ -19,7 +20,7 @@ import org.jetbrains.anko.info
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
-class FragmentSettings: Fragment(), KoinComponent, AnkoLogger{
+class FragmentSettings: Fragment(), KoinComponent, IceLog {
 
     private val settings: AppSettings by inject()
 
@@ -46,17 +47,17 @@ class FragmentSettings: Fragment(), KoinComponent, AnkoLogger{
         this.networking_enable_switch.isChecked = settings.networkingEnabled
         setLectureNotificationSwitchListener()
 
-        this.deleteLogs.setOnClickListener{
-            info("Reading log file!")
-            val filename = "ice_log.log"
-            if(context?.fileList()?.contains(filename)!!){
-                val reader = FileLogReader(context!!)
-                info{"Log file collected since last onCreate:"}
-                reader.printFile(filename)
-                context?.deleteFile(filename)
-                info{"Log file cleared! does it still exist: ${context?.fileList()?.contains(filename)}"}
-            }
-        }
+//        this.deleteLogs.setOnClickListener{
+//            info("Reading log file!")
+//            val filename = "ice_log.log"
+//            if(context?.fileList()?.contains(filename)!!){
+//                val reader = FileLogReader(context!!)
+//                info{"Log file collected since last onCreate:"}
+//                reader.printFile(filename)
+//                context?.deleteFile(filename)
+//                info{"Log file cleared! does it still exist: ${context?.fileList()?.contains(filename)}"}
+//            }
+//        }
 
     }
 

@@ -1,14 +1,14 @@
 package com.ice.ktuice.al.services.yearGradesService
 
 import com.ice.ktuice.R
-import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.al.logger.IceLog
 import com.ice.ktuice.al.logger.info
-import com.ice.ktuice.al.logger.infoFile
 import com.ice.ktuice.al.services.scrapers.base.ScraperService
 import com.ice.ktuice.al.services.scrapers.base.exceptions.AuthenticationException
+import com.ice.ktuice.al.services.scrapers.base.exceptions.ValidationException
 import com.ice.ktuice.al.services.userService.UserService
 import com.ice.ktuice.models.YearGradesCollectionModel
+import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.repositories.yearGradesResponseRepository.YearGradesRepository
 import io.reactivex.subjects.ReplaySubject
 import io.reactivex.subjects.Subject
@@ -79,24 +79,15 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent, IceLog {
             val refreshRetries = preferenceRepository.getValue(R.string.grade_scraper_retries).toIntOrNull() ?: 0
             preferenceRepository.setValue(R.string.grade_scraper_retries, (refreshRetries + 1).toString())
 
-            if(refreshRetries >= 3){
-                infoFile { "Crash due to repeatedly failing authentication" }
+            if(refreshRetries >= 10){
+                info { "Crash due to repeatedly failing authentication" }
                 throw AuthenticationException("Authentication failed after $refreshRetries requests!", e)
             }
 
-            infoFile{ "Fetching grades from web after cookie refresh (attempt #${refreshRetries + 1})" }
             return getYearGradesListFromWeb()
         }catch (e: Exception){
             throw e
         }
-        infoFile{"YearGradesCollectionModel fetched from the web:"}
-        infoFile{"Mark count: ${webGrades.markCnt}"}
-        infoFile{"Module count: ${webGrades.moduleCnt}"}
-        infoFile{"Semester count: ${webGrades.semesterCnt}"}
-        infoFile{"Year count: ${webGrades.yearCnt}"}
-        infoFile{"HTML Hash: ${webGrades.htmlHash}"}
-        infoFile { "The new table looks like this:" }
-        infoFile { webGrades.toString() }
         return webGrades
     }
 
@@ -111,13 +102,7 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent, IceLog {
         }else{
             val validationInfo = validator.validateModel(dbGrades)
             if(!validationInfo.valid){
-                infoFile{"Object fetched from the database seems to be invalid!"}
-                infoFile{"Differences:"}
-                infoFile{"Mark count expected: ${dbGrades.markCnt} -> actual ${validationInfo.markCnt}"}
-                infoFile{"Module count expected: ${dbGrades.moduleCnt} -> actual ${validationInfo.moduleCnt}"}
-                infoFile{"Semester count expected: ${dbGrades.semesterCnt} -> actual ${validationInfo.semesterCnt}"}
-                infoFile{"Year count expected: ${dbGrades.yearCnt} -> actual ${validationInfo.yearCnt}"}
-                infoFile{"HTML Hash expected: ${dbGrades.htmlHash} -> actual ${validationInfo.htmlHash}"}
+                throw ValidationException("Failed validating the year model fetched from the database!")
             }
         }
         return dbGrades

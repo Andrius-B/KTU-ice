@@ -36,7 +36,7 @@ val mainModule: Module = applicationContext {
     provide { UserServiceImpl() as UserService }
     provide { NotificationFactoryImpl(this.androidApplication()) as NotificationFactory }
     provide { NotificationSummaryGeneratorImpl(this.androidApplication()) as NotificationSummaryGenerator }
-    provide(isSingleton = true) { GradesFragmentViewModel()}
+    provide ( isSingleton = true) { GradesFragmentViewModel() }
     provide { KTUScraperService() as ScraperService }
     provide { AppSettingsPreferencesImpl(this.androidApplication()) as AppSettings }
     provide { CalendarScraperHanderImpl() as CalendarScraper }

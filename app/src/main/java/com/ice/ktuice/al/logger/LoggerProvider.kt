@@ -13,7 +13,7 @@ class LoggerProvider{
         val logger: Logger
             get() = _consoleLogger
         val fileLogger: Logger
-            get() = Companion._fileLogger
+            get() = _fileLogger
     }
 
 }

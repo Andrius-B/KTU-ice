@@ -1,5 +1,7 @@
 package com.ice.ktuice.al.services.scrapers.base.ktuScraperService.handlers
 
+import com.ice.ktuice.al.logger.IceLog
+import com.ice.ktuice.al.services.scrapers.base.exceptions.ServerErrorException
 import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.models.YearModel
 import com.ice.ktuice.models.responses.LoginResponseModel
@@ -7,7 +9,9 @@ import io.realm.RealmList
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 
-class LoginHandler: BaseHandler() {
+// TODO Fix substring thingy
+// ookies librarry
+class LoginHandler: BaseHandler(), IceLog {
 
     fun getAuthCookies(username: String, password: String): LoginResponseModel {
         val autoLogin = getAutoLogin()
@@ -77,16 +81,11 @@ class LoginHandler: BaseHandler() {
                 .method(Connection.Method.POST)
                 .execute()
         val parse = request.parse()
-        val inputList = parse.select("input")
-        val filteredInputList = inputList.firstOrNull { it.attr("name") == "StateId" }
-        if (filteredInputList != null) {
-            val stateId = filteredInputList.attr("value")
-            return PostLoginResponse(stateId, request.cookies() + autoLoginResponse.cookies, request.statusCode())
-        }
-        return PostLoginResponse(null, null, request.statusCode())
+        val stateId = parse.baseUri().substring(79).split('&')[0]
+        return PostLoginResponse(stateId, request.cookies() + autoLoginResponse.cookies, request.statusCode())
     }
 
-    private fun getAgree(postLoginResponse: PostLoginResponse): AgreeResponse {
+    private fun getAgree(postLoginResponse: PostLoginResponse, retries: Int = 0): AgreeResponse {
         val url = "https://login.ktu.lt/simplesaml/module.php/consent/getconsent.php?" +
                 "StateId=${postLoginResponse.stateId}&" +
                 "yes=Yes%2C%20continue%0D%0A&" +
@@ -94,10 +93,27 @@ class LoginHandler: BaseHandler() {
         val request = Jsoup.connect(url)
                 .method(Connection.Method.GET)
                 .cookies(postLoginResponse.cookies)
+                .followRedirects(true)
                 .execute()
-
         val parse = request.parse()
         val inputList = parse.select("input")
+        try {
+            val StateId = inputList.first { it.attr("name") == "StateId" }.attr("value")
+            if (StateId != postLoginResponse.stateId) {
+                // retry on StateId mismatch
+                val newCookies = postLoginResponse.cookies!!.toMutableMap()
+                if(request.hasCookie("SimpleSAMLSessionID")) {
+                    newCookies["SimpleSAMLSessionID"] = request.cookie("SimpleSAMLSessionID")
+                }
+                if(retries < 5) {
+                    return getAgree(PostLoginResponse(StateId, newCookies, request.statusCode()), retries + 1)
+                }else{
+                    throw ServerErrorException("Log in could not complete successfully!")
+                }
+            }
+        }catch (e: NoSuchElementException){
+            // if the correct no-js version is fetched
+        }
         val samlResponse = inputList.first { it.attr("name") == "SAMLResponse" }.attr("value")
         val relayState = inputList.first { it.attr("name") == "RelayState" }.attr("value")
         return AgreeResponse(samlResponse, relayState, request.statusCode())
