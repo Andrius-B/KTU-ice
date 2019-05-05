@@ -73,7 +73,6 @@ class FragmentGrades: Fragment(), KoinComponent, IceLog {
         viewModel.loginModel.observe(this, Observer {  loginModel->
             this.activity?.runOnUiThread {
                 loginModel!!
-                info_semesters_found.text = loginModel.studentSemesters.size.toString()
                 info_student_code.text = loginModel.studentId
                 info_student_name.text = loginModel.studentName
             }
@@ -113,7 +112,7 @@ class FragmentGrades: Fragment(), KoinComponent, IceLog {
         if(!instant){
             val notificationWorkTag = resources.getString(R.string.notification_work_tag)
 
-            val periodicSyncWork = PeriodicWorkRequestBuilder<SyncJobWorker>(1, TimeUnit.HOURS)
+            val periodicSyncWork = PeriodicWorkRequestBuilder<SyncJobWorker>(3, TimeUnit.HOURS)
                     .setInputData(dataToWorker)
                     .addTag(notificationWorkTag)
                     .build()

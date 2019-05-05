@@ -102,7 +102,7 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent, IceLog {
         }else{
             val validationInfo = validator.validateModel(dbGrades)
             if(!validationInfo.valid){
-                throw ValidationException("Failed validating the year model fetched from the database!")
+                info{"Database object validation failed!"}
             }
         }
         return dbGrades

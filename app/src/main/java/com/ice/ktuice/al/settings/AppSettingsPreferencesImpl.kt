@@ -30,7 +30,7 @@ class AppSettingsPreferencesImpl(private val context: Context): AppSettings, Koi
 
     override var gradeNotificationsEnabled: Boolean
         get(){
-            return getValue(R.string.grade_notifications_enabled, true);
+            return getValue(R.string.grade_notifications_enabled, true)
         }
         set(value){
             preferenceRepository.setValue(context.getString(R.string.grade_notifications_enabled), value.toString())
