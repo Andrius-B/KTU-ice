@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape android:shape="rectangle" >
-            <solid android:color="@color/card_background_dark" />
-        </shape>
-    </item>
-    <item android:top="-2dp" android:right="-2dp" android:left="-2dp">
-        <shape>
-            <solid android:color="@android:color/transparent" />
-            <stroke
-                android:width="0.5dp"
-                android:color="@color/colorPrimaryDark" />
-        </shape>
-    </item>
-</layer-list>
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:insetTop="-2dp"
+    android:insetRight="-2dp"
+    android:insetLeft="-2dp"
+    >
+    <shape>
+        <solid android:color="@android:color/transparent" />
+        <stroke
+            android:width="0.5dp"
+            android:color="@color/colorDarkPrimaryLight" />
+    </shape>
+</inset>

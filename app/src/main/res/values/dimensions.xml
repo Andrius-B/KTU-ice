@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="grade_table_cell_padding_horizontal">16</integer>
+    <integer name="grade_table_cell_padding_horizontal">24</integer>
     <integer name="grade_table_cell_padding_vertical">24</integer>
     <integer name="grade_table_cell_text_size">16</integer>
 

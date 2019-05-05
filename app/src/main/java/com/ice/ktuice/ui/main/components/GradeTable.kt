@@ -145,24 +145,15 @@ class GradeTable(
 
         //header generation
         val weekTableRow = TableRow(context)
-
         /**
          * Adding the "week" row header
          */
         val weekTitleContainer = LinearLayout(context)
         val weekTitle = TextView(context)
         weekTitle.setText(R.string.grade_table_week_header)
-        weekTitleContainer.setPadding(CELL_PADDING_H,0,0,0)
-        val typedValue = TypedValue()
-        context.theme.resolveAttribute(R.attr.grade_cell_background_ref, typedValue, true)
-        val textSizeAttr = intArrayOf(R.attr.grade_cell_background_ref)
-        val indexOfAttrGradeCellBg = 0
-        val a = context.obtainStyledAttributes(typedValue.data, textSizeAttr)
-        val bgDrawable = a.getDrawable(indexOfAttrGradeCellBg)
-        a.recycle()
-        weekTitle.background = bgDrawable
+        weekTitleContainer.setPadding(38,0,0,0)
         weekTitleContainer.addView(weekTitle)
-        weekTitle.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        weekTitle.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         weekTableRow.addView(weekTitleContainer)
 
         /**
@@ -171,10 +162,19 @@ class GradeTable(
         weekModelList?.forEach {
             val weekText = TextView(context)
             weekText.text = it.week
-            weekText.background = bgDrawable
             weekTableRow.addView(weekText)
         }
-        grade_table_table_layout.addView(weekTableRow, TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f))
+
+        val typedValue = TypedValue()
+        context.theme.resolveAttribute(R.attr.grade_cell_background_ref, typedValue, true)
+        val textSizeAttr = intArrayOf(R.attr.grade_cell_background_ref)
+        val indexOfAttrGradeCellBg = 0
+        val a = context.obtainStyledAttributes(typedValue.data, textSizeAttr)
+        val bgDrawable = a.getDrawable(indexOfAttrGradeCellBg)
+        a.recycle()
+        weekTableRow.background = bgDrawable
+
+        grade_table_table_layout.addView(weekTableRow, TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 0f))
 
 
         rowModelList?.forEach { gradeTableRowModel ->
