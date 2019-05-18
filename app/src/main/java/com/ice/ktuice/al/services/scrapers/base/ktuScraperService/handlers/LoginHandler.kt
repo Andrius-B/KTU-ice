@@ -11,7 +11,7 @@ import org.jsoup.Jsoup
 
 // TODO Fix substring thingy
 // ookies librarry
-class LoginHandler: BaseHandler(), IceLog {
+class LoginHandler: IceLog {
 
     fun getAuthCookies(username: String, password: String): LoginResponseModel {
         val autoLogin = getAutoLogin()
