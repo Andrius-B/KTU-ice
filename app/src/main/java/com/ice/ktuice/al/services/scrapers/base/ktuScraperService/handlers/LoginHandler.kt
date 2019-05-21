@@ -9,18 +9,22 @@ import io.realm.RealmList
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 
-// TODO Fix substring thingy
-// ookies librarry
 class LoginHandler: BaseHandler(), IceLog {
 
     fun getAuthCookies(username: String, password: String): LoginResponseModel {
-        val autoLogin = getAutoLogin()
+        val aisTracker = getTracker()
+        Thread.sleep(28)
+        val autoLogin = getAutoLogin( aisTracker )
         val postLogin = postLogin(username, password, autoLogin)
+        Thread.sleep(182)
         if (postLogin.cookies != null) {
             val agreeLogin = getAgree(postLogin)
-            val postContinue = postContinue(agreeLogin)
+            Thread.sleep(100)
+            val postContinue = postContinue(agreeLogin, aisTracker)
+            Thread.sleep(200)
             return getInfo(postContinue, username, password)
         }
+
         // if there are no cookies returned from postLogin,
         // assume not authorized!
         return LoginResponseModel(null, 401)
@@ -37,7 +41,6 @@ class LoginHandler: BaseHandler(), IceLog {
             val cookies: Map<String, String>?,
             val responseCode: Int
     )
-
     private class AgreeResponse(
             val samlResponse: String,
             val relayState: String,
@@ -54,15 +57,27 @@ class LoginHandler: BaseHandler(), IceLog {
      * it gives a STUDCOOKIE, both of which are needed to authenticate a user
      * @return AuthState and cookies
      */
-    private fun getAutoLogin(): AutoLoginResponse {
+    private fun getTracker() : AutoLoginResponse {
+        val url = "https://uais.cr.ktu.lt/ktuis/stp_prisijungimas"
+        val request = Jsoup.connect(url)
+                .method(Connection.Method.GET)
+                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36")
+                .execute()
+        return AutoLoginResponse("", request.cookies(),0)
+    }
+
+    private fun getAutoLogin( trackerResponse : AutoLoginResponse): AutoLoginResponse {
         val url = "https://uais.cr.ktu.lt/ktuis/studautologin"
         val request = Jsoup.connect(url)
                 .method(Connection.Method.GET)
+                .cookies(trackerResponse.cookies)
+                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36")
                 .execute()
         val parse = request.parse()
         val select = parse.select("input[name=\"AuthState\"]")
         val attr = select[0].attr("value")
-        return AutoLoginResponse(attr, request.cookies(), request.statusCode())
+
+        return AutoLoginResponse(attr, request.cookies() + trackerResponse.cookies, request.statusCode())
     }
 
     private fun postLogin(
@@ -79,14 +94,16 @@ class LoginHandler: BaseHandler(), IceLog {
                         "AuthState" to autoLoginResponse.authState
                 ))
                 .method(Connection.Method.POST)
+                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36")
                 .execute()
         val parse = request.parse()
         val stateId = parse.baseUri().substring(79).split('&')[0]
+        //val r = request.cookies() + autoLoginResponse.cookies
         return PostLoginResponse(stateId, request.cookies() + autoLoginResponse.cookies, request.statusCode())
     }
 
     private fun getAgree(postLoginResponse: PostLoginResponse, retries: Int = 0): AgreeResponse {
-        val url = "https://login.ktu.lt/simplesaml/module.php/consent/getconsent.php?" +
+        val url = "https://login.ktu.lt/simplesaml/module.php/consentAleph/getconsent.php?" +
                 "StateId=${postLoginResponse.stateId}&" +
                 "yes=Yes%2C%20continue%0D%0A&" +
                 "saveconsent=1"
@@ -94,6 +111,7 @@ class LoginHandler: BaseHandler(), IceLog {
                 .method(Connection.Method.GET)
                 .cookies(postLoginResponse.cookies)
                 .followRedirects(true)
+                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36")
                 .execute()
         val parse = request.parse()
         val inputList = parse.select("input")
@@ -118,17 +136,21 @@ class LoginHandler: BaseHandler(), IceLog {
         val relayState = inputList.first { it.attr("name") == "RelayState" }.attr("value")
         return AgreeResponse(samlResponse, relayState, request.statusCode())
     }
-
-    private fun postContinue(agreeResponse: AgreeResponse): AuthResponse {
+    private fun postContinue(agreeResponse: AgreeResponse, trackerResponse: AutoLoginResponse): AuthResponse {
         val url = "https://uais.cr.ktu.lt/shibboleth/SAML2/POST"
+        val trackerCookie =trackerResponse.cookies["aistrack"]
+        //val e = agreeResponse.relayState
         val request = Jsoup.connect(url)
                 .method(Connection.Method.POST)
                 .data(mapOf(
                         "SAMLResponse" to agreeResponse.samlResponse,
-                        "RelayState" to agreeResponse.relayState
+                        "RelayState" to agreeResponse.relayState,
+                        "aistrack" to trackerCookie
                 ))
+                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36")
                 .execute()
-        return AuthResponse(request.cookies(), request.statusCode())
+
+        return AuthResponse(request.cookies() + trackerResponse.cookies, request.statusCode())
     }
 
     private fun getInfo(authResponse: AuthResponse, username: String, password: String): LoginResponseModel {
@@ -136,10 +158,12 @@ class LoginHandler: BaseHandler(), IceLog {
         val request = Jsoup.connect(url)
                 .cookies(authResponse.authCookies)
                 .method(Connection.Method.GET)
+                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36")
                 .execute()
 
         request.charset("windows-1257")
         val parse = request.parse()
+
         val nameItemText = parse.select("#ais_lang_link_lt").parents().first().text()
         val studentId = nameItemText.split(' ')[0].trim()
         val studentName = nameItemText.split(' ')[1].trim()
@@ -164,4 +188,5 @@ class LoginHandler: BaseHandler(), IceLog {
         loginModel.setCookieMap(authResponse.authCookies)
         return LoginResponseModel(loginModel, request.statusCode())
     }
+
 }
