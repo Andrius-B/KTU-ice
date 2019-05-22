@@ -2,6 +2,7 @@ package com.ice.ktuice.al.services.scrapers.login.stages
 
 import com.ice.ktuice.al.services.scrapers.base.exceptions.ServerErrorException
 import com.ice.ktuice.al.services.scrapers.login.LoginDataStore
+import com.ice.ktuice.al.services.scrapers.login.LoginUtil
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import java.lang.Exception
@@ -20,6 +21,7 @@ class AgreeStage: Stage() {
         val request = Jsoup.connect(url)
                 .method(Connection.Method.GET)
                 .cookies(cookieJar)
+                .headers(LoginUtil.getAdditionalHeaders())
                 .followRedirects(true)
                 .execute()
         val parse = request.parse()
@@ -43,12 +45,12 @@ class AgreeStage: Stage() {
         }
 
         cookieJar.putAll(request.cookies())
-//        try{
-//        dataStore.samlResponse = inputList.first { it.attr("name") == "SAMLResponse" }.attr("value")
-//        dataStore.relayState = getRelayStateFromAuthState(dataStore.authState)
-//        }catch (e: Exception){
-//
-//        }
+        try{
+            dataStore.samlResponse = inputList.first { it.attr("name") == "SAMLResponse" }.attr("value")
+            dataStore.relayState = getRelayStateFromAuthState(dataStore.authState)
+        }catch (e: NoSuchElementException){
+
+        }
         return request.statusCode()
     }
 

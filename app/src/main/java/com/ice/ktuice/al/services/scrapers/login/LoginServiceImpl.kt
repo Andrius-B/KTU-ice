@@ -11,7 +11,7 @@ class LoginServiceImpl: LoginService {
             PreLoginStage(),
             AutoLoginStage(),
             LoginUserPassStage(),
-//            AgreeStage(),
+            AgreeStage(),
             PostContinueStage()
     )
 

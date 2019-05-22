@@ -1,6 +1,7 @@
 package com.ice.ktuice.al.services.scrapers.login.stages
 
 import com.ice.ktuice.al.services.scrapers.login.LoginDataStore
+import com.ice.ktuice.al.services.scrapers.login.LoginUtil
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 
@@ -10,6 +11,7 @@ class AutoLoginStage: Stage() {
         val url = "https://uais.cr.ktu.lt/ktuis/studautologin"
         val request = Jsoup.connect(url)
                 .method(Connection.Method.GET)
+                .headers(LoginUtil.getAdditionalHeaders())
                 .followRedirects(true)
                 .execute()
         val parse = request.parse()

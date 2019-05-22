@@ -16,6 +16,7 @@ class LoginUserPassStage: Stage() {
                         "password" to dataStore.password,
                         "AuthState" to dataStore.authState
                 ))
+                .headers(LoginUtil.getAdditionalHeaders())
                 .method(Connection.Method.POST)
                 .execute()
         val parse = request.parse()

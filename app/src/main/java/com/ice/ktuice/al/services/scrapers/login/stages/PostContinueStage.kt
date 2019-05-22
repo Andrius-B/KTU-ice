@@ -1,6 +1,7 @@
 package com.ice.ktuice.al.services.scrapers.login.stages
 
 import com.ice.ktuice.al.services.scrapers.login.LoginDataStore
+import com.ice.ktuice.al.services.scrapers.login.LoginUtil
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 
@@ -14,6 +15,7 @@ class PostContinueStage: Stage() {
                         "SAMLResponse" to dataStore.samlResponse,
                         "RelayState" to dataStore.relayState
                 ))
+                .headers(LoginUtil.getAdditionalHeaders())
                 .execute()
         println("PostContinuePage\n" + request.body())
         cookieJar.putAll(request.cookies())
