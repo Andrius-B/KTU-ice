@@ -16,6 +16,8 @@ import com.ice.ktuice.al.services.scrapers.base.ktuScraperService.KTUScraperServ
 import com.ice.ktuice.al.services.scrapers.base.ScraperService
 import com.ice.ktuice.al.services.scrapers.calendar.CalendarScraper
 import com.ice.ktuice.al.services.scrapers.calendar.CalendarScraperHanderImpl
+import com.ice.ktuice.al.services.scrapers.login.LoginService
+import com.ice.ktuice.al.services.scrapers.login.LoginServiceImpl
 import com.ice.ktuice.al.services.scrapers.timetable.TimetableScraper
 import com.ice.ktuice.al.services.scrapers.timetable.TimetableScraperHandlerImpl
 import com.ice.ktuice.al.settings.AppSettings
@@ -41,4 +43,5 @@ val mainModule: Module = applicationContext {
     provide { AppSettingsPreferencesImpl(this.androidApplication()) as AppSettings }
     provide { CalendarScraperHanderImpl() as CalendarScraper }
     provide { TimetableScraperHandlerImpl() as TimetableScraper }
+    provide { LoginServiceImpl() as LoginService }
 }

@@ -24,8 +24,13 @@ class LoginUserPassStage: Stage() {
         cookieJar.putAll(request.cookies())
         dataStore.stateId = parsedQueryArguments.getValue("StateId")
         val inputList = parse.select("input")
-        dataStore.samlResponse = inputList.first { it.attr("name") == "SAMLResponse" }.attr("value")
-        dataStore.relayState = inputList.first { it.attr("name") == "RelayState" }.attr("value")
+        try{
+            // these can either be given here or in the AgreeStage
+            dataStore.samlResponse = inputList.first { it.attr("name") == "SAMLResponse" }.attr("value")
+            dataStore.relayState = inputList.first { it.attr("name") == "RelayState" }.attr("value")
+        }catch (e: NoSuchElementException){
+            println(e.stackTrace)
+        }
         return request.statusCode()
     }
 }

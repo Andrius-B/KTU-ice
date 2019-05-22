@@ -3,6 +3,8 @@ package com.ice.ktuice.scraperTests
 import com.ice.ktuice.al.services.scrapers.base.ScraperService
 import com.ice.ktuice.al.services.scrapers.base.exceptions.AuthenticationException
 import com.ice.ktuice.al.services.scrapers.base.ktuScraperService.KTUScraperService
+import com.ice.ktuice.al.services.scrapers.login.LoginService
+import com.ice.ktuice.al.services.scrapers.login.LoginServiceImpl
 import com.ice.ktuice.impl.FileLoginProvider
 import com.ice.ktuice.models.Cookie
 import com.ice.ktuice.models.LoginModel
@@ -26,6 +28,7 @@ class KTUScraperTest: KoinTest{
 
     private val scraperModule: Module = applicationContext {
         provide { KTUScraperService() as ScraperService }
+        provide { LoginServiceImpl() as LoginService }
     }
 
     private lateinit var username: String

@@ -2,26 +2,28 @@ package com.ice.ktuice.al.services.scrapers.base.ktuScraperService
 
 import com.ice.ktuice.al.logger.IceLog
 import com.ice.ktuice.al.logger.info
+import com.ice.ktuice.al.services.scrapers.base.ScraperService
+import com.ice.ktuice.al.services.scrapers.base.exceptions.AuthenticationException
+import com.ice.ktuice.al.services.scrapers.base.exceptions.ParsingException
+import com.ice.ktuice.al.services.scrapers.base.exceptions.ServerErrorException
 import com.ice.ktuice.al.services.scrapers.base.ktuScraperService.handlers.DataHandler
-import com.ice.ktuice.al.services.scrapers.base.ktuScraperService.handlers.LoginHandler
+import com.ice.ktuice.al.services.scrapers.login.LoginService
 import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.models.YearGradesModel
 import com.ice.ktuice.models.YearModel
 import com.ice.ktuice.models.responses.LoginResponseModel
 import com.ice.ktuice.models.responses.YearGradesResponseModel
-import com.ice.ktuice.al.services.scrapers.base.ScraperService
-import com.ice.ktuice.al.services.scrapers.base.exceptions.AuthenticationException
-import com.ice.ktuice.al.services.scrapers.base.exceptions.ParsingException
-import com.ice.ktuice.al.services.scrapers.base.exceptions.ServerErrorException
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
+import org.koin.standalone.KoinComponent
+import org.koin.standalone.inject
 
 
-class  KTUScraperService: ScraperService, IceLog{
+class KTUScraperService: KoinComponent, ScraperService, IceLog{
+
+    private val loginService: LoginService by inject()
 
     override fun login(username: String, password: String)
-            = LoginHandler().getAuthCookies(username, password)
+            = LoginResponseModel(loginService.login(username, password), 200)
 
     override fun getGrades(login: LoginModel, yearModel: YearModel): YearGradesModel {
         var response: YearGradesResponseModel
