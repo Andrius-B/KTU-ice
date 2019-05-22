@@ -12,7 +12,7 @@ class PreLoginStage: Stage() {
                 .method(Connection.Method.GET)
                 .headers(LoginUtil.getAdditionalHeaders())
                 .execute()
-        dataStore.setKeepingOld("PreLoginPage", request.body())
+        dataStore.setWithBackup("PreLoginPage", request.body())
         cookieJar.putAll(request.cookies())
         return request.statusCode()
     }
