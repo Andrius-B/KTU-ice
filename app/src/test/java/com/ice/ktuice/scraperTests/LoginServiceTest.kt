@@ -2,6 +2,7 @@ package com.ice.ktuice.scraperTests
 
 import com.ice.ktuice.al.services.scrapers.login.LoginServiceImpl
 import com.ice.ktuice.impl.FileLoginProvider
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
@@ -21,5 +22,7 @@ class LoginServiceTest {
         val loginService = LoginServiceImpl()
         val loginResponseModel = loginService.login(username, password)
         println("LoginResponseModel:$loginResponseModel")
+        assertTrue(loginResponseModel.getCookieMap().contains("STUDCOOKIE"))
+        assertTrue(loginResponseModel.getCookieMap()["STUDCOOKIE"]?.isNotBlank()!!)
     }
 }

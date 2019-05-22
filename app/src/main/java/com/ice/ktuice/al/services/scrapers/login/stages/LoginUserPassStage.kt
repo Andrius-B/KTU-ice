@@ -20,7 +20,6 @@ class LoginUserPassStage: Stage() {
                 .method(Connection.Method.POST)
                 .execute()
         val parse = request.parse()
-        println("LoginUserPassStage:$parse")
         val parsedQueryArguments = LoginUtil.splitQuery(parse.baseUri())
         cookieJar.putAll(request.cookies())
         dataStore.stateId = parsedQueryArguments.getValue("StateId")

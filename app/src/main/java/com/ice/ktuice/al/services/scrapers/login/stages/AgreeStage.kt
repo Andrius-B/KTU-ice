@@ -25,14 +25,13 @@ class AgreeStage: Stage() {
                 .followRedirects(true)
                 .execute()
         val parse = request.parse()
-        println("Agree page:$parse")
         val inputList = parse.select("input")
         try {
             val stateId = inputList.first { it.attr("name") == "StateId" }.attr("value")
             if (stateId != dataStore.stateId) {
                 dataStore.stateId = stateId
                 // retry on StateId mismatch
-                println("StateId miss-match")
+//                println("StateId miss-match")
                 cookieJar.putAll(request.cookies())
                 if(retries < 5) {
                     return executeCountingRetries(cookieJar, dataStore, retries)

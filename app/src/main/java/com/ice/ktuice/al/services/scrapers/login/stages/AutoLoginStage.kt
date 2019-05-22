@@ -19,7 +19,6 @@ class AutoLoginStage: Stage() {
         val attr = select[0].attr("value")
         cookieJar.putAll(request.cookies())
         dataStore.authState = attr
-        println("AutoLoginStage:$parse")
         return request.statusCode()
     }
 }

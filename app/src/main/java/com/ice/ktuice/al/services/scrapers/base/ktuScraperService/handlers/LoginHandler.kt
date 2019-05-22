@@ -2,6 +2,7 @@ package com.ice.ktuice.al.services.scrapers.base.ktuScraperService.handlers
 
 import com.ice.ktuice.al.logger.IceLog
 import com.ice.ktuice.al.services.scrapers.base.exceptions.ServerErrorException
+import com.ice.ktuice.models.AuthModel
 import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.models.YearModel
 import com.ice.ktuice.models.responses.LoginResponseModel
@@ -158,8 +159,7 @@ class LoginHandler: IceLog {
                 studentName = studentName,
                 studentId = studentId,
                 studentSemesters = RealmList<YearModel>().apply { addAll(studyList) },
-                username = username,
-                password = password
+                authModel = AuthModel(RealmList(), username, password)
         )
         loginModel.setCookieMap(authResponse.authCookies)
         return LoginResponseModel(loginModel, request.statusCode())
