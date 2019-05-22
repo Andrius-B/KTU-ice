@@ -7,32 +7,29 @@ import io.realm.annotations.RealmClass
 
 @RealmClass
 open class LoginModel(
-        var authCookies: RealmList<Cookie> = RealmList(),
         var studentName: String = "",
         @PrimaryKey
         var studentId: String = "",
         var studentSemesters: RealmList<YearModel> = RealmList(),
-        var username: String = "",
-        var password: String = ""
+        private var authModel: AuthModel = AuthModel(RealmList(), "", "")
 ):RealmObject(){
-        /**
-         * Utility function to change types:
-         * @param cookies - cookie map from jsoup request
-         * @return List of Realm objects containing keys and values
-         */
-        fun setCookieMap(cookies: Map<String, String>) { //remap the map of cookies to a list of key-value pairs
-            authCookies = RealmList<Cookie>().apply {
-                cookies.forEach({add(Cookie(it.key, it.value))})
-            }
-        }
 
-        /**
-         * Utility function to get the cookies as a map for use in request
-         * @return map of <String, String> pairs as per standard
-         */
-        fun getCookieMap():Map<String, String>{
-            return mutableMapOf<String, String>().apply {
-                authCookies.forEach({ put(it.key, it.content) })
-            }
-        }
+
+    var username: String
+        get() = authModel.username
+        set(value) {authModel.username = value}
+
+    var password: String
+        get() = authModel.password
+        set(value) {authModel.password = value}
+
+    var authCookies: RealmList<Cookie>
+        get() = authModel.authCookies
+        set(value) {authModel.authCookies = value}
+
+    fun setCookieMap(cookies: Map<String, String>)
+        = authModel.setCookieMap(cookies)
+
+    fun getCookieMap():Map<String, String>
+        = authModel.getCookieMap()
 }

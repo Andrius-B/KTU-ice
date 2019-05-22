@@ -15,7 +15,6 @@ interface ScraperService {
      * @return Authentication cookies and user info
      */
     fun login(username: String, password: String): LoginResponseModel
-
     /**
      * Gets all marks for requested year.
      *

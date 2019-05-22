@@ -2,6 +2,8 @@ package com.ice.ktuice.scraperTests
 
 import com.ice.ktuice.al.services.scrapers.base.ScraperService
 import com.ice.ktuice.al.services.scrapers.base.ktuScraperService.KTUScraperService
+import com.ice.ktuice.al.services.scrapers.login.LoginService
+import com.ice.ktuice.al.services.scrapers.login.LoginServiceImpl
 import com.ice.ktuice.al.services.scrapers.timetable.TimetableHandler
 import com.ice.ktuice.al.services.scrapers.timetable.TimetableScraper
 import com.ice.ktuice.al.services.scrapers.timetable.TimetableScraperHandlerImpl
@@ -26,6 +28,7 @@ class TimetableHandlerTest: KoinComponent {
     private val scraperModule: Module = applicationContext {
         provide { KTUScraperService() as ScraperService }
         provide { TimetableScraperHandlerImpl() as TimetableScraper }
+        provide { LoginServiceImpl() as LoginService }
     }
 
     lateinit var username: String

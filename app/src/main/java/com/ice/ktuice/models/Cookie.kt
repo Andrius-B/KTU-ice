@@ -21,5 +21,5 @@ open class Cookie(): RealmObject(){
     var content:String = ""
 
     @LinkingObjects("authCookies")
-    open val owners: RealmResults<LoginModel>? = null
+    open val owners: RealmResults<AuthModel>? = null
 }
