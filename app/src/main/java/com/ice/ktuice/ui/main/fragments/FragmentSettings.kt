@@ -1,8 +1,11 @@
 package com.ice.ktuice.ui.main.fragments
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,11 +14,14 @@ import android.widget.ArrayAdapter
 import android.widget.CompoundButton
 import com.ice.ktuice.R
 import com.ice.ktuice.al.logger.FileLogReader
+import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.al.logger.IceLog
 import com.ice.ktuice.al.logger.info
 import com.ice.ktuice.al.settings.AppSettings
+import com.ice.ktuice.ui.login.LoginActivity
 import kotlinx.android.synthetic.main.fragment_settings.*
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.info
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
@@ -23,7 +29,7 @@ import org.koin.standalone.inject
 class FragmentSettings: Fragment(), KoinComponent, IceLog {
 
     private val settings: AppSettings by inject()
-
+    private val preferenceRepository: PreferenceRepository by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +53,14 @@ class FragmentSettings: Fragment(), KoinComponent, IceLog {
         this.networking_enable_switch.isChecked = settings.networkingEnabled
         setLectureNotificationSwitchListener()
 
+        doAsync {
+
+            logout_btn.setOnClickListener {
+                activity?.runOnUiThread {
+                    logout()
+                }
+            }
+        }
 //        this.deleteLogs.setOnClickListener{
 //            info("Reading log file!")
 //            val filename = "ice_log.log"
@@ -76,6 +90,20 @@ class FragmentSettings: Fragment(), KoinComponent, IceLog {
         }
     }
 
+    private fun logout(){
+        //viewModel.dispose()
+        logoutCurrentUser(this.activity)
+    }
+
+    fun logoutCurrentUser(activity: Activity?){
+        activity?.runOnUiThread{
+            preferenceRepository.setValue(R.string.logged_in_user_code, "") // clear out the logged in user code from prefrences
+            val intent = Intent(activity, LoginActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+            ContextCompat.startActivity(activity, intent, null)
+            activity.finish()
+        }
+    }
 
     /**
      * Assigns a simple listener to the theme spinner to recreate the activity with fade

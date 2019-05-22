@@ -78,29 +78,15 @@ class FragmentGrades: Fragment(), KoinComponent, IceLog {
             }
         })
 
-        doAsync {
-
-            logout_btn.setOnClickListener{
-                activity?.runOnUiThread {
-                    logout()
-                }
-            }
-
             test_button.setOnClickListener{
                 scheduleJob(true)
             }
-        }
     }
 
     override fun onPause() {
         super.onPause()
         scheduleJob(false)
         // shedule the notifications to be polled for  whenever the application is paused / stopped
-    }
-
-    private fun logout(){
-        viewModel.dispose()
-        viewModel.logoutCurrentUser(this.activity)
     }
 
     private fun scheduleJob(instant: Boolean){
