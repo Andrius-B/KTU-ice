@@ -35,6 +35,7 @@
         app:headerRowBackgroundColor="?attr/colorCardBackground"
         app:dayBackgroundColor="#05000000"
         app:todayBackgroundColor="#1848adff"
+        app:nowBackgroundColor="#5848adff"
         app:headerColumnBackground="?attr/colorPrimaryDark"
         app:hourSeparatorColor="?attr/colorPrimary"
         app:todayHeaderTextColor="?attr/colorAccent"

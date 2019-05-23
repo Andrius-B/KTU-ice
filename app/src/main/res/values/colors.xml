@@ -7,7 +7,7 @@
     <color name="colorErrorLight">#fec6c6</color>
 
     <color name="colorBackground">#FFFF</color>
-    
+
     <color name="loginButtonRipple">#1f00e5ff</color>
     <!--<color name="loginButtonFocused">#a000e5ff</color>-->
 
@@ -33,5 +33,5 @@
     <color name="card_background_light">#ffffff</color>
 
     <color name="event_text_light">#ffffff</color>
-    <color name="event_text_dark">#bdbdbd</color>
+    <color name="event_text_dark">#FFFFFF</color>
 </resources>
