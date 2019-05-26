@@ -21,10 +21,12 @@
     <color name="event_red_category_light">#dd2c00</color>
     <color name="event_green_category_light">#00c853</color>
     <color name="event_blue_category_light">#2962ff</color>
+    <color name="event_yellow_category_light">#EECA00</color>
 
     <color name="event_red_category_dark">#dc891b00</color>
     <color name="event_green_category_dark">#dc007932</color>
     <color name="event_blue_category_dark">#dc0f318e</color>
+    <color name="event_yellow_category_dark">#A28800</color>
 
     <!--Splash screen and background image tint-->
     <color name="background_image_tint">#88ffffff</color>
@@ -33,5 +35,5 @@
     <color name="card_background_light">#ffffff</color>
 
     <color name="event_text_light">#ffffff</color>
-    <color name="event_text_dark">#FFFFFF</color>
+    <color name="event_text_dark">#bdbdbd</color>
 </resources>

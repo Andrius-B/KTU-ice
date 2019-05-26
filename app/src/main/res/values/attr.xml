@@ -8,5 +8,6 @@
     <attr name="color_event_red_category" format="reference|color"/>
     <attr name="color_event_green_category" format="reference|color"/>
     <attr name="color_event_blue_category" format="reference|color"/>
+    <attr name="color_event_yellow_category" format="reference|color"/>
     <attr name="color_event_text" format="reference|color"/>
 </resources>
