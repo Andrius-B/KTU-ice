@@ -997,17 +997,13 @@ public class WeekView extends View {
                         mEventBackgroundPaint.setShader(mEventRects.get(i).event.getShader());
                         if (isSameDayAndTimeBetween(mEventRects.get(i).event.getStartTime(), mEventRects.get(i).event.getEndTime())) {
                             int color = mEventBackgroundPaint.getColor();
-                            int A = (color >> 24) & 0xff; // or color >>> 24
                             int R = (color >> 16) & 0xff;
                             int G = (color >>  8) & 0xff;
                             int B = (color      ) & 0xff;
-
-                            color = (A & 0xff) << 24 | (R & 0xff) << 16 | (G & 0xff) << 8 | (B & 0xff);
-                            A = 0xff;
                             R = R/2;
                             G = G/2;
                             B = B/2;
-                            mEventBackgroundPaint.setColor(Color.argb(A,R,G,B));
+                            mEventBackgroundPaint.setColor(Color.rgb(R,G,B));
                             canvas.drawRoundRect(mEventRects.get(i).rectF, mEventCornerRadius, mEventCornerRadius, mEventBackgroundPaint);
                         }
                         else {
