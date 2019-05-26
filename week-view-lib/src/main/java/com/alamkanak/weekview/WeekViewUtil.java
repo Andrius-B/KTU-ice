@@ -1,6 +1,9 @@
 package com.alamkanak.weekview;
 
+import java.time.Clock;
+import java.time.LocalTime;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by jesse on 6/02/2016.
@@ -50,6 +53,14 @@ public class WeekViewUtil {
 
         if (dateTwo != null) {
             return isSameDay(dateOne, dateTwo) && dateOne.get(Calendar.HOUR_OF_DAY) == dateTwo.get(Calendar.HOUR_OF_DAY);
+        }
+        return false;
+    }
+    public static boolean isSameDayAndTimeBetween(Calendar dateOne, Calendar dateTwo)
+    {
+        Date today = Calendar.getInstance().getTime();
+        if(dateTwo != null && isSameDay(dateOne,dateTwo)) {
+            return  dateOne.getTime().before(today)  && dateTwo.getTime().after(today);
         }
         return false;
     }

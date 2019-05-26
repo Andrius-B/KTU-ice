@@ -11,6 +11,7 @@
         <item name="color_event_red_category">@color/event_red_category_light</item>
         <item name="color_event_green_category">@color/event_green_category_light</item>
         <item name="color_event_blue_category">@color/event_blue_category_light</item>
+        <item name="color_event_yellow_category">@color/event_yellow_category_light</item>
 
         <item name="android:windowActivityTransitions">false</item>
         <item name="grade_cell_background_ref">@drawable/grade_cell_background_light</item>
@@ -41,6 +42,7 @@
         <item name="color_event_red_category">@color/event_red_category_dark</item>
         <item name="color_event_green_category">@color/event_green_category_dark</item>
         <item name="color_event_blue_category">@color/event_blue_category_dark</item>
+        <item name="color_event_yellow_category">@color/event_yellow_category_dark</item>
 
         <item name="grade_cell_background_ref">@drawable/grade_cell_background_dark</item>
         <item name="colorCardBackground">@color/card_background_dark</item>

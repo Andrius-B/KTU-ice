@@ -79,6 +79,7 @@ class FragmentTimeTable: Fragment(), KoinComponent, AnkoLogger{
     private fun weekViewEventsFromCalendar(calendar: CalendarModel): List<WeekViewEvent>{
         val list = mutableListOf<WeekViewEvent>()
         calendar.eventList.forEach {
+            info(it.categories)
             val event = WeekViewEvent()
             event.startTime = CalendarManager.convertDateToCalendar(it.dateStart)
             event.endTime = CalendarManager.convertDateToCalendar(it.dateEnd)

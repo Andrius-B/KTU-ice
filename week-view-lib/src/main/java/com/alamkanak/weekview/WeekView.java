@@ -39,16 +39,20 @@ import android.view.ViewConfiguration;
 import android.widget.OverScroller;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.time.LocalDateTime;
 
 import static com.alamkanak.weekview.WeekViewUtil.daysBetween;
 import static com.alamkanak.weekview.WeekViewUtil.getPassedMinutesInDay;
 import static com.alamkanak.weekview.WeekViewUtil.isSameDay;
+import static com.alamkanak.weekview.WeekViewUtil.isSameDayAndHour;
+import static com.alamkanak.weekview.WeekViewUtil.isSameDayAndTimeBetween;
 import static com.alamkanak.weekview.WeekViewUtil.today;
 
 /**
@@ -134,6 +138,7 @@ public class WeekView extends View {
     private int mNowLineThickness = 5;
     private int mHourSeparatorColor = Color.rgb(230, 230, 230);
     private int mTodayBackgroundColor = Color.rgb(239, 247, 254);
+    private int mNowBackgroundColor = Color.rgb(0,0,0);
     private int mHourSeparatorHeight = 2;
     private int mTodayHeaderTextColor = Color.rgb(39, 137, 228);
     private int mEventTextSize = 12;
@@ -451,6 +456,7 @@ public class WeekView extends View {
         // Prepare today background color paint.
         mTodayBackgroundPaint = new Paint();
         mTodayBackgroundPaint.setColor(mTodayBackgroundColor);
+
 
         // Prepare today header text color paint.
         mTodayHeaderTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -964,6 +970,7 @@ public class WeekView extends View {
      * @param canvas         The canvas to draw upon.
      */
     private void drawEvents(Calendar date, float startFromPixel, Canvas canvas) {
+
         if (mEventRects != null && mEventRects.size() > 0) {
             for (int i = 0; i < mEventRects.size(); i++) {
                 if (isSameDay(mEventRects.get(i).event.getStartTime(), date) && !mEventRects.get(i).event.isAllDay()) {
@@ -988,7 +995,20 @@ public class WeekView extends View {
                         mEventRects.get(i).rectF = new RectF(left, top, right, bottom);
                         mEventBackgroundPaint.setColor(mEventRects.get(i).event.getColor() == 0 ? mDefaultEventColor : mEventRects.get(i).event.getColor());
                         mEventBackgroundPaint.setShader(mEventRects.get(i).event.getShader());
-                        canvas.drawRoundRect(mEventRects.get(i).rectF, mEventCornerRadius, mEventCornerRadius, mEventBackgroundPaint);
+                        if (isSameDayAndTimeBetween(mEventRects.get(i).event.getStartTime(), mEventRects.get(i).event.getEndTime())) {
+                            int color = mEventBackgroundPaint.getColor();
+                            int R = (color >> 16) & 0xff;
+                            int G = (color >>  8) & 0xff;
+                            int B = (color      ) & 0xff;
+                            R = R/2;
+                            G = G/2;
+                            B = B/2;
+                            mEventBackgroundPaint.setColor(Color.rgb(R,G,B));
+                            canvas.drawRoundRect(mEventRects.get(i).rectF, mEventCornerRadius, mEventCornerRadius, mEventBackgroundPaint);
+                        }
+                        else {
+                            canvas.drawRoundRect(mEventRects.get(i).rectF, mEventCornerRadius, mEventCornerRadius, mEventBackgroundPaint);
+                        }
                         float topToUse = top;
                         if (mEventRects.get(i).event.getStartTime().get(Calendar.HOUR_OF_DAY) < mMinTime)
                             topToUse = mHourHeight * getPassedMinutesInDay(mMinTime, 0) / 60 + getEventsTop();
@@ -1037,7 +1057,7 @@ public class WeekView extends View {
                             top < getHeight() &&
                             right > mHeaderColumnWidth &&
                             bottom > 0
-                            ) {
+                    ) {
                         mEventRects.get(i).rectF = new RectF(left, top, right, bottom);
                         mEventBackgroundPaint.setColor(mEventRects.get(i).event.getColor() == 0 ? mDefaultEventColor : mEventRects.get(i).event.getColor());
                         mEventBackgroundPaint.setShader(mEventRects.get(i).event.getShader());
@@ -1049,6 +1069,7 @@ public class WeekView extends View {
             }
         }
     }
+
 
     /**
      * Draw the name of the event on top of the event rectangle.

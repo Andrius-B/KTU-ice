@@ -7,12 +7,7 @@ import io.realm.RealmObject
 import io.realm.annotations.Ignore
 import java.text.DateFormat
 import java.util.*
-import android.R.attr.data
-import android.support.annotation.ColorInt
-import android.content.res.Resources.Theme
-import android.graphics.Color
 import android.util.TypedValue
-
 
 
 /**
@@ -58,11 +53,11 @@ open class CalendarEvent: RealmObject(){
     }
 
     fun getCategoryColor(c: Context): Int {
-
         return when(categories){
             "Red Category"    ->    resolveColorAttr(c, R.attr.color_event_red_category)
             "Blue Category"   ->    resolveColorAttr(c, R.attr.color_event_blue_category)
             "Green Category"  ->    resolveColorAttr(c, R.attr.color_event_green_category)
+            "Yellow Category" ->    resolveColorAttr(c, R.attr.color_event_yellow_category) // exams
             else              ->    ContextCompat.getColor(c, R.color.transparent)
         }
     }
