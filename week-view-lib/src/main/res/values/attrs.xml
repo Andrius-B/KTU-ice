@@ -65,6 +65,5 @@
         <attr name="zoomFocusPoint" format="fraction" />
         <attr name="zoomFocusPointEnabled" format="boolean" />
         <attr name="dropListenerEnabled" format="boolean" />
-        <attr name="nowBackgroundColor" format="color" />
     </declare-styleable>
 </resources>

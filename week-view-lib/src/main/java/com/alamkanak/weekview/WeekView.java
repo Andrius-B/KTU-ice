@@ -95,7 +95,6 @@ public class WeekView extends View {
     private Paint mPastWeekendBackgroundPaint;
     private Paint mNowLinePaint;
     private Paint mTodayHeaderTextPaint;
-    private Paint mNowBackgroundPaint;
     private Paint mEventBackgroundPaint;
     private Paint mNewEventBackgroundPaint;
     private float mHeaderColumnWidth;
@@ -350,7 +349,6 @@ public class WeekView extends View {
             mNowLineThickness = a.getDimensionPixelSize(R.styleable.WeekView_nowLineThickness, mNowLineThickness);
             mHourSeparatorColor = a.getColor(R.styleable.WeekView_hourSeparatorColor, mHourSeparatorColor);
             mTodayBackgroundColor = a.getColor(R.styleable.WeekView_todayBackgroundColor, mTodayBackgroundColor);
-            mNowBackgroundColor = a.getColor(R.styleable.WeekView_nowBackgroundColor,mNowBackgroundColor);
             mHourSeparatorHeight = a.getDimensionPixelSize(R.styleable.WeekView_hourSeparatorHeight, mHourSeparatorHeight);
             mTodayHeaderTextColor = a.getColor(R.styleable.WeekView_todayHeaderTextColor, mTodayHeaderTextColor);
             mEventTextSize = a.getDimensionPixelSize(R.styleable.WeekView_eventTextSize, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, mEventTextSize, context.getResources().getDisplayMetrics()));
@@ -459,9 +457,6 @@ public class WeekView extends View {
         mTodayBackgroundPaint = new Paint();
         mTodayBackgroundPaint.setColor(mTodayBackgroundColor);
 
-        // Prepare now backgroung color paint.
-        mNowBackgroundPaint = new Paint();
-        mNowBackgroundPaint.setColor(mNowBackgroundColor);
 
         // Prepare today header text color paint.
         mTodayHeaderTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -1001,15 +996,24 @@ public class WeekView extends View {
                         mEventBackgroundPaint.setColor(mEventRects.get(i).event.getColor() == 0 ? mDefaultEventColor : mEventRects.get(i).event.getColor());
                         mEventBackgroundPaint.setShader(mEventRects.get(i).event.getShader());
                         if (isSameDayAndTimeBetween(mEventRects.get(i).event.getStartTime(), mEventRects.get(i).event.getEndTime())) {
+                            int color = mEventBackgroundPaint.getColor();
+                            int A = (color >> 24) & 0xff; // or color >>> 24
+                            int R = (color >> 16) & 0xff;
+                            int G = (color >>  8) & 0xff;
+                            int B = (color      ) & 0xff;
+
+                            color = (A & 0xff) << 24 | (R & 0xff) << 16 | (G & 0xff) << 8 | (B & 0xff);
+                            A = 0xff;
+                            R = R/2;
+                            G = G/2;
+                            B = B/2;
+                            mEventBackgroundPaint.setColor(Color.argb(A,R,G,B));
                             canvas.drawRoundRect(mEventRects.get(i).rectF, mEventCornerRadius, mEventCornerRadius, mEventBackgroundPaint);
-                            canvas.drawRoundRect(mEventRects.get(i).rectF, mEventCornerRadius, mEventCornerRadius, mNowBackgroundPaint);
-                            float topToUse = top;
                         }
-                        else
+                        else {
                             canvas.drawRoundRect(mEventRects.get(i).rectF, mEventCornerRadius, mEventCornerRadius, mEventBackgroundPaint);
+                        }
                         float topToUse = top;
-
-
                         if (mEventRects.get(i).event.getStartTime().get(Calendar.HOUR_OF_DAY) < mMinTime)
                             topToUse = mHourHeight * getPassedMinutesInDay(mMinTime, 0) / 60 + getEventsTop();
 
@@ -1058,19 +1062,17 @@ public class WeekView extends View {
                             right > mHeaderColumnWidth &&
                             bottom > 0
                     ) {
-
-                            mEventRects.get(i).rectF = new RectF(left, top, right, bottom);
-                            mEventBackgroundPaint.setColor(mEventRects.get(i).event.getColor() == 0 ? mDefaultEventColor : mEventRects.get(i).event.getColor());
-                            mEventBackgroundPaint.setShader(mEventRects.get(i).event.getShader());
-                            canvas.drawRoundRect(mEventRects.get(i).rectF, mEventCornerRadius, mEventCornerRadius, mEventBackgroundPaint);
-                            drawEventTitle(mEventRects.get(i).event, mEventRects.get(i).rectF, canvas, top, left);
-                        }
-                    }
-                    else
+                        mEventRects.get(i).rectF = new RectF(left, top, right, bottom);
+                        mEventBackgroundPaint.setColor(mEventRects.get(i).event.getColor() == 0 ? mDefaultEventColor : mEventRects.get(i).event.getColor());
+                        mEventBackgroundPaint.setShader(mEventRects.get(i).event.getShader());
+                        canvas.drawRoundRect(mEventRects.get(i).rectF, mEventCornerRadius, mEventCornerRadius, mEventBackgroundPaint);
+                        drawEventTitle(mEventRects.get(i).event, mEventRects.get(i).rectF, canvas, top, left);
+                    } else
                         mEventRects.get(i).rectF = null;
-                    }
                 }
             }
+        }
+    }
 
 
     /**
