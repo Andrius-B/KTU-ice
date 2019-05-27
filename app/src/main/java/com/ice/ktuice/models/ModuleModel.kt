@@ -96,9 +96,9 @@ open class ModuleModel(
                     }
                     jsFunctionStripped = jsFunctionStripped.substring(0, commentStart) + jsFunctionStripped.substring(commentEnd);
                 }
-                val arguments = """\(.*\)""".toRegex().find(jsFunctionStripped)?.value?.removeSurrounding("(", ")")?.split(',')
+                val arguments = """\(.*\)""".toRegex().find(jsFunctionStripped)?.value?.split(',')
 
-                return removeChars(arguments?.get(index), "\'\"")
+                return removeChars(arguments?.get(index), "\'\"()")
             }
             return null
         }

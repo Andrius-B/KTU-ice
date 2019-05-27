@@ -35,6 +35,7 @@ class KTUScraperService: KoinComponent, ScraperService, IceLog{
             //Assume that parsing failed in this case
             //(pretty much if anything else goes wrong)
             response = YearGradesResponseModel(-100, YearGradesModel(yearModel))
+            println(e)
         }
 
         info("Grades response code(@Scraper service):"+response.statusCode)
