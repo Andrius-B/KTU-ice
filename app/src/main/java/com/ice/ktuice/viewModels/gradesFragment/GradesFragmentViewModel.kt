@@ -60,16 +60,6 @@ class GradesFragmentViewModel: ViewModel(), KoinComponent, Disposable{
         }
     }
 
-    fun logoutCurrentUser(activity: Activity?){
-        activity?.runOnUiThread{
-            preferenceRepository.setValue(R.string.logged_in_user_code, "") // clear out the logged in user code from prefrences
-            val intent = Intent(activity, LoginActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(activity, intent, null)
-            activity.finish()
-        }
-    }
-
     override fun isDisposed(): Boolean {
         return  yearGradesSubjectDisposable.isDisposed
     }
