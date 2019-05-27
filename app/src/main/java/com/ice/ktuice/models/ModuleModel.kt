@@ -85,8 +85,19 @@ open class ModuleModel(
                 = e.children().getOrNull(5)?.children()?.first()?.attr("onclick")
 
         private fun getInfivertJsFunctionArgument(jsFunction: String?, index: Int): String? {
+
             if(jsFunction != null) {
-                val arguments = """\(.*\)""".toRegex().find(jsFunction)?.value?.removeSurrounding("(", ")")?.split(',')
+                var jsFunctionStripped = jsFunction!!
+                while(jsFunctionStripped.indexOf("/*") >= 0){
+                    val commentStart = jsFunctionStripped.indexOf("/*")
+                    var commentEnd = jsFunctionStripped.length
+                    if(jsFunctionStripped.indexOf("*/") > 0){
+                        commentEnd = jsFunctionStripped.indexOf("*/") + 2
+                    }
+                    jsFunctionStripped = jsFunctionStripped.substring(0, commentStart) + jsFunctionStripped.substring(commentEnd);
+                }
+                val arguments = """\(.*\)""".toRegex().find(jsFunctionStripped)?.value?.removeSurrounding("(", ")")?.split(',')
+
                 return removeChars(arguments?.get(index), "\'\"")
             }
             return null
