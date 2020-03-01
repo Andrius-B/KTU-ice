@@ -3,23 +3,25 @@ package com.ice.ktuice.ui.login
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import com.ice.ktuice.repositories.loginRepository.LoginRepository
 import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
+import com.ice.ktuice.al.logger.IceLog
+import com.ice.ktuice.al.logger.info
 import com.ice.ktuice.ui.main.MainActivity
 import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.al.services.scrapers.base.ScraperService
 import kotlinx.android.synthetic.main.activity_login.*
-import org.jetbrains.anko.*
+import kotlinx.coroutines.*
 import org.koin.android.ext.android.inject
 import java.util.concurrent.Future
 
 /**
  * Created by Andrius on 1/24/2018.
- * TODO refactor the login system to a more robust system
  */
-class LoginActivity: AppCompatActivity(), AnkoLogger {
+class LoginActivity: AppCompatActivity(), IceLog {
 
     private val loginRepository: LoginRepository by inject()
     private val preferenceRepository: PreferenceRepository by inject()
@@ -43,13 +45,13 @@ class LoginActivity: AppCompatActivity(), AnkoLogger {
             val password = login_password_field.text.toString()
             val loginFuture= loginRequest(username, password)
 
-            doAsync {
-                val loginModel = loginFuture.get()
+            GlobalScope.launch (Dispatchers.IO) {
+                val loginModel = loginFuture.await()
                 if (loginModel == null) {
                     setErrorDisplay(resources.getString(R.string.failed_login), true)
                     setLoadingVisible(false)
                 } else {
-                    activityUiThreadWithContext {
+                    launch (Dispatchers.Main) {
                         saveLoginToRealm(loginModel)
                         preferenceRepository.setValue(R.string.logged_in_user_code, loginModel.studentId)
                         info("login saved to database, launching main activity!")
@@ -67,34 +69,25 @@ class LoginActivity: AppCompatActivity(), AnkoLogger {
         }
     }
 
-    private fun loginRequest(username:String, password:String): Future<LoginModel?>{
-        return doAsyncResult(
-                {
-                    info(it)
-                    info(it.getStackTraceString())
-                    runOnUiThread{
-                        setErrorDisplay(it.toString(), true)
+    private fun loginRequest(username:String, password:String): Deferred<LoginModel?>{
+            return GlobalScope.async {
+                var loginModel: LoginModel? = null
+                try {
+                    setLoadingVisible(true)
+                    val loginResponse = scraperService.login(username, password)
+                    if(loginResponse.loginModel != null) {
                         setLoadingVisible(false)
+                        loginModel = loginResponse.loginModel
+                        info("Login successful! " + loginModel.studentName)
                     }
-                },
-                {
-                    var loginModel: LoginModel? = null
-                    try {
-                        setLoadingVisible(true)
-                        val loginResponse = scraperService.login(username, password)
-                        if(loginResponse.loginModel != null) {
-                            setLoadingVisible(false)
-                            loginModel = loginResponse.loginModel
-                            info("Login successful! " + loginModel.studentName)
-                        }
-                    }catch (e: Exception){
-                        info("Exception while making the login requests!:$e")
-                        setErrorDisplay(e.toString(), true)
-                        info(e.getStackTraceString())
-                        setLoadingVisible(false)
-                    }
-                    return@doAsyncResult loginModel
-                })
+                }catch (e: Exception){
+                    info("Exception while making the login requests!:$e")
+                    setErrorDisplay(e.toString(), true)
+                    info(Log.getStackTraceString(e))
+                    setLoadingVisible(false)
+                }
+                loginModel
+            }
     }
 
 

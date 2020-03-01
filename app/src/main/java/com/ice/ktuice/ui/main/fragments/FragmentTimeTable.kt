@@ -8,20 +8,17 @@ import android.view.ViewGroup
 import com.alamkanak.weekview.WeekViewEvent
 import com.ice.ktuice.R
 import com.ice.ktuice.al.lectureCalendar.CalendarManager
+import com.ice.ktuice.al.logger.IceLog
+import com.ice.ktuice.al.logger.info
 import com.ice.ktuice.models.lectureCalendarModels.CalendarModel
-import io.realm.Realm
-import io.realm.RealmChangeListener
 import kotlinx.android.synthetic.main.fragment_timetable.*
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.info
 import org.koin.standalone.KoinComponent
 
 /**
  * Created by Andrius on 2/24/2018.
  * Displays a calendar of the upcoming events
  */
-class FragmentTimeTable: Fragment(), KoinComponent, AnkoLogger{
+class FragmentTimeTable: Fragment(), KoinComponent, IceLog {
 
     private val calendarManager = CalendarManager()
 

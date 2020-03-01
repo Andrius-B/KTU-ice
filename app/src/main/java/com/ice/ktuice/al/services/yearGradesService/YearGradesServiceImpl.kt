@@ -12,8 +12,9 @@ import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.repositories.yearGradesResponseRepository.YearGradesRepository
 import io.reactivex.subjects.ReplaySubject
 import io.reactivex.subjects.Subject
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import java.util.*
@@ -43,9 +44,9 @@ class YearGradesServiceImpl: YearGradesService, KoinComponent, IceLog {
         val dbGrades = getYearGradesListFromDB()
         yearGradesRepository.setUpdating(dbGrades, true)
         currentSubject.onNext(dbGrades)
-        doAsync {
+        GlobalScope.launch(Dispatchers.Default) {
             val webGrades = getYearGradesListFromWeb()
-            uiThread {
+            launch(Dispatchers.Main) {
                 persistYearGradesModel(webGrades)
                 yearGradesRepository.setUpdating(webGrades, false)
                 currentSubject.onNext(webGrades)

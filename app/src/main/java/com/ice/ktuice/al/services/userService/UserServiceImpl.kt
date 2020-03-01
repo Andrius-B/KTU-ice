@@ -3,18 +3,18 @@ package com.ice.ktuice.al.services.userService
 import com.ice.ktuice.repositories.loginRepository.LoginRepository
 import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
+import com.ice.ktuice.al.logger.IceLog
+import com.ice.ktuice.al.logger.info
 import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.al.services.scrapers.base.ScraperService
 import io.realm.Realm
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
 /**
  * Created by Andrius on 2/24/2018.
  */
-class UserServiceImpl: UserService, KoinComponent, AnkoLogger{
+class UserServiceImpl: UserService, KoinComponent, IceLog {
     private val preferenceRepository: PreferenceRepository by inject()
     private val loginRepository: LoginRepository by inject()
     private val scraperService: ScraperService by inject()

@@ -1,21 +1,21 @@
 package com.ice.ktuice.al.gradeTable
 
+import android.util.Log
 import com.ice.ktuice.al.gradeTable.gradeTableModels.GradeTableFactory
 import com.ice.ktuice.al.gradeTable.gradeTableModels.GradeTableModel
 import com.ice.ktuice.al.gradeTable.gradeTableModels.SemesterAdapterItem
+import com.ice.ktuice.al.logger.IceLog
+import com.ice.ktuice.al.logger.info
 import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.models.YearModel
 import com.ice.ktuice.al.services.scrapers.base.exceptions.AuthenticationException
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
-import org.jetbrains.anko.getStackTraceString
 import org.koin.standalone.KoinComponent
 
 /**
  * Created by Andrius on 2/15/2018.
  * A helper class to contain the logic of the grade table and supply the models
  */
-class GradeTableManager: KoinComponent, AnkoLogger{
+class GradeTableManager: KoinComponent, IceLog {
     fun constructGradeTableModel(yearGradesList: YearGradesCollectionModel): GradeTableModel?{
         try{
             val table = GradeTableFactory.buildGradeTableFromYearGradesModel(yearGradesList)
@@ -28,11 +28,11 @@ class GradeTableManager: KoinComponent, AnkoLogger{
                         //recursive auth trying
                         return constructGradeTableModel(yearGradesList)
                     }catch (e: Exception){
-                        info(e.getStackTraceString())
+                        info(Log.getStackTraceString(e))
                     }
                 }
             }
-            info(it.getStackTraceString())
+            info(Log.getStackTraceString(it))
         }
         return null
     }

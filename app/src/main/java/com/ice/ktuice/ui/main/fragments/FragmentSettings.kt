@@ -13,16 +13,12 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.CompoundButton
 import com.ice.ktuice.R
-import com.ice.ktuice.al.logger.FileLogReader
 import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.al.logger.IceLog
 import com.ice.ktuice.al.logger.info
 import com.ice.ktuice.al.settings.AppSettings
 import com.ice.ktuice.ui.login.LoginActivity
 import kotlinx.android.synthetic.main.fragment_settings.*
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.info
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
@@ -53,12 +49,9 @@ class FragmentSettings: Fragment(), KoinComponent, IceLog {
         this.networking_enable_switch.isChecked = settings.networkingEnabled
         setLectureNotificationSwitchListener()
 
-        doAsync {
-
-            logout_btn.setOnClickListener {
-                activity?.runOnUiThread {
-                    logout()
-                }
+        logout_btn.setOnClickListener {
+            activity?.runOnUiThread {
+                logout()
             }
         }
 //        this.deleteLogs.setOnClickListener{

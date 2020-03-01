@@ -10,17 +10,18 @@ import android.os.Build
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
 import com.ice.ktuice.R
+import com.ice.ktuice.al.logger.IceLog
+import com.ice.ktuice.al.logger.info
 import com.ice.ktuice.ui.main.MainActivity
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
-import org.jetbrains.anko.runOnUiThread
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*;
 
 
 /**
  * Created by Andrius on 2/20/2018.
  * Default notification pushing
  */
-class NotificationFactoryImpl(val context: Context): NotificationFactory, AnkoLogger{
+class NotificationFactoryImpl(val context: Context): NotificationFactory, IceLog {
     companion object {
 
         private var _notificationTrack = 416
@@ -34,7 +35,7 @@ class NotificationFactoryImpl(val context: Context): NotificationFactory, AnkoLo
     }
 
     override fun pushNotification(message: String){
-        context.runOnUiThread {
+        GlobalScope.launch(Dispatchers.Main) {
             info("pushing notification!")
             // The id of the channel.
             val CHANNEL_ID = "test_notification_channel"

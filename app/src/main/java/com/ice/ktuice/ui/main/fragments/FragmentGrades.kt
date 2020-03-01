@@ -20,7 +20,9 @@ import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.ui.main.components.GradeTable
 import com.ice.ktuice.viewModels.gradesFragment.GradesFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_grades.*
-import org.jetbrains.anko.doAsync
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
 import java.util.concurrent.TimeUnit
@@ -106,7 +108,7 @@ class FragmentGrades: Fragment(), KoinComponent, IceLog {
             //TODO move period time to configuration, not inline
         }
         else{
-            doAsync {
+            GlobalScope.launch (Dispatchers.IO) {
                 syncJob.sync(0)
             }
         }

@@ -1,8 +1,8 @@
 package com.ice.ktuice.al.gradeTable.gradeTableModels
 
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
-import org.jetbrains.anko.getStackTraceString
+import android.util.Log
+import com.ice.ktuice.al.logger.IceLog
+import io.realm.log.RealmLog.info
 
 /**
  * Created by Andrius on 1/27/2018.
@@ -26,7 +26,7 @@ class WeekModel(val week:String){
         return result
     }
 
-    companion object: AnkoLogger{
+    companion object: IceLog {
         /**
          * Takes in a string representation of a week and converts it to an exact (Double) value.
          * Examples:
@@ -44,7 +44,7 @@ class WeekModel(val week:String){
                     retVal += elem.toFloat()
                     partCounter++
                 }catch (e: NumberFormatException){
-                    info(e.getStackTraceString())
+                    info(Log.getStackTraceString(e))
                 }
             }
             if(partCounter == 0) return 0f

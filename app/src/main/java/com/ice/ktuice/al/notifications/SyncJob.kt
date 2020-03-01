@@ -1,16 +1,15 @@
 package com.ice.ktuice.al.notifications
 
+import android.util.Log
 import com.ice.ktuice.al.gradeTable.notifications.NotificationFactory
 import com.ice.ktuice.al.gradeTable.yearGradesModelComparator.Difference
 import com.ice.ktuice.al.gradeTable.yearGradesModelComparator.YearGradesModelComparator
 import com.ice.ktuice.al.logger.IceLog
-import com.ice.ktuice.al.logger.info
 import com.ice.ktuice.al.logger.infoFile
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.al.settings.AppSettings
 import com.ice.ktuice.models.GradeModel
 import com.ice.ktuice.models.YearGradesCollectionModel
-import org.jetbrains.anko.getStackTraceString
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
@@ -56,7 +55,7 @@ class SyncJob: KoinComponent, IceLog {
                     infoFile("Notification pushed!")
                     infoFile("====================================")
                 }catch (e: Exception){
-                    infoFile(e.getStackTraceString())
+                    infoFile(Log.getStackTraceString(e))
                     infoFile("Notification push failed!")
                 }
             }

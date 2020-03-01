@@ -1,16 +1,16 @@
 package com.ice.ktuice.al.gradeTable.gradeTableModels
 
+import com.ice.ktuice.al.logger.IceLog
+import com.ice.ktuice.al.logger.info
 import com.ice.ktuice.models.GradeModel
 import com.ice.ktuice.models.ModuleModel
 import com.ice.ktuice.models.YearModel
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
 
 /**
  * Created by Andrius on 2/11/2018.
  * Stores the data of a semester (modules and some other supplementary names)
  */
-class GradeTableSemesterModel(val semester: String, val semester_number:String, val yearModel: YearModel): AnkoLogger {
+class GradeTableSemesterModel(val semester: String, val semester_number:String, val yearModel: YearModel): IceLog {
     private val rowMap: HashMap<String, GradeTableRowModel> = HashMap()
     private val weekList = mutableListOf<WeekModel>()
     fun getTotalWeekList(): List<WeekModel>{ // public getter to expose the seen weekModel list

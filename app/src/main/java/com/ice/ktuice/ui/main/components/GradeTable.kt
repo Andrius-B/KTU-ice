@@ -12,12 +12,12 @@ import com.ice.ktuice.al.gradeTable.GradeTableManager
 import com.ice.ktuice.al.gradeTable.gradeTableModels.GradeTableModel
 import com.ice.ktuice.al.gradeTable.gradeTableModels.SemesterAdapterItem
 import com.ice.ktuice.al.gradeTable.yearGradesModelComparator.YearGradesModelComparator
+import com.ice.ktuice.al.logger.IceLog
+import com.ice.ktuice.al.logger.info
 import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.ui.adapters.SemesterSpinnerAdapter
 import com.ice.ktuice.ui.main.dialogs.GradeTableCellDetailsDialog
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
@@ -30,7 +30,7 @@ import org.koin.standalone.inject
 class GradeTable(
          c: Context,
          attrs: AttributeSet?
-): LinearLayout(c, attrs), KoinComponent, AnkoLogger {
+): LinearLayout(c, attrs), KoinComponent, IceLog {
 
     private val comparator: YearGradesModelComparator by inject()
     private val preferenceRepository: PreferenceRepository by inject()
