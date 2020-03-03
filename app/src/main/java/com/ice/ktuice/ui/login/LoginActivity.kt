@@ -2,21 +2,20 @@ package com.ice.ktuice.ui.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
-import com.ice.ktuice.repositories.loginRepository.LoginRepository
-import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
+import androidx.appcompat.app.AppCompatActivity
 import com.ice.ktuice.R
 import com.ice.ktuice.al.logger.IceLog
 import com.ice.ktuice.al.logger.info
-import com.ice.ktuice.ui.main.MainActivity
-import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.al.services.scrapers.base.ScraperService
+import com.ice.ktuice.models.LoginModel
+import com.ice.ktuice.repositories.loginRepository.LoginRepository
+import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
+import com.ice.ktuice.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.*
 import org.koin.android.ext.android.inject
-import java.util.concurrent.Future
 
 /**
  * Created by Andrius on 1/24/2018.

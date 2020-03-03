@@ -1,10 +1,10 @@
 package com.ice.ktuice.ui.main.fragments
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.alamkanak.weekview.WeekViewEvent
 import com.ice.ktuice.R
 import com.ice.ktuice.al.lectureCalendar.CalendarManager

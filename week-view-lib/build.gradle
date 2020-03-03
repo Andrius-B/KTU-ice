@@ -5,12 +5,11 @@ repositories {
 }
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 29
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 29
     }
 }
 
@@ -18,6 +17,6 @@ configurations {
     javadocDeps
 }
 dependencies {
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    javadocDeps 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    javadocDeps 'androidx.appcompat:appcompat:1.1.0'
 }

@@ -1,18 +1,14 @@
 package com.ice.ktuice.viewModels.gradesFragment
 
-import android.app.Activity
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
-import android.content.Intent
-import android.support.v4.content.ContextCompat.startActivity
-import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.ice.ktuice.R
 import com.ice.ktuice.al.services.userService.UserService
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.models.YearGradesCollectionModel
-import com.ice.ktuice.ui.login.LoginActivity
+import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
 import io.reactivex.disposables.Disposable
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject

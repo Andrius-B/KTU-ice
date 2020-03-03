@@ -1,13 +1,13 @@
 package com.ice.ktuice.models.lectureCalendarModels
 
 import android.content.Context
-import android.support.v4.content.ContextCompat
 import com.ice.ktuice.R
 import io.realm.RealmObject
 import io.realm.annotations.Ignore
 import java.text.DateFormat
 import java.util.*
 import android.util.TypedValue
+import androidx.core.content.ContextCompat
 
 
 /**
