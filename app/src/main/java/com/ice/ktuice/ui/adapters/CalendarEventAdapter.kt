@@ -1,14 +1,14 @@
 package com.ice.ktuice.ui.adapters
 
 import android.content.Context
-import android.support.v4.content.ContextCompat
-import android.support.v4.graphics.drawable.DrawableCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TableRow
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import com.ice.ktuice.R
 import com.ice.ktuice.al.lectureCalendar.CalendarListItemModel
 import com.ice.ktuice.al.lectureCalendar.CalendarListItemModel.ItemType.*
