@@ -1,9 +1,14 @@
 package com.ice.ktuice.models
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
+import java.util.stream.Collector
+import java.util.stream.Collectors
+import kotlin.collections.joinToString;
 
 @RealmClass
 open class LoginModel(
@@ -32,4 +37,12 @@ open class LoginModel(
 
     fun getCookieMap():Map<String, String>
         = authModel.getCookieMap()
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun getCookieAsString(): String {
+        val cookies = getCookieMap().entries.stream().map {
+            it.key + "=" + it.value
+        }.collect(Collectors.toList())
+        return cookies.joinToString(separator = "; ")
+    }
 }

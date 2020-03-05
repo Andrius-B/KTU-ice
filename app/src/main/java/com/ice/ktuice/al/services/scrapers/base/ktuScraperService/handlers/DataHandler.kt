@@ -60,6 +60,7 @@ class DataHandler {
 
             request.charset("windows-1257")
             val parse = request.parse()
+//            println(parse.body())
             val moduleList = if(UnauthenticatedRequestDetector.isResponseAuthError(parse)){
                 throw AuthenticationException("Request not authenticated!")
             }else{
@@ -84,18 +85,21 @@ class DataHandler {
         private fun getModuleMarkList(loginModel: LoginModel, moduleModel: ModuleModel): RealmList<GradeModel> {
             val markList = RealmList<GradeModel>()
             val url = "https://uais.cr.ktu.lt/ktuis/STUD_SS2.infivert"
+            val cookies = loginModel.getCookieMap()
             val request = Jsoup.connect(url)
-                    .cookies(loginModel.getCookieMap())
+                    .cookies(cookies)
                     .method(Connection.Method.POST)
+                    .header("Content-Type", "application/x-www-form-urlencoded")
                     .data(mapOf(
                             "p1" to moduleModel.p1,
                             "p2" to moduleModel.p2,
                             "p3" to moduleModel.p3
                     ))
-                    .execute()
 
-            request.charset("windows-1257")
-            val parse = request.parse()
+            val response = request.execute()
+
+            response.charset("windows-1257")
+            val parse = response.parse()
 
             val markTable = parse.select(".d_grd2[style=\"border-collapse:collapse; empty-cells:hide;\"]").firstOrNull()
             val markInfoTable = parse.select(".d_grd2[style=\"border-collapse:collapse; table-layout:fixed; width:450px;\"]").firstOrNull()

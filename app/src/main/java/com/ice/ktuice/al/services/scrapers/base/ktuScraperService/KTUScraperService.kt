@@ -18,7 +18,7 @@ import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
 
-class KTUScraperService: KoinComponent, ScraperService, IceLog{
+class KTUScraperService: KoinComponent, ScraperService, IceLog {
 
     private val loginService: LoginService by inject()
 
@@ -28,7 +28,7 @@ class KTUScraperService: KoinComponent, ScraperService, IceLog{
     override fun getGrades(login: LoginModel, yearModel: YearModel): YearGradesModel {
         var response: YearGradesResponseModel
         try {
-             response = DataHandler.getGrades(login, yearModel)
+            response = DataHandler.getGrades(login, yearModel)
         }catch (e: AuthenticationException){
             throw e
         }catch (e:Exception){
@@ -37,7 +37,6 @@ class KTUScraperService: KoinComponent, ScraperService, IceLog{
             response = YearGradesResponseModel(-100, YearGradesModel(yearModel))
             println(e)
         }
-
         info("Grades response code(@Scraper service):"+response.statusCode)
         if(response.statusCode >= 500){
             throw ServerErrorException("Server error, something went wrong!")

@@ -1,9 +1,11 @@
 package com.ice.ktuice.models
 
+import com.ice.ktuice.al.services.scrapers.base.ktuScraperService.util.JsFunctionParser
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
+import kotlinx.coroutines.supervisorScope
 import org.jsoup.nodes.Element
 
 /**
@@ -85,22 +87,8 @@ open class ModuleModel(
                 = e.children().getOrNull(5)?.children()?.first()?.attr("onclick")
 
         private fun getInfivertJsFunctionArgument(jsFunction: String?, index: Int): String? {
-
-            if(jsFunction != null) {
-                var jsFunctionStripped = jsFunction!!
-                while(jsFunctionStripped.indexOf("/*") >= 0){
-                    val commentStart = jsFunctionStripped.indexOf("/*")
-                    var commentEnd = jsFunctionStripped.length
-                    if(jsFunctionStripped.indexOf("*/") > 0){
-                        commentEnd = jsFunctionStripped.indexOf("*/") + 2
-                    }
-                    jsFunctionStripped = jsFunctionStripped.substring(0, commentStart) + jsFunctionStripped.substring(commentEnd);
-                }
-                val arguments = """\(.*\)""".toRegex().find(jsFunctionStripped)?.value?.split(',')
-
-                return removeChars(arguments?.get(index), "\'\"()")
-            }
-            return null
+            val parser = JsFunctionParser(jsFunction!!)
+            return parser.getArgument(index)
         }
 
         private fun getP1(e: Element)
@@ -112,12 +100,5 @@ open class ModuleModel(
         private fun getP3(e: Element)
                 = getInfivertJsFunctionArgument(getInfivertJsFunction(e), 2)
 
-        private fun removeChars(target: String?, chars: String): String? {
-            var result = target
-            for(c in chars){
-                result = result?.replace(c.toString(), "")
-            }
-            return result
-        }
     }
 }
