@@ -9,7 +9,7 @@
         android:id="@+id/main_activity_view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <android.support.design.widget.TabLayout
+        <com.google.android.material.tabs.TabLayout
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/tab_layout_main"
             android:layout_height="wrap_content"
