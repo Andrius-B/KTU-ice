@@ -43,13 +43,13 @@ class SyncJobServiceNotificationTest: KoinTest{
     @Test
     fun `No notification`(){
         //mocking the year grades service to return the same default result for both of the
-        val yearGradesServiceMock = Mockito.mock(YearGradesService::class.java)
+        val yearGradesServiceMock = mock(YearGradesService::class.java)
         Mockito.`when`(yearGradesServiceMock.getYearGradesListFromDB()).thenReturn(YearGradesCollectionProviderTest.createDefaultYearGradesCollection())
         Mockito.`when`(yearGradesServiceMock.getYearGradesListFromWeb()).thenReturn(YearGradesCollectionProviderTest.createDefaultYearGradesCollection())
 
-        val notificationSummaryGenerator = Mockito.mock(NotificationSummaryGenerator::class.java)
-        Mockito.`when`(notificationSummaryGenerator.generateSummaryFromDifferences(ArgumentMatchers.anyList())).thenReturn("Test")
-        val notificationFactoryMock = Mockito.mock(NotificationFactory::class.java)
+        val notificationSummaryGenerator = mock(NotificationSummaryGenerator::class.java)
+        `when`(notificationSummaryGenerator.generateSummaryFromDifferences(ArgumentMatchers.anyList())).thenReturn("Test")
+        val notificationFactoryMock = mock(NotificationFactory::class.java)
 
         val module: Module = applicationContext {
             provide { yearGradesServiceMock as YearGradesService }
@@ -79,10 +79,10 @@ class SyncJobServiceNotificationTest: KoinTest{
         `when`(yearGradesServiceMock.getYearGradesListFromDB()).thenReturn(YearGradesCollectionProviderTest.createDefaultYearGradesCollection())
         `when`(yearGradesServiceMock.getYearGradesListFromWeb()).thenReturn(defaultGradeCollectionWithAddedGrade)
 
-        val notificationSummaryGenerator = Mockito.mock(NotificationSummaryGenerator::class.java)
-        Mockito.`when`(notificationSummaryGenerator.generateSummaryFromDifferences(ArgumentMatchers.anyList())).thenReturn("Test")
+        val notificationSummaryGenerator = mock(NotificationSummaryGenerator::class.java)
+        `when`(notificationSummaryGenerator.generateSummaryFromDifferences(ArgumentMatchers.anyList())).thenReturn("Test")
 
-        val notificationFactoryMock = Mockito.mock(NotificationFactory::class.java)
+        val notificationFactoryMock = mock(NotificationFactory::class.java)
 
         val module: Module = applicationContext {
             provide { yearGradesServiceMock as YearGradesService }
@@ -114,10 +114,10 @@ class SyncJobServiceNotificationTest: KoinTest{
         `when`(yearGradesServiceMock.getYearGradesListFromDB()).thenReturn(YearGradesCollectionProviderTest.createDefaultYearGradesCollection())
         `when`(yearGradesServiceMock.getYearGradesListFromWeb()).thenReturn(defaultGradeCollectionWithChangedGrade)
 
-        val notificationSummaryGenerator = Mockito.mock(NotificationSummaryGenerator::class.java)
-        Mockito.`when`(notificationSummaryGenerator.generateSummaryFromDifferences(ArgumentMatchers.anyList())).thenReturn("Test")
+        val notificationSummaryGenerator = mock(NotificationSummaryGenerator::class.java)
+        `when`(notificationSummaryGenerator.generateSummaryFromDifferences(ArgumentMatchers.anyList())).thenReturn("Test")
 
-        val notificationFactoryMock = Mockito.mock(NotificationFactory::class.java)
+        val notificationFactoryMock = mock(NotificationFactory::class.java)
 
         val module: Module = applicationContext {
             provide { yearGradesServiceMock as YearGradesService }
@@ -155,10 +155,10 @@ class SyncJobServiceNotificationTest: KoinTest{
         `when`(yearGradesServiceMock.getYearGradesListFromDB()).thenReturn(YearGradesCollectionProviderTest.createDefaultYearGradesCollection())
         `when`(yearGradesServiceMock.getYearGradesListFromWeb()).thenReturn(defaultGradeCollectionWithChangedGrade)
 
-        val notificationSummaryGenerator = Mockito.mock(NotificationSummaryGenerator::class.java)
-        Mockito.`when`(notificationSummaryGenerator.generateSummaryFromDifferences(ArgumentMatchers.anyList())).thenReturn("Test")
+        val notificationSummaryGenerator = mock(NotificationSummaryGenerator::class.java)
+        `when`(notificationSummaryGenerator.generateSummaryFromDifferences(ArgumentMatchers.anyList())).thenReturn("Test")
 
-        val notificationFactoryMock = Mockito.mock(NotificationFactory::class.java)
+        val notificationFactoryMock = mock(NotificationFactory::class.java)
 
         val module: Module = applicationContext {
             provide { yearGradesServiceMock as YearGradesService }
@@ -193,10 +193,10 @@ class SyncJobServiceNotificationTest: KoinTest{
         `when`(yearGradesServiceMock.getYearGradesListFromDB()).thenReturn(YearGradesCollectionProviderTest.createDefaultYearGradesCollection())
         `when`(yearGradesServiceMock.getYearGradesListFromWeb()).thenReturn(defaultGradeCollectionWithChangedGrade)
 
-        val notificationSummaryGenerator = Mockito.mock(NotificationSummaryGenerator::class.java)
-        Mockito.`when`(notificationSummaryGenerator.generateSummaryFromDifferences(ArgumentMatchers.anyList())).thenReturn("Test")
+        val notificationSummaryGenerator = mock(NotificationSummaryGenerator::class.java)
+        `when`(notificationSummaryGenerator.generateSummaryFromDifferences(ArgumentMatchers.anyList())).thenReturn("Test")
 
-        val notificationFactoryMock = Mockito.mock(NotificationFactory::class.java)
+        val notificationFactoryMock = mock(NotificationFactory::class.java)
 
         val module: Module = applicationContext {
             provide { yearGradesServiceMock as YearGradesService }

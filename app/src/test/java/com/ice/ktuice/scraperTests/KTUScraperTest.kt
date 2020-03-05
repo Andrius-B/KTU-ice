@@ -1,5 +1,6 @@
 package com.ice.ktuice.scraperTests
 
+import android.util.Log
 import com.ice.ktuice.al.services.scrapers.base.ScraperService
 import com.ice.ktuice.al.services.scrapers.base.exceptions.AuthenticationException
 import com.ice.ktuice.al.services.scrapers.base.ktuScraperService.KTUScraperService
@@ -7,11 +8,7 @@ import com.ice.ktuice.al.services.scrapers.login.LoginService
 import com.ice.ktuice.al.services.scrapers.login.LoginServiceImpl
 import com.ice.ktuice.impl.FileLoginProvider
 import com.ice.ktuice.models.Cookie
-import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.models.YearGradesCollectionModel
-import com.ice.ktuice.models.YearModel
-import io.realm.RealmList
-import org.jetbrains.anko.getStackTraceString
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -113,7 +110,7 @@ class KTUScraperTest: KoinTest{
             scraperService.refreshLoginCookies(loginModel)
             `Test grade fetching`()
         }catch (e: Exception){
-            println(e.getStackTraceString())
+            println(Log.getStackTraceString(e))
         }
     }
 

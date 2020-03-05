@@ -1,6 +1,5 @@
 package com.ice.ktuice.impl
 
-import com.ice.ktuice.models.LoginModel
 import java.io.File
 import java.io.FileNotFoundException
 

@@ -7,7 +7,6 @@ import com.ice.ktuice.al.gradeTable.yearGradesModelComparator.YearGradesModelCom
 import com.ice.ktuice.al.gradeTable.yearGradesModelComparator.YearGradesModelComparatorImpl
 import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.models.GradeModel
-import com.ice.ktuice.models.YearGradesCollectionModel
 import junit.framework.Assert.assertNotNull
 import junit.framework.Assert.assertTrue
 import org.junit.After
@@ -20,7 +19,6 @@ import org.koin.standalone.inject
 import org.koin.test.KoinTest
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
-import java.lang.Exception
 
 /**
  * Created by Andrius on 3/13/2018.

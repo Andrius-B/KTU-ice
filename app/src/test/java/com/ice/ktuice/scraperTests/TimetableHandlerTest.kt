@@ -4,7 +4,6 @@ import com.ice.ktuice.al.services.scrapers.base.ScraperService
 import com.ice.ktuice.al.services.scrapers.base.ktuScraperService.KTUScraperService
 import com.ice.ktuice.al.services.scrapers.login.LoginService
 import com.ice.ktuice.al.services.scrapers.login.LoginServiceImpl
-import com.ice.ktuice.al.services.scrapers.timetable.TimetableHandler
 import com.ice.ktuice.al.services.scrapers.timetable.TimetableScraper
 import com.ice.ktuice.al.services.scrapers.timetable.TimetableScraperHandlerImpl
 import com.ice.ktuice.impl.FileLoginProvider
