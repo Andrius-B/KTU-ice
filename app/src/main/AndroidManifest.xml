@@ -21,7 +21,8 @@
             android:theme="@style/iceTheme" />
         <activity
             android:name=".ui.main.MainActivity"
-            android:screenOrientation="fullSensor">
+            android:screenOrientation="fullSensor"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

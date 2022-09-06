@@ -10,8 +10,8 @@ import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
 import io.reactivex.disposables.Disposable
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /**
  * View model contains the data needed to show the

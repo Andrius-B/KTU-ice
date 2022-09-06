@@ -9,7 +9,7 @@ import com.ice.ktuice.al.logger.info
 import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.models.YearModel
 import com.ice.ktuice.al.services.scrapers.base.exceptions.AuthenticationException
-import org.koin.standalone.KoinComponent
+import org.koin.core.component.KoinComponent
 
 /**
  * Created by Andrius on 2/15/2018.

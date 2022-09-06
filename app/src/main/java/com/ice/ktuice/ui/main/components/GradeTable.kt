@@ -18,8 +18,8 @@ import com.ice.ktuice.models.YearGradesCollectionModel
 import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.ui.adapters.SemesterSpinnerAdapter
 import com.ice.ktuice.ui.main.dialogs.GradeTableCellDetailsDialog
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 
 /**

@@ -6,11 +6,10 @@ import com.ice.ktuice.repositories.yearGradesResponseRepository.YearGradesReposi
 import com.ice.ktuice.repositories.yearGradesResponseRepository.YearGradesRepositoryImpl
 import com.ice.ktuice.repositories.loginRepository.LoginRepository
 import com.ice.ktuice.repositories.loginRepository.LoginRepositoryImpl
-import org.koin.dsl.module.Module
-import org.koin.dsl.module.applicationContext
+import org.koin.dsl.module
 
-val repositoryModule: Module = applicationContext {
-    provide { LoginRepositoryImpl() as LoginRepository }
-    provide { YearGradesRepositoryImpl() as YearGradesRepository }
-    provide { CalendarRepositoryImpl() as CalendarRepository }
+val repositoryModule = module {
+    single<LoginRepository> { LoginRepositoryImpl() }
+    single<YearGradesRepository> { YearGradesRepositoryImpl() }
+    single<CalendarRepository> { CalendarRepositoryImpl() }
 }

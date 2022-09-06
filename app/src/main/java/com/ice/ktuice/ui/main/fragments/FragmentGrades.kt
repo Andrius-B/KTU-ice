@@ -24,7 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
-import org.koin.standalone.KoinComponent
+import org.koin.core.component.KoinComponent
 import java.util.concurrent.TimeUnit
 
 

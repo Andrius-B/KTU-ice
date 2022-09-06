@@ -4,8 +4,8 @@ import android.content.Context
 import com.ice.ktuice.repositories.prefrenceRepository.PreferenceRepository
 import com.ice.ktuice.R
 import io.realm.log.RealmLog.warn
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /**
  * Simple persistent settings stored in the preference repository

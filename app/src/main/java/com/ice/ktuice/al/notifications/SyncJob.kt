@@ -10,8 +10,8 @@ import com.ice.ktuice.al.services.yearGradesService.YearGradesService
 import com.ice.ktuice.al.settings.AppSettings
 import com.ice.ktuice.models.GradeModel
 import com.ice.ktuice.models.YearGradesCollectionModel
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class SyncJob: KoinComponent, IceLog {
 

@@ -24,24 +24,23 @@ import com.ice.ktuice.al.settings.AppSettings
 import com.ice.ktuice.al.settings.AppSettingsPreferencesImpl
 import com.ice.ktuice.viewModels.gradesFragment.GradesFragmentViewModel
 import org.koin.android.ext.koin.androidApplication
-import org.koin.dsl.module.Module
-import org.koin.dsl.module.applicationContext
+import org.koin.dsl.module
 
 /**
  * Created by Andrius on 1/31/2018.
  * All the main dependencies are declared here
  */
-val mainModule: Module = applicationContext {
-    provide { SharedPreferenceRepositoryImpl(this.androidApplication()) as PreferenceRepository }
-    provide { YearGradesModelComparatorImpl() as YearGradesModelComparator }
-    provide { YearGradesServiceImpl() as YearGradesService }
-    provide { UserServiceImpl() as UserService }
-    provide { NotificationFactoryImpl(this.androidApplication()) as NotificationFactory }
-    provide { NotificationSummaryGeneratorImpl(this.androidApplication()) as NotificationSummaryGenerator }
-    provide ( isSingleton = true) { GradesFragmentViewModel() }
-    provide { KTUScraperService() as ScraperService }
-    provide { AppSettingsPreferencesImpl(this.androidApplication()) as AppSettings }
-    provide { CalendarScraperHanderImpl() as CalendarScraper }
-    provide { TimetableScraperHandlerImpl() as TimetableScraper }
-    provide { LoginServiceImpl() as LoginService }
+val mainModule = module {
+    single<PreferenceRepository> { SharedPreferenceRepositoryImpl(this.androidApplication()) }
+    single<YearGradesModelComparator> { YearGradesModelComparatorImpl() }
+    single<YearGradesService> { YearGradesServiceImpl() }
+    single<UserService> { UserServiceImpl() }
+    single<NotificationFactory> { NotificationFactoryImpl(this.androidApplication()) }
+    single<NotificationSummaryGenerator> { NotificationSummaryGeneratorImpl(this.androidApplication()) }
+    single { GradesFragmentViewModel() }
+    single<ScraperService> { KTUScraperService() }
+    single<AppSettings> { AppSettingsPreferencesImpl(this.androidApplication()) }
+    single<CalendarScraper> { CalendarScraperHanderImpl() }
+    single<TimetableScraper> { TimetableScraperHandlerImpl() }
+    single<LoginService> { LoginServiceImpl() }
 }

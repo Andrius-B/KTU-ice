@@ -12,7 +12,8 @@ import com.ice.ktuice.al.logger.IceLog
 import com.ice.ktuice.al.logger.info
 import com.ice.ktuice.models.lectureCalendarModels.CalendarModel
 import kotlinx.android.synthetic.main.fragment_timetable.*
-import org.koin.standalone.KoinComponent
+import org.koin.core.component.KoinComponent
+
 
 /**
  * Created by Andrius on 2/24/2018.
@@ -79,7 +80,7 @@ class FragmentTimeTable: Fragment(), KoinComponent, IceLog {
             val event = WeekViewEvent()
             event.startTime = CalendarManager.convertDateToCalendar(it.dateStart)
             event.endTime = CalendarManager.convertDateToCalendar(it.dateEnd)
-            event.color = it.getCategoryColor(this.activity!!)
+            event.color = it.getCategoryColor(this.requireActivity())
             event.name = it.summary
             event.location = it.getLocationString()
             list.add(event)

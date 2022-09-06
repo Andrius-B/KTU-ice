@@ -14,8 +14,8 @@ import com.ice.ktuice.models.YearGradesModel
 import com.ice.ktuice.models.YearModel
 import com.ice.ktuice.models.responses.LoginResponseModel
 import com.ice.ktuice.models.responses.YearGradesResponseModel
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 
 class KTUScraperService: KoinComponent, ScraperService, IceLog {

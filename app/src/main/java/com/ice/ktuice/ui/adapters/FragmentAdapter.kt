@@ -10,14 +10,15 @@ import com.ice.ktuice.R
 import com.ice.ktuice.ui.main.fragments.FragmentGrades
 import com.ice.ktuice.ui.main.fragments.FragmentSettings
 import com.ice.ktuice.ui.main.fragments.FragmentTimeTable
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /**
  * Created by Andrius on 2/24/2018.
  * Fragments, that the tab layout can manage
  */
-class FragmentAdapter(fm: FragmentManager, context: Context): FragmentStatePagerAdapter(fm), KoinComponent{
+class FragmentAdapter(fm: FragmentManager, context: Context): FragmentStatePagerAdapter(fm),
+    KoinComponent {
     private val preferenceRepository: PreferenceRepository by inject()
 
     override fun getItem(position: Int): Fragment {

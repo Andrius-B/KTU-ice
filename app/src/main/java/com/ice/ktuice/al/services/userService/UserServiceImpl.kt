@@ -8,8 +8,8 @@ import com.ice.ktuice.al.logger.info
 import com.ice.ktuice.models.LoginModel
 import com.ice.ktuice.al.services.scrapers.base.ScraperService
 import io.realm.Realm
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /**
  * Created by Andrius on 2/24/2018.

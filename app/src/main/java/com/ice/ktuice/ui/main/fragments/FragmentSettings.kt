@@ -19,8 +19,8 @@ import com.ice.ktuice.al.logger.info
 import com.ice.ktuice.al.settings.AppSettings
 import com.ice.ktuice.ui.login.LoginActivity
 import kotlinx.android.synthetic.main.fragment_settings.*
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class FragmentSettings: Fragment(), KoinComponent, IceLog {
 
@@ -38,7 +38,7 @@ class FragmentSettings: Fragment(), KoinComponent, IceLog {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        this.current_theme_spinner.adapter =  ArrayAdapter<String>(this.context!!,
+        this.current_theme_spinner.adapter =  ArrayAdapter<String>(this.requireContext(),
                                                 android.R.layout.simple_spinner_dropdown_item,
                                                 resources.getStringArray(R.array.themes))
         this.current_theme_spinner.setSelection(settings.currentThemePos)
